@@ -158,18 +158,9 @@ table .dropdown-item.active, .dropdown-item:active{
 }
 
 
-.pagination li:nth-child(1) {
-    counter-reset: pagination;
-}
 
 
-.previous a:after {
-    content: "<";
-}
 
-.next a:after {
-    content: ">";
-}
 
 .pagination li a {
     border: solid 1px #d0d0d0;
@@ -221,9 +212,6 @@ table .dropdown-item.active, .dropdown-item:active{
     border: none !important;
 }
 
-.pagination li a:after {
-    content: " " counter(pagination) " ";
-}
 
 .large li a {
     display: none;

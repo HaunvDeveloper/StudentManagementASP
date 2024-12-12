@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Danh sách sinh viên";
+}
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">DANH SÁCH SINH VIÊN</h4>
+        <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+            <div>
+                <div class="d-flex gap-2 align-items-center w-100">
+                    <span style="text-wrap: nowrap;">Chọn khóa:</span>
+                    @Html.DropDownList("StudyYearId", (SelectList)ViewBag.StudyYear, "Tất cả", new { @class = "form-control", id = "StudyYearId" })
+                    
+                    <span style="text-wrap: nowrap;">Chọn khoa:</span>
+                    @Html.DropDownList("DeptId", (SelectList)ViewBag.Dept, "Tất cả", new { @class = "form-control", id = "DeptId" })
+
+                    <span style="text-wrap: nowrap;">Chọn ngành:</span>
+                    <select id="SpecializationId" class="form-control" disabled>
+                        <option value="">Chọn ngành</option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2 mt-4 align-items-center">
+                    <span style="text-wrap: nowrap;">Tìm kiếm:</span>
+                    <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Nhập nội dung tìm kiếm.... "/>
+                    <button id="btn-search" class="btn btn-primary">LỌC</button>
+                </div>
+            </div>
+            
+
+            <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary" style="height:40px">+ Thêm sinh viên</button>
+        </div>
+
+        <div class="table-data">
+            <!-- Nội dung bảng danh sách sinh viên sẽ được hiển thị ở đây -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            $('#btn-search').on('click', function () {
+                let data = {
+                    StudyYearId: $('#StudyYearId').val(),
+                    DeptId: $('#DeptId').val(),
+                    SpecializationId: $('#SpecializationId').val(),
+                    keyword: $('#keyword').val()
+                }
+                $.ajax({
+
+                });
+            });
+
+            $('#DeptId').on('change', function() {
+                var deptId = $(this).val();
+
+                if (deptId) {
+                    $.ajax({
+                        url: '/api/API/GetSpecializationByDept?deptid=' + deptId,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data && data.length > 0) {
+                                var specializationSelect = $('#SpecializationId');
+                                specializationSelect.empty();  
+                                specializationSelect.append('<option value="">Chọn ngành</option>'); 
+
+                                $.each(data, function(index, spec) {
+                                    specializationSelect.append('<option value="' + spec.id + '">' + spec.name + '</option>');
+                                });
+
+                                specializationSelect.prop('disabled', false);  // Kích hoạt dropdown Chọn ngành
+                            } else {
+                                $('#SpecializationId').prop('disabled', true);  // Nếu không có ngành thì disable dropdown
+                            }
+                        },
+                        error: function() {
+                            alert('Không thể lấy dữ liệu ngành.');
+                        }
+                    });
+                } else {
+                    $('#SpecializationId').prop('disabled', true);  // Nếu không chọn khoa thì disable dropdown Chọn ngành
+                }
+            });
+        });
+    </script>
+}
