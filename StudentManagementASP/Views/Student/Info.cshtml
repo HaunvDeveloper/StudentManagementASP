@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/infoStudent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+
+
+<div class="_container">
+    <div class="left-section">
+        <img src="~/assets/images/user.png" alt="">
+        <button class="face-button"><i class="fa-regular fa-face-laugh"></i> Định danh khuôn mặt</button>
+        <button class="update-button"><i class="fa-solid fa-pen"></i> Cập nhật thông tin</button>
+    </div>
+
+    <div class="right-section">
+        <div class="tabs">
+            <button data-tab="student-info" class="active" onclick="showTab('student-info')">Thông tin sinh viên</button>
+            <button data-tab="contact-info" onclick="showTab('contact-info')">Thông tin liên lạc</button>
+            <button data-tab="course-info" onclick="showTab('course-info')">Thông tin khoá học</button>
+        </div>
+
+        <div id="student-info" class="tab-content">
+            <table>
+                <tr>
+                    <th>Họ và tên</th>
+                    <td>Nguyễn Văn A</td>
+                    <th>Mã số sinh viên</th>
+                    <td>48.01.103.000</td>
+                </tr>
+                <tr>
+                    <th>Ngày sinh</th>
+                    <td>01/01/2004</td>
+                    <th>Nơi sinh</th>
+                    <td>TP. Hồ Chí Minh</td>
+                </tr>
+                <tr>
+                    <th>Dân tộc</th>
+                    <td>Kinh</td>
+                    <th>Tôn giáo</th>
+                    <td>Không</td>
+                </tr>
+                <tr>
+                    <th>CMND/CCCD</th>
+                    <td>079204011111</td>
+                    <td colspan="2"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="contact-info" class="tab-content" style="display: none;">
+            <table>
+                <tr>
+                    <th>Quốc gia</th>
+                    <td>Việt Nam</td>
+                    <th>Tỉnh/Thành</th>
+                    <td>TP. Hồ Chí Minh</td>
+                </tr>
+                <tr>
+                    <th>Quận/Huyện</th>
+                    <td>Quận 8</td>
+                    <th>Phường/Xã</th>
+                    <td>Phường 3</td>
+                </tr>
+                <tr>
+                    <th>Địa chỉ</th>
+                    <td colspan="3">123 Phạm Thế Hiển</td>
+                </tr>
+                <tr>
+                    <th>Số điện thoại</th>
+                    <td>098 7654 321</td>
+                    <th>Email</th>
+                    <td>nguyenvana@gmail.com</td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="course-info" class="tab-content" style="display: none;">
+            <table>
+                <tr>
+                    <th>Khoa</th>
+                    <td>Công nghệ Thông tin</td>
+                    <th>Chương trình đào tạo</th>
+                    <td>Sư phạm Tin học</td>
+                </tr>
+                <tr>
+                    <th>Khoá</th>
+                    <td>48</td>
+                    <th>Lớp</th>
+                    <td>48.01.TIN.SPB</td>
+                </tr>
+                <tr>
+                    <th>Cố vấn học tập</th>
+                    <td>TS. Lê Đức Long</td>
+                    <th>Niên khoá</th>
+                    <td>2022-2026</td>
+                </tr>
+                <tr>
+                    <th>Hệ</th>
+                    <td>Chính quy</td>
+                    <th>Tình trạng học</th>
+                    <td>Còn học</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function showTab(tabId) {
+                const tabs = document.querySelectorAll('.tab-content');
+                const buttons = document.querySelectorAll('.tabs button');
+                tabs.forEach(tab => tab.style.display = 'none');
+                buttons.forEach(button => button.classList.remove('active'));
+                document.getElementById(tabId).style.display = 'block';
+                document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            }
+
+            window.onload = () => {
+                showTab('student-info'); // Default tab
+            };
+    </script>
+}
