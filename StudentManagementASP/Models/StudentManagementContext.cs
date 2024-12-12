@@ -1,0 +1,460 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace StudentManagementASP.Models;
+
+public partial class StudentManagementContext : DbContext
+{
+    public StudentManagementContext()
+    {
+    }
+
+    public StudentManagementContext(DbContextOptions<StudentManagementContext> options)
+        : base(options)
+    {
+    }
+
+    public virtual DbSet<Authentication> Authentications { get; set; }
+
+    public virtual DbSet<Course> Courses { get; set; }
+
+    public virtual DbSet<CourseClass> CourseClasses { get; set; }
+
+    public virtual DbSet<CourseType> CourseTypes { get; set; }
+
+    public virtual DbSet<Curriculum> Curricula { get; set; }
+
+    public virtual DbSet<Department> Departments { get; set; }
+
+    public virtual DbSet<Lecturer> Lecturers { get; set; }
+
+    public virtual DbSet<LecturerInfo> LecturerInfos { get; set; }
+
+    public virtual DbSet<Lesson> Lessons { get; set; }
+
+    public virtual DbSet<Major> Majors { get; set; }
+
+    public virtual DbSet<Room> Rooms { get; set; }
+
+    public virtual DbSet<Semester> Semesters { get; set; }
+
+    public virtual DbSet<Student> Students { get; set; }
+
+    public virtual DbSet<StudentClass> StudentClasses { get; set; }
+
+    public virtual DbSet<StudentInfo> StudentInfos { get; set; }
+
+    public virtual DbSet<StudentJoinClass> StudentJoinClasses { get; set; }
+
+    public virtual DbSet<StudentJoinLesson> StudentJoinLessons { get; set; }
+
+    public virtual DbSet<StudyYear> StudyYears { get; set; }
+
+    public virtual DbSet<StudyYearDetail> StudyYearDetails { get; set; }
+
+    public virtual DbSet<Subject> Subjects { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    { }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Authentication>(entity =>
+        {
+            entity.ToTable("Authentication");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Course>(entity =>
+        {
+            entity.ToTable("Course");
+
+            entity.Property(e => e.Credits).HasDefaultValue(1);
+            entity.Property(e => e.Infomation).HasMaxLength(255);
+
+            entity.HasOne(d => d.Curriculum).WithMany(p => p.Courses)
+                .HasForeignKey(d => d.CurriculumId)
+                .HasConstraintName("FK_course_curriculum");
+
+            entity.HasOne(d => d.Semester).WithMany(p => p.Courses)
+                .HasForeignKey(d => d.SemesterId)
+                .HasConstraintName("FK_course_semester");
+
+            entity.HasOne(d => d.Subject).WithMany(p => p.Courses)
+                .HasForeignKey(d => d.SubjectId)
+                .HasConstraintName("FK_course_subject");
+
+            entity.HasOne(d => d.Type).WithMany(p => p.Courses)
+                .HasForeignKey(d => d.TypeId)
+                .HasConstraintName("FK_course_course_type");
+        });
+
+        modelBuilder.Entity<CourseClass>(entity =>
+        {
+            entity.ToTable("CourseClass");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.MaxQuantity).HasDefaultValue(10);
+            entity.Property(e => e.Name).HasMaxLength(255);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Course).WithMany(p => p.CourseClasses)
+                .HasForeignKey(d => d.CourseId)
+                .HasConstraintName("FK_course_class_course");
+
+            entity.HasOne(d => d.DefaultRoom).WithMany(p => p.CourseClasses)
+                .HasForeignKey(d => d.DefaultRoomId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_course_class_room");
+
+            entity.HasOne(d => d.Lecturer).WithMany(p => p.CourseClasses)
+                .HasForeignKey(d => d.LecturerId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_course_class_lecturer");
+        });
+
+        modelBuilder.Entity<CourseType>(entity =>
+        {
+            entity.ToTable("CourseType");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Curriculum>(entity =>
+        {
+            entity.ToTable("Curriculum");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(255);
+
+            entity.HasOne(d => d.Major).WithMany(p => p.Curricula)
+                .HasForeignKey(d => d.MajorId)
+                .HasConstraintName("FK_curriculum_major");
+
+            entity.HasOne(d => d.StudyYear).WithMany(p => p.Curricula)
+                .HasForeignKey(d => d.StudyYearId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_curriculum_study_year");
+        });
+
+        modelBuilder.Entity<Department>(entity =>
+        {
+            entity.ToTable("Department");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.DateFound).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<Lecturer>(entity =>
+        {
+            entity.ToTable("Lecturer");
+
+            entity.Property(e => e.DayOfBirth).HasColumnType("datetime");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.FullName).HasMaxLength(255);
+            entity.Property(e => e.HiredDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Dept).WithMany(p => p.Lecturers)
+                .HasForeignKey(d => d.DeptId)
+                .HasConstraintName("FK_lecturer_department");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Lecturers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Lecturer_User");
+        });
+
+        modelBuilder.Entity<LecturerInfo>(entity =>
+        {
+            entity.ToTable("LecturerInfo");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.BirthName).HasMaxLength(255);
+            entity.Property(e => e.BirthPlace).HasMaxLength(255);
+            entity.Property(e => e.NationId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentAddress).HasMaxLength(255);
+            entity.Property(e => e.Sex)
+                .HasMaxLength(10)
+                .HasDefaultValue("Nam");
+            entity.Property(e => e.TempAddress).HasMaxLength(255);
+
+            entity.HasOne(d => d.Lecturer).WithMany(p => p.LecturerInfos)
+                .HasForeignKey(d => d.LecturerId)
+                .HasConstraintName("FK_lecturer_info_lecturer");
+        });
+
+        modelBuilder.Entity<Lesson>(entity =>
+        {
+            entity.ToTable("Lesson");
+
+            entity.Property(e => e.EndTime).HasColumnType("datetime");
+            entity.Property(e => e.StartTime).HasColumnType("datetime");
+
+            entity.HasOne(d => d.CourseClass).WithMany(p => p.Lessons)
+                .HasForeignKey(d => d.CourseClassId)
+                .HasConstraintName("FK_lesson_course_class");
+
+            entity.HasOne(d => d.Room).WithMany(p => p.Lessons)
+                .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_lesson_room");
+        });
+
+        modelBuilder.Entity<Major>(entity =>
+        {
+            entity.ToTable("Major");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(255);
+
+            entity.HasOne(d => d.Dept).WithMany(p => p.Majors)
+                .HasForeignKey(d => d.DeptId)
+                .HasConstraintName("FK_major_department");
+        });
+
+        modelBuilder.Entity<Room>(entity =>
+        {
+            entity.ToTable("Room");
+
+            entity.Property(e => e.Address).HasMaxLength(255);
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Settlement).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Semester>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_semester");
+
+            entity.ToTable("Semester");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.SchoolYearDetail).WithMany(p => p.Semesters)
+                .HasForeignKey(d => d.SchoolYearDetailId)
+                .HasConstraintName("FK_semester_study_year_detail");
+        });
+
+        modelBuilder.Entity<Student>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_student");
+
+            entity.ToTable("Student");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.DayOfBirth).HasColumnType("datetime");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.FullName).HasMaxLength(255);
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("Còn học");
+
+            entity.HasOne(d => d.Curriculum).WithMany(p => p.Students)
+                .HasForeignKey(d => d.CurriculumId)
+                .HasConstraintName("FK_student_curriculum");
+
+            entity.HasOne(d => d.Dept).WithMany(p => p.Students)
+                .HasForeignKey(d => d.DeptId)
+                .HasConstraintName("FK_student_department");
+
+            entity.HasOne(d => d.Major).WithMany(p => p.Students)
+                .HasForeignKey(d => d.MajorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_student_major");
+
+            entity.HasOne(d => d.StudentClass).WithMany(p => p.Students)
+                .HasForeignKey(d => d.StudentClassId)
+                .HasConstraintName("FK_Student_StudentClass");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Students)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Student_User");
+        });
+
+        modelBuilder.Entity<StudentClass>(entity =>
+        {
+            entity.ToTable("StudentClass");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(125);
+
+            entity.HasOne(d => d.Lecturer).WithMany(p => p.StudentClasses)
+                .HasForeignKey(d => d.LecturerId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_StudentClass_Lecturer");
+        });
+
+        modelBuilder.Entity<StudentInfo>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_student_info");
+
+            entity.ToTable("StudentInfo");
+
+            entity.Property(e => e.BirthName).HasMaxLength(255);
+            entity.Property(e => e.BirthPlace).HasMaxLength(255);
+            entity.Property(e => e.FaceData).HasMaxLength(255);
+            entity.Property(e => e.NationId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentAddress).HasMaxLength(255);
+            entity.Property(e => e.Sex)
+                .HasMaxLength(10)
+                .HasDefaultValue("Nam");
+            entity.Property(e => e.StudentId)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.TempAddress).HasMaxLength(255);
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentInfos)
+                .HasForeignKey(d => d.StudentId)
+                .HasConstraintName("FK_student_info_student");
+        });
+
+        modelBuilder.Entity<StudentJoinClass>(entity =>
+        {
+            entity.ToTable("StudentJoinClass");
+
+            entity.Property(e => e.DateJoin).HasColumnType("datetime");
+            entity.Property(e => e.StudentId)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.CourseClass).WithMany(p => p.StudentJoinClasses)
+                .HasForeignKey(d => d.CourseClassId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_student_join_class_course_class");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentJoinClasses)
+                .HasForeignKey(d => d.StudentId)
+                .HasConstraintName("FK_student_join_class_student");
+        });
+
+        modelBuilder.Entity<StudentJoinLesson>(entity =>
+        {
+            entity.ToTable("StudentJoinLesson");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.JoinTime).HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.StudentId)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Lesson).WithMany(p => p.StudentJoinLessons)
+                .HasForeignKey(d => d.LessonId)
+                .HasConstraintName("FK_student_join_lesson_lesson");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentJoinLessons)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_student_join_lesson_student");
+        });
+
+        modelBuilder.Entity<StudyYear>(entity =>
+        {
+            entity.ToTable("StudyYear");
+
+            entity.Property(e => e.EndYear).HasColumnType("datetime");
+            entity.Property(e => e.ExpireDate).HasColumnType("datetime");
+            entity.Property(e => e.Number).HasDefaultValue(1);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.StartYear).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<StudyYearDetail>(entity =>
+        {
+            entity.ToTable("StudyYearDetail");
+
+            entity.Property(e => e.EndYear).HasColumnType("datetime");
+            entity.Property(e => e.StartYear).HasColumnType("datetime");
+
+            entity.HasOne(d => d.StudyYear).WithMany(p => p.StudyYearDetails)
+                .HasForeignKey(d => d.StudyYearId)
+                .HasConstraintName("FK_study_year_detail_study_year");
+        });
+
+        modelBuilder.Entity<Subject>(entity =>
+        {
+            entity.ToTable("Subject");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("User");
+
+            entity.Property(e => e.DayOfBirth).HasColumnType("datetime");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FullName).HasMaxLength(100);
+            entity.Property(e => e.Otp)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("OTP");
+            entity.Property(e => e.OtplastestSend)
+                .HasColumnType("datetime")
+                .HasColumnName("OTPLastestSend");
+            entity.Property(e => e.Password)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Username)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Auth).WithMany(p => p.Users)
+                .HasForeignKey(d => d.AuthId)
+                .HasConstraintName("FK_User_Authentication");
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}
