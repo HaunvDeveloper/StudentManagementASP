@@ -107,5 +107,17 @@ namespace StudentManagementASP.Controllers
             return Ok("File uploaded and data saved successfully.");
         }
 
+
+        public IActionResult Info()
+        {
+            return View();
+        }
+
+        public IActionResult EditInfo()
+        {
+            return View();
+        }
+
+
     }
 }

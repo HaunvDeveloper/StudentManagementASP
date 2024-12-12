@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Chỉnh sửa thông tin";
+}
+
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/editInfo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+
+<div class="_container">
+    <div class="header-title"><i class="fa-solid fa-pen"></i> Chỉnh sửa thông tin</div>
+    <div class="scrollable">
+        <div class="section-title">Thông tin cá nhân</div>
+        <div class="form-group">
+            <label for="fullName">Họ và tên</label>
+            <input type="text" id="fullName" value="Nguyễn Văn A">
+        </div>
+        <div class="form-group">
+            <label for="birthDate">Ngày sinh</label>
+            <input type="date" id="birthDate" value="2004-01-01">
+        </div>
+        <div class="form-group">
+            <label for="ethnicity">Dân tộc</label>
+            <input type="text" id="ethnicity" value="Kinh">
+        </div>
+        <div class="form-group">
+            <label for="idCard">CMND/CCCD</label>
+            <input type="text" id="idCard" value="079204011111">
+        </div>
+
+        <div class="section-title">Thông tin liên lạc</div>
+        <div class="form-group">
+            <label for="country">Quốc gia</label>
+            <input type="text" id="country" value="Việt Nam">
+        </div>
+        <div class="form-group">
+            <label for="province">Tỉnh/Thành</label>
+            <input type="text" id="province" value="TP. Hồ Chí Minh">
+        </div>
+        <div class="form-group">
+            <label for="district">Quận/Huyện</label>
+            <input type="text" id="district" value="Quận 8">
+        </div>
+        <div class="form-group">
+            <label for="address">Địa chỉ</label>
+            <input type="text" id="address" value="123 Phạm Thế Hiển">
+        </div>
+        <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="text" id="phone" value="098 7654 321">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" value="nguyenvana@gmail.com">
+        </div>
+
+    <div class="actions">
+        <button class="save-button btn btn-primary">Lưu</button>
+        <button class="cancel-button btn btn-danger">Huỷ</button>
+    </div>
+</div>
+
+@section Scripts{
+
+}
