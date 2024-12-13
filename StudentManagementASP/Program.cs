@@ -1,3 +1,15 @@
+
+
+/*
+ *
+ *
+
+Scaffold-DbContext "Data Source=LAPTOP-ENCKOU6S;Initial Catalog=student_management;Integrated Security=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+
+ * 
+ */
+
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Builder;
@@ -95,13 +107,3 @@ app.MapControllerRoute(
 
 app.Run();
 
-
-
-/*
- *
- *
-
-Scaffold-DbContext "Data Source=LAPTOP-ENCKOU6S;Initial Catalog=student_management;Integrated Security=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
-
- * 
- */

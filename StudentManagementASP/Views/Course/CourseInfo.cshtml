@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Thông tin học phần";
+    string[] dayNames = new string[] { "Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy" };
 }
-
+@model StudentManagementASP.Models.CourseClass
 
 @section Links{
     <link rel="stylesheet" href="~/assets/css/courseInfo.css">
@@ -9,29 +10,27 @@
 }
 
 <div class="info-section">
-    <h5>Thông tin học phần: <span style='font-weight: normal;'>(7/9/2021 - 14/12/2021)</span></h5>
+    <h5>Thông tin học phần: <span style='font-weight: normal;'>(@Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString())</span></h5>
     <table class="info-table">
         <tr>
             <td>Mã HP</td>
-            <td>COMP101001</td>
+            <td>@Model.Course.Subject.Code</td>
             <td>Tên HP</td>
-            <td>Lập trình cơ bản</td>
+            <td>@Model.Name</td>
         </tr>
         <tr>
             <td>Số tiết</td>
-            <td>60</td>
+            <td>@Model.Course.Lesson</td>
             <td>Giảng viên</td>
-            <td>ThS. Trần Hữu Quốc Thư</td>
+            <td>@Model.Lecturer?.FullName</td>
         </tr>
         <tr>
             <td>Thời gian</td>
-            <td>6g30 - 10g00 Thứ 3</td>
+            <td>Tiết @Model.StartLessonNavigation.StartTime.ToString("HH:mm") - @Model.EndLessonNavigation.EndTime.ToString("HH:mm") @(dayNames[(int)Model.StartDate.DayOfWeek])</td>
             <td>Phòng</td>
-            <td>I.102 - Cơ sở 280 An Dương Vương</td>
+            <td>@Model.DefaultRoom?.Name - Cơ sở @Model.DefaultRoom?.Address</td>
         </tr>
         <tr>
-            <td>Lớp</td>
-            <td>48.01.TIN.SPB</td>
             <td>Điểm danh (buổi)</td>
             <td>3/15</td>
         </tr>

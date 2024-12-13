@@ -17,6 +17,8 @@ public partial class Semester
 
     public int SchoolYearDetailId { get; set; }
 
+    public virtual ICollection<CourseClass> CourseClasses { get; set; } = new List<CourseClass>();
+
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual StudyYearDetail SchoolYearDetail { get; set; } = null!;

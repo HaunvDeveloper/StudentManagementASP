@@ -33,7 +33,7 @@
                 }
                 foreach (var hk in item.Semesters)
                 {
-                    var currentCourse = courseClasses?.Where(x => x.Course.SemesterId == hk.Id).ToList();
+                    var currentCourse = courseClasses?.Where(x => x.SemesterId == hk.Id).ToList();
                     if (currentCourse != null && currentCourse.Any())
                     {
                         <tr class="semester-header">
@@ -49,7 +49,7 @@
                                 <td>@course.Course.Lesson</td>
                                 <td>@course.Course.Type.Name</td>
                                 <td>
-                                    <a href="@Url.Action("CourseInfo", "Course", new {id = course.Id})" class="btn btn-primary">
+                                    <a asp-action="CourseInfo" asp-controller="Course" asp-route-id="@course.Id" class="btn btn-primary">
                                         <i class="fa-solid fa-eye"></i> 
                                         Chi tiết
                                     </a>
