@@ -4,122 +4,124 @@
 
 
 @section Links{
-    <link rel="stylesheet" href="~/assets/css/course.css">
+    <link rel="stylesheet" href="~/assets/css/studentCourse.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 }
 
-<div class="container">
-    <div class="table-container m-4">
-        <h4 class="text-center mb-4 mt-2" style="font-size:35px;font-weight:bold;">DANH SÁCH MÔN HỌC</h4>
-        <div class="d-flex justify-content-between mb-3">
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary">Filters</button>
-                <button class="btn btn-outline-secondary">Export</button>
-            </div>
-            <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-add-course">+ Thêm môn học</button>
-        </div>
-
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr class="table-primary">
-                    <th class="text-center text-light">Mã môn học</th>
-                    <th class="text-center text-light">Tên môn học</th>
-                    <th class="text-center text-light">Số tín chỉ</th>
-                    <th class="text-center text-light">Khoa - Bộ môn</th>
-                    <th width="13%"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @for(int i = 0; i <= 10; i++)
-                {
-                    <tr>
-                        <td>COMP18001</td>
-                        <td>Công nghệ phần mềm</td>
-                        <td class="text-center">3</td>
-                        <td>Công nghệ Thông tin</td>
-                        <td class="text-center">
-                            <a href="" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
-                            <a href="" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
-                        </td>
-                    </tr>
-                }
-                
-            </tbody>
-        </table>
-
-
-        <div class="pag-container middle">
-            <div class="pagination">
-                <ul>
-                    <img class="move previous" src="assets/images/circle-chevron-right-solid.svg" alt="">
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li class="active"><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <img class="move next" src="assets/images/circle-chevron-right-solid.svg" alt="">
-
-                </ul>
-            </div>
-        </div>
-
-    </div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã học phần</th>
+                <th>Tên học phần</th>
+                <th>Số Tín chỉ</th>
+                <th>Số Tiết</th>
+                <th>Khoa</th>
+                <th>Điểm danh</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="semester-header">
+                <td colspan="7" style="text-align: left;">Năm học 2021 - 2022 | Học kỳ 1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>COMP1010</td>
+                <td>Lập trình cơ bản</td>
+                <td>3</td>
+                <td>60</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>COMP1800</td>
+                <td>Cơ sở toán</td>
+                <td>4</td>
+                <td>75</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>COMP1801</td>
+                <td>Toán rời rạc</td>
+                <td>2</td>
+                <td>30</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>POLI2001</td>
+                <td>Pháp luật đại cương</td>
+                <td>2</td>
+                <td>30</td>
+                <td>Giáo dục chính trị</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>POLI2001</td>
+                <td>Triết học Mác-Lênin</td>
+                <td>2</td>
+                <td>45</td>
+                <td>Giáo dục chính trị</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr class="semester-header">
+                <td colspan="7" style="text-align: left;">Năm học 2021 - 2022 | Học kỳ 2</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>COMP1011</td>
+                <td>Kiến trúc máy tính</td>
+                <td>3</td>
+                <td>45</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>COMP1013</td>
+                <td>Lập trình nâng cao</td>
+                <td>3</td>
+                <td>60</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>MILI2702</td>
+                <td>Công tác quốc phòng</td>
+                <td>3</td>
+                <td>30</td>
+                <td>Giáo dục quốc phòng</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>POLI2003</td>
+                <td>Kinh tế chính trị</td>
+                <td>2</td>
+                <td>30</td>
+                <td>Giáo dục chính trị</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>PSYC2802</td>
+                <td>Tâm lý học giáo dục</td>
+                <td>4</td>
+                <td>60</td>
+                <td>Tâm lý</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-
-
-
-<div class="modal" id="myModal">
-    <form class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h4 class="modal-title">Thêm Môn Học</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="" class="form-label">Mã Môn Học</label>
-                    <input type="text" class="form-control" name="" id="">
-                </div>
-                <div class="form-group">
-                    <label for="" class="form-label">Tên Môn Học</label>
-                    <input type="text" class="form-control" name="" id="">
-                </div>
-                <div class="form-group">
-                    <label for="" class="form-label">Khoa/ Bộ môn</label>
-                    <select name="" class="form-control" id="">
-                        <option value="1">CNTT</option>
-                        <option value="2">Toan</option>
-                        <option value="3">Ly</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Thêm</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-            </div>
-
-        </div>
-    </form>
-</div>
-
-
-
-
-
 @section Scripts{
     
 }
