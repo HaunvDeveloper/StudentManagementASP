@@ -23,5 +23,7 @@ public partial class StudentInfo
 
     public string? FaceData { get; set; }
 
+    public string? PhoneNo { get; set; }
+
     public virtual Student Student { get; set; } = null!;
 }

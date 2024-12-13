@@ -67,7 +67,8 @@ namespace StudentManagementASP.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Auth.Code)
+                    new Claim(ClaimTypes.Role, user.Auth.Code),
+                    new Claim(ClaimTypes.GivenName, user.FullName ?? "No Name")
                 };
 
                 var identity = new ClaimsIdentity(claims, "Cookies");

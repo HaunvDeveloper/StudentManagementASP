@@ -21,5 +21,7 @@ public partial class LecturerInfo
 
     public string Sex { get; set; } = null!;
 
+    public string? PhoneNo { get; set; }
+
     public virtual Lecturer Lecturer { get; set; } = null!;
 }

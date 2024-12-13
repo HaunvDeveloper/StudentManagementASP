@@ -33,6 +33,8 @@ public partial class StudentManagementContext : DbContext
 
     public virtual DbSet<Lesson> Lessons { get; set; }
 
+    public virtual DbSet<LessonInfo> LessonInfos { get; set; }
+
     public virtual DbSet<Major> Majors { get; set; }
 
     public virtual DbSet<Room> Rooms { get; set; }
@@ -59,6 +61,7 @@ public partial class StudentManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Authentication>(entity =>
@@ -117,10 +120,25 @@ public partial class StudentManagementContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_course_class_room");
 
+            entity.HasOne(d => d.EndLessonNavigation).WithMany(p => p.CourseClassEndLessonNavigations)
+                .HasForeignKey(d => d.EndLesson)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CourseClass_LessonInfo1");
+
             entity.HasOne(d => d.Lecturer).WithMany(p => p.CourseClasses)
                 .HasForeignKey(d => d.LecturerId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_course_class_lecturer");
+
+            entity.HasOne(d => d.Semester).WithMany(p => p.CourseClasses)
+                .HasForeignKey(d => d.SemesterId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CourseClass_Semester");
+
+            entity.HasOne(d => d.StartLessonNavigation).WithMany(p => p.CourseClassStartLessonNavigations)
+                .HasForeignKey(d => d.StartLesson)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CourseClass_LessonInfo");
         });
 
         modelBuilder.Entity<CourseType>(entity =>
@@ -190,13 +208,15 @@ public partial class StudentManagementContext : DbContext
         {
             entity.ToTable("LecturerInfo");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.BirthName).HasMaxLength(255);
             entity.Property(e => e.BirthPlace).HasMaxLength(255);
             entity.Property(e => e.NationId)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.PermanentAddress).HasMaxLength(255);
+            entity.Property(e => e.PhoneNo)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Sex)
                 .HasMaxLength(10)
                 .HasDefaultValue("Nam");
@@ -218,10 +238,27 @@ public partial class StudentManagementContext : DbContext
                 .HasForeignKey(d => d.CourseClassId)
                 .HasConstraintName("FK_lesson_course_class");
 
+            entity.HasOne(d => d.EndLessonNavigation).WithMany(p => p.LessonEndLessonNavigations)
+                .HasForeignKey(d => d.EndLesson)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Lesson_LessonInfo1");
+
             entity.HasOne(d => d.Room).WithMany(p => p.Lessons)
                 .HasForeignKey(d => d.RoomId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_lesson_room");
+
+            entity.HasOne(d => d.StartLessonNavigation).WithMany(p => p.LessonStartLessonNavigations)
+                .HasForeignKey(d => d.StartLesson)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Lesson_LessonInfo");
+        });
+
+        modelBuilder.Entity<LessonInfo>(entity =>
+        {
+            entity.ToTable("LessonInfo");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Major>(entity =>
@@ -337,6 +374,9 @@ public partial class StudentManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.PermanentAddress).HasMaxLength(255);
+            entity.Property(e => e.PhoneNo)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Sex)
                 .HasMaxLength(10)
                 .HasDefaultValue("Nam");
