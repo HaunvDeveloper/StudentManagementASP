@@ -422,9 +422,9 @@ Main Components
 .cd-schedule .event-modal {
     position: fixed;
     z-index: 3;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, 0);
+    top: 50% !important;
+    left: 57% !important;
+    transform: translate(-50%, -50%) !important;
     width: 600px;
     max-height: 400px;
     background: white;

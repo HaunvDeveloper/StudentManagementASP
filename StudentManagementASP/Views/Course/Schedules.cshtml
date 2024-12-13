@@ -316,16 +316,16 @@
 				// });
 
 				this.singleEvents.each(function() {
-    // create the .event-date element for each event
-    var durationLabel = '<span class="event-date">' + $(this).data('start') + ' - ' + $(this).data('end') + '</span>';
-    $(this).children('a').prepend($(durationLabel));
+					// create the .event-date element for each event
+					var durationLabel = '<span class="event-date">' + $(this).data('start') + ' - ' + $(this).data('end') + '</span>';
+					$(this).children('a').prepend($(durationLabel));
 
-    // detect click on the event and open the modal
-    $(this).on('click', 'a', function(event) {
-        event.preventDefault();
-        if (!self.animating) self.openModal($(this)); // Gọi hàm mở modal
-    });
-});
+					// detect click on the event and open the modal
+					$(this).on('click', 'a', function(event) {
+						event.preventDefault();
+						if (!self.animating) self.openModal($(this)); // Gọi hàm mở modal
+					});
+				});
 
 				//close modal window
 				this.modal.on('click', '.close', function(event){
@@ -382,17 +382,11 @@
 				`;
 
 				this.modalBody.find('.event-info').html(eventDetails);
-				this.element.addClass('modal-is-open');
-				setTimeout(function() {
-					event.parent('li').addClass('selected-event');
-				}, 10);
-
+				
 
 				//update event content
-				this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'.html .event-info > *', function(data){
-					//once the event content has been loaded
-					self.element.addClass('content-loaded');
-				});
+				self.element.addClass('content-loaded');
+
 
 				this.element.addClass('modal-is-open');
 
