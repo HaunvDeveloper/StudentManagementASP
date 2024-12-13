@@ -92,7 +92,7 @@ table .dropdown-item.active, .dropdown-item:active{
 }
 
 .pagination {
-    width: 30rem;
+    width: 40rem;
 }
 
 .pag-container:after {
@@ -249,7 +249,6 @@ table .dropdown-item.active, .dropdown-item:active{
 }
 
 .middle li a {
-    display: none;
 }
 
 .middle li:first-child a {
@@ -273,11 +272,6 @@ table .dropdown-item.active, .dropdown-item:active{
 
 .middle li:nth-last-child(2) a {
     display: inline-block;
-}
-
-.middle li:nth-last-child(3):after {
-    padding: 0 1rem;
-    content: "...";
 }
 
 .small li {

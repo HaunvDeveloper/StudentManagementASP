@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentManagementASP.Models;
+using System.Security.Claims;
 
 namespace StudentManagementASP.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "student")]
     public class CourseController : Controller
     {
         private readonly StudentManagementContext _context;
@@ -16,14 +18,31 @@ namespace StudentManagementASP.Controllers
 
         public IActionResult List()
         {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var student = _context.Students.AsNoTracking().FirstOrDefault(x => x.UserId == userId);
+            if(student == null)
+            {
+                return NotFound();
+            }
 
-            return View();
+            var curriculum = _context.Curricula.AsNoTracking()
+                .Where(x => x.Id == student.CurriculumId)
+                .Include(x => x.StudyYear)
+                    .ThenInclude(x => x.StudyYearDetails)
+                        .ThenInclude(x => x.Semesters)
+                .FirstOrDefault();
+
+            // Lấy danh sách Course mà Student tham gia qua bảng StudentJoinClass
+            ViewBag.Course = _context.StudentJoinClasses
+                .Where(sjc => sjc.StudentId == student.Id)
+                .Include(sjc => sjc.CourseClass) // Bao gồm thông tin CourseClass
+                    .ThenInclude(cc => cc.Course) // Bao gồm thông tin Course từ CourseClass
+                .Select(sjc => sjc.CourseClass.Course) // Chỉ lấy thông tin Course
+                .ToList();
+
+            
+            return View(curriculum);
         }
-
-        
-
-
-
 
         public IActionResult CreateSemesterByStudyYear(int syearid)
         {

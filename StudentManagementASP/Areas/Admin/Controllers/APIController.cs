@@ -34,5 +34,7 @@ namespace StudentManagementASP.Areas.Admin.Controllers
             return Ok(specializations);
         }
 
+        
+
     }
 }

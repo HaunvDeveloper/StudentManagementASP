@@ -1,20 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Danh sách học phần";
+    ViewData["Title"] = "Chương trình đào tạo";
     int stt = 1;
-    List<Course> courses = ViewBag.Course as List<Course>;
 }
 @model StudentManagementASP.Models.Curriculum
 
-@section Links{
+@section Links {
     <link rel="stylesheet" href="~/assets/css/course.css">
 }
 
 <div class="container mt-3">
     <div class="table-container">
-        <h4 class="text-danger text-center">DANH SÁCH HỌC PHẦN</h4>
+
         <table class="table table-hover table-bordered">
             <thead class="table-primary">
-                <tr class="text-light">
+                <tr>
                     <th>STT</th>
                     <th>Mã học phần</th>
                     <th>Tên học phần</th>
@@ -25,9 +24,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var item in Model.StudyYear.StudyYearDetails)
+                @foreach (var item in Model.StudyYear.StudyYearDetails)
                 {
-                    if(item.EndYear.Year > Model.StudyYear.EndYear.Year)
+                    if (item.EndYear.Year > Model.StudyYear.EndYear.Year)
                     {
                         break;
                     }
@@ -39,9 +38,7 @@
                         <tr class="table-secondary">
                             <td colspan="7">@hk.Name</td>
                         </tr>
-                        if (courses != null)
-                        {
-                            foreach (var course in courses.Where(x => x.SemesterId == hk.Id).ToList())
+                            foreach (var course in hk.Courses)
                             {
                                 <tr>
                                     <td>@stt</td>
@@ -50,13 +47,10 @@
                                     <td>@course.Credits</td>
                                     <td>@course.Lesson</td>
                                     <td>@course.Type.Name</td>
-                                    <td>
-                                        <a asp-route-id="@course.Id" asp-action="Detail" asp-controller="Course">Xem Chi tiết</a>
-                                    </td>
+                                    <td></td>
                                 </tr>
                                 stt++;
                             }
-                        }
                     }
                 }
             </tbody>
@@ -68,6 +62,6 @@
 
 
 
-@section Scripts{
-    
+@section Scripts {
+
 }

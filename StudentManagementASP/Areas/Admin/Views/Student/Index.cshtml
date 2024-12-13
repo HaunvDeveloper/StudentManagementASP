@@ -26,7 +26,7 @@
                 <div class="d-flex gap-2 mt-4 align-items-center">
                     <span style="text-wrap: nowrap;">Tìm kiếm:</span>
                     <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Nhập nội dung tìm kiếm.... "/>
-                    <button id="btn-search" class="btn btn-primary">LỌC</button>
+                    <button id="btn-search" onclick="search(1)" class="btn btn-primary">LỌC</button>
                 </div>
             </div>
             
@@ -43,18 +43,8 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            
 
-            $('#btn-search').on('click', function () {
-                let data = {
-                    StudyYearId: $('#StudyYearId').val(),
-                    DeptId: $('#DeptId').val(),
-                    SpecializationId: $('#SpecializationId').val(),
-                    keyword: $('#keyword').val()
-                }
-                $.ajax({
-
-                });
-            });
 
             $('#DeptId').on('change', function() {
                 var deptId = $(this).val();
@@ -87,5 +77,32 @@
                 }
             });
         });
+        function search(p) {
+            let data = {
+                StudyYearId: $('#StudyYearId').val(),
+                DeptId: $('#DeptId').val(),
+                SpecializationId: $('#SpecializationId').val(),
+                keyword: $('#keyword').val(),
+                p: p
+            }
+            $.ajax({
+                url: '@Url.Action("_GetList", "Student", new { area = "Admin" })',
+                method: 'POST',
+                data: data,
+                success: function (response) {
+                    $('.table-data').html(response);
+                    attachPaginationEvents();
+                }
+            });
+        }
+
+
+        function attachPaginationEvents() {
+            $('.pagination a').off('click').on('click', function (e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                search(page);
+            });
+        }
     </script>
 }

@@ -7,7 +7,7 @@ using StudentManagementASP.ViewModels;
 namespace StudentManagementASP.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "admin,manager")]
     public class LecturerController : Controller
     {
 
