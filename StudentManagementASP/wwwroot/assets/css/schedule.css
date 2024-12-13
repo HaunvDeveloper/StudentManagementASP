@@ -422,10 +422,16 @@ Main Components
 .cd-schedule .event-modal {
     position: fixed;
     z-index: 3;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
+    top: 50% !important;
+    left: 57% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 600px;
+    max-height: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: all 0.3s ease;
     visibility: hidden;
     /* Force Hardware acceleration */
     -webkit-transform: translateZ(0);
@@ -467,10 +473,14 @@ Main Components
 
     .cd-schedule .event-modal .event-info {
         position: relative;
+        padding: 20px; /* Tăng khoảng cách bên trong */
+        font-size: 1.6rem; /* Kích thước chữ lớn hơn */
         z-index: 2;
-        line-height: 1.4;
+        line-height: 1.8;
+        color: #333; /* Màu chữ tối cho dễ đọc */
         height: 100%;
         overflow: hidden;
+        max-height: calc(100% - 100px); /* Đảm bảo không vượt quá chiều cao modal */
     }
 
         .cd-schedule .event-modal .event-info > div {
@@ -506,10 +516,19 @@ Main Components
     .cd-schedule .event-modal .close {
         /* this is the 'X' icon */
         position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 3;
-        background: rgba(0, 0, 0, 0.1);
+        top: 10px;
+        right: 10px;
+        z-index: 4;
+        background: #f44336;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
         /* replace text with icon */
         color: transparent;
         white-space: nowrap;
