@@ -21,7 +21,10 @@ namespace StudentManagementASP.Controllers
         }
 
         
-
+        public IActionResult CourseInfo()
+        {
+            return View();
+        }
 
 
 

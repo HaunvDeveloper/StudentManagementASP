@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Thông tin học phần";
+}
+
+
+@section Links{
+    <link rel="stylesheet" href="~/assets/css/courseInfo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+
+<div class="info-section">
+    <h5>Thông tin học phần: <span style='font-weight: normal;'>(7/9/2021 - 14/12/2021)</span></h5>
+    <table class="info-table">
+        <tr>
+            <td>Mã HP</td>
+            <td>COMP101001</td>
+            <td>Tên HP</td>
+            <td>Lập trình cơ bản</td>
+        </tr>
+        <tr>
+            <td>Số tiết</td>
+            <td>60</td>
+            <td>Giảng viên</td>
+            <td>ThS. Trần Hữu Quốc Thư</td>
+        </tr>
+        <tr>
+            <td>Thời gian</td>
+            <td>6g30 - 10g00 Thứ 3</td>
+            <td>Phòng</td>
+            <td>I.102 - Cơ sở 280 An Dương Vương</td>
+        </tr>
+        <tr>
+            <td>Lớp</td>
+            <td>48.01.TIN.SPB</td>
+            <td>Điểm danh (buổi)</td>
+            <td>3/15</td>
+        </tr>
+    </table>
+</div>
+
+<div class="attendance-section">
+    <table class="attendance-table">
+        <thead>
+            <tr>
+                <th>Số buổi</th>
+                <th>Thời gian</th>
+                <th>Ngày học</th>
+                <th>Trạng thái điểm danh</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="status-present">
+                <td>1</td>
+                <td>6:20:35</td>
+                <td>7/11/2021</td>
+                <td>Có mặt</td>
+            </tr>
+            <tr class="status-present">
+                <td>2</td>
+                <td>6:25:12</td>
+                <td>14/11/2021</td>
+                <td>Có mặt</td>
+            </tr>
+            <tr class="status-late">
+                <td>3</td>
+                <td>7:00:03</td>
+                <td>21/11/2021</td>
+                <td>Trễ</td>
+            </tr>
+            <tr class="status-absent">
+                <td>4</td>
+                <td>-</td>
+                <td>28/11/2021</td>
+                <td>Vắng</td>
+            </tr>
+            <tr class="default-status">
+                <td>5</td>
+                <td>-</td>
+                <td>5/12/2021</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+
+@section Scripts
+{
+
+}
