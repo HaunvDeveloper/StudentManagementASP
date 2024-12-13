@@ -51,6 +51,11 @@ namespace StudentManagementASP.Controllers
             return View(courseClass);
         }
 
+        public IActionResult Schedules()
+        {
+            return View();
+        }
+
 
 
         public IActionResult CreateSemesterByStudyYear(int syearid)
