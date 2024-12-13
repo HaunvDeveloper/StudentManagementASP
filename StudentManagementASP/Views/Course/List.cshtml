@@ -1,73 +1,127 @@
 ﻿@{
     ViewData["Title"] = "Danh sách học phần";
-    int stt = 1;
-    List<Course> courses = ViewBag.Course as List<Course>;
 }
-@model StudentManagementASP.Models.Curriculum
+
 
 @section Links{
-    <link rel="stylesheet" href="~/assets/css/course.css">
+    <link rel="stylesheet" href="~/assets/css/studentCourse.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 }
 
-<div class="container mt-3">
-    <div class="table-container">
-        <h4 class="text-danger text-center">DANH SÁCH HỌC PHẦN</h4>
-        <table class="table table-hover table-bordered">
-            <thead class="table-primary">
-                <tr class="text-light">
-                    <th>STT</th>
-                    <th>Mã học phần</th>
-                    <th>Tên học phần</th>
-                    <th>STC</th>
-                    <th>Số Tiết</th>
-                    <th>Loại HP</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var item in Model.StudyYear.StudyYearDetails)
-                {
-                    if(item.EndYear.Year > Model.StudyYear.EndYear.Year)
-                    {
-                        break;
-                    }
-                    <tr class="table-success">
-                        <td colspan="7">Năm học @item.StartYear.Year - @item.EndYear.Year</td>
-                    </tr>
-                    foreach (var hk in item.Semesters)
-                    {
-                        <tr class="table-secondary">
-                            <td colspan="7">@hk.Name</td>
-                        </tr>
-                        if (courses != null)
-                        {
-                            foreach (var course in courses.Where(x => x.SemesterId == hk.Id).ToList())
-                            {
-                                <tr>
-                                    <td>@stt</td>
-                                    <td>@course.Subject.Code</td>
-                                    <td>@course.Subject.Name</td>
-                                    <td>@course.Credits</td>
-                                    <td>@course.Lesson</td>
-                                    <td>@course.Type.Name</td>
-                                    <td>
-                                        <a asp-route-id="@course.Id" asp-action="Detail" asp-controller="Course">Xem Chi tiết</a>
-                                    </td>
-                                </tr>
-                                stt++;
-                            }
-                        }
-                    }
-                }
-            </tbody>
-        </table>
-
-    </div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã học phần</th>
+                <th>Tên học phần</th>
+                <th>Số Tín chỉ</th>
+                <th>Số Tiết</th>
+                <th>Khoa</th>
+                <th>Điểm danh</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="semester-header">
+                <td colspan="7" style="text-align: left;">Năm học 2021 - 2022 | Học kỳ 1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>COMP1010</td>
+                <td>Lập trình cơ bản</td>
+                <td>3</td>
+                <td>60</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>COMP1800</td>
+                <td>Cơ sở toán</td>
+                <td>4</td>
+                <td>75</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>COMP1801</td>
+                <td>Toán rời rạc</td>
+                <td>2</td>
+                <td>30</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>POLI2001</td>
+                <td>Pháp luật đại cương</td>
+                <td>2</td>
+                <td>30</td>
+                <td>Giáo dục chính trị</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>POLI2001</td>
+                <td>Triết học Mác-Lênin</td>
+                <td>2</td>
+                <td>45</td>
+                <td>Giáo dục chính trị</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr class="semester-header">
+                <td colspan="7" style="text-align: left;">Năm học 2021 - 2022 | Học kỳ 2</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>COMP1011</td>
+                <td>Kiến trúc máy tính</td>
+                <td>3</td>
+                <td>45</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>COMP1013</td>
+                <td>Lập trình nâng cao</td>
+                <td>3</td>
+                <td>60</td>
+                <td>Công nghệ Thông tin</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>MILI2702</td>
+                <td>Công tác quốc phòng</td>
+                <td>3</td>
+                <td>30</td>
+                <td>Giáo dục quốc phòng</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>POLI2003</td>
+                <td>Kinh tế chính trị</td>
+                <td>2</td>
+                <td>30</td>
+                <td>Giáo dục chính trị</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>PSYC2802</td>
+                <td>Tâm lý học giáo dục</td>
+                <td>4</td>
+                <td>60</td>
+                <td>Tâm lý</td>
+                <td><a href="#" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Chi tiết</a></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-
-
-
-
 @section Scripts{
     
 }
