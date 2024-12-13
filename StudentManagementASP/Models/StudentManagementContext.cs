@@ -61,7 +61,6 @@ public partial class StudentManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     { }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Authentication>(entity =>
@@ -210,17 +209,21 @@ public partial class StudentManagementContext : DbContext
 
             entity.Property(e => e.BirthName).HasMaxLength(255);
             entity.Property(e => e.BirthPlace).HasMaxLength(255);
+            entity.Property(e => e.DistrictAddress).HasMaxLength(100);
+            entity.Property(e => e.Nation).HasMaxLength(100);
             entity.Property(e => e.NationId)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.PermanentAddress).HasMaxLength(255);
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.ProvinceAddress).HasMaxLength(100);
+            entity.Property(e => e.Religion).HasMaxLength(100);
             entity.Property(e => e.Sex)
                 .HasMaxLength(10)
                 .HasDefaultValue("Nam");
-            entity.Property(e => e.TempAddress).HasMaxLength(255);
+            entity.Property(e => e.StreetAddress).HasMaxLength(255);
+            entity.Property(e => e.WardAddress).HasMaxLength(100);
 
             entity.HasOne(d => d.Lecturer).WithMany(p => p.LecturerInfos)
                 .HasForeignKey(d => d.LecturerId)
@@ -369,21 +372,25 @@ public partial class StudentManagementContext : DbContext
 
             entity.Property(e => e.BirthName).HasMaxLength(255);
             entity.Property(e => e.BirthPlace).HasMaxLength(255);
+            entity.Property(e => e.DistrictAddress).HasMaxLength(100);
             entity.Property(e => e.FaceData).HasMaxLength(255);
+            entity.Property(e => e.Nation).HasMaxLength(100);
             entity.Property(e => e.NationId)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.PermanentAddress).HasMaxLength(255);
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.ProvinceAddress).HasMaxLength(100);
+            entity.Property(e => e.Religion).HasMaxLength(100);
             entity.Property(e => e.Sex)
                 .HasMaxLength(10)
                 .HasDefaultValue("Nam");
+            entity.Property(e => e.StreetAddress).HasMaxLength(255);
             entity.Property(e => e.StudentId)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.TempAddress).HasMaxLength(255);
+            entity.Property(e => e.WardAddress).HasMaxLength(100);
 
             entity.HasOne(d => d.Student).WithMany(p => p.StudentInfos)
                 .HasForeignKey(d => d.StudentId)

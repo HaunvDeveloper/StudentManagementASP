@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Thông tin cá nhân";
 }
-
+@model StudentManagementASP.Models.Student
 
 @section Links {
     <link rel="stylesheet" href="~/assets/css/infoStudent.css">
@@ -27,27 +27,27 @@
             <table>
                 <tr>
                     <th>Họ và tên</th>
-                    <td>Nguyễn Văn A</td>
+                    <td>@Model.FullName</td>
                     <th>Mã số sinh viên</th>
-                    <td>48.01.103.000</td>
+                    <td>@Model.Id</td>
                 </tr>
                 <tr>
                     <th>Ngày sinh</th>
-                    <td>01/01/2004</td>
+                    <td>@Model.DayOfBirth.ToShortDateString()</td>
                     <th>Nơi sinh</th>
-                    <td>TP. Hồ Chí Minh</td>
+                    <td>@Model.StudentInfos.FirstOrDefault()?.BirthPlace</td>
                 </tr>
                 <tr>
-                    <th>Dân tộc</th>
-                    <td>Kinh</td>
-                    <th>Tôn giáo</th>
-                    <td>Không</td>
+                    <th>Giới tính</th>
+                    <td>@Model.StudentInfos.FirstOrDefault()?.Sex</td>
+                    <th>CMND/CCCD</th>
+                    <td>@Model.StudentInfos.FirstOrDefault()?.NationId</td>
                 </tr>
-                <tr>
+                @* <tr>
                     <th>CMND/CCCD</th>
                     <td>079204011111</td>
                     <td colspan="2"></td>
-                </tr>
+                </tr> *@
             </table>
         </div>
 

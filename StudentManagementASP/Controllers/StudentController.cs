@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using StudentManagementASP.Models;
+using System.Security.Claims;
 
 namespace StudentManagementASP.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "student")]
     public class StudentController : Controller
     {
         private readonly StudentManagementContext _context;
@@ -110,7 +111,13 @@ namespace StudentManagementASP.Controllers
 
         public IActionResult Info()
         {
-            return View();
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var student = _context.Students.AsNoTracking().FirstOrDefault(x => x.UserId == userId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return View(student);
         }
 
         public IActionResult EditInfo()
