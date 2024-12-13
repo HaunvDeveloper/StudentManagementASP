@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Danh sách học phần";
-    List<Course> courses = ViewBag.Course as List<Course>;
+    List<CourseClass> courseClasses = ViewBag.CourseClass as List<CourseClass>;
     int stt = 1;
 }
 @model StudentManagementASP.Models.Curriculum
@@ -33,7 +33,7 @@
                 }
                 foreach (var hk in item.Semesters)
                 {
-                    var currentCourse = courses?.Where(x => x.SemesterId == hk.Id).ToList();
+                    var currentCourse = courseClasses?.Where(x => x.Course.SemesterId == hk.Id).ToList();
                     if (currentCourse != null && currentCourse.Any())
                     {
                         <tr class="semester-header">
@@ -43,13 +43,13 @@
                         {
                             <tr>
                                 <td>@stt</td>
-                                <td>@course.Subject.Code</td>
-                                <td>@course.Subject.Name</td>
-                                <td>@course.Credits</td>
-                                <td>@course.Lesson</td>
-                                <td>@course.Type.Name</td>
+                                <td>@course.Course.Subject.Code</td>
+                                <td>@course.Course.Subject.Name</td>
+                                <td>@course.Course.Credits</td>
+                                <td>@course.Course.Lesson</td>
+                                <td>@course.Course.Type.Name</td>
                                 <td>
-                                    <a href="#" class="btn btn-primary">
+                                    <a href="@Url.Action("CourseInfo", "Course", new {id = course.Id})" class="btn btn-primary">
                                         <i class="fa-solid fa-eye"></i> 
                                         Chi tiết
                                     </a>

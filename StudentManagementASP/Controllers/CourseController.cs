@@ -31,11 +31,11 @@ namespace StudentManagementASP.Controllers
                         .ThenInclude(x => x.Semesters)
                 .FirstOrDefault();
 
-            ViewBag.Course = _context.StudentJoinClasses
+            ViewBag.CourseClass = _context.StudentJoinClasses
                 .Where(sjc => sjc.StudentId == student.Id)
                 .Include(sjc => sjc.CourseClass) // Bao gồm thông tin CourseClass
                     .ThenInclude(cc => cc.Course) // Bao gồm thông tin Course từ CourseClass
-                .Select(sjc => sjc.CourseClass.Course) // Chỉ lấy thông tin Course
+                .Select(sjc => sjc.CourseClass) // Chỉ lấy thông tin Course
                 .ToList();
 
 
@@ -43,9 +43,12 @@ namespace StudentManagementASP.Controllers
         }
 
         
-        public IActionResult CourseInfo()
+        public IActionResult CourseInfo(int id)
         {
-            return View();
+            var courseClass = _context.CourseClasses.AsNoTracking().SingleOrDefault(x => x.Id == id);
+            if (courseClass == null) { return NotFound(); }
+
+            return View(courseClass);
         }
 
 
