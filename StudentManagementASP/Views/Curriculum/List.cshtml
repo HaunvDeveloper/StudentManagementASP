@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Chương trình đào tạo";
+    int stt = 1;
+}
+@model StudentManagementASP.Models.Curriculum
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+<div class="container mt-3">
+    <div class="table-container">
+
+        <table class="table table-hover table-bordered">
+            <thead class="table-primary">
+                <tr>
+                    <th>STT</th>
+                    <th>Mã học phần</th>
+                    <th>Tên học phần</th>
+                    <th>STC</th>
+                    <th>Số Tiết</th>
+                    <th>Loại HP</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.StudyYear.StudyYearDetails)
+                {
+                    if (item.EndYear.Year > Model.StudyYear.EndYear.Year)
+                    {
+                        break;
+                    }
+                    <tr class="table-success">
+                        <td colspan="7">Năm học @item.StartYear.Year - @item.EndYear.Year</td>
+                    </tr>
+                    foreach (var hk in item.Semesters)
+                    {
+                        <tr class="table-secondary">
+                            <td colspan="7">@hk.Name</td>
+                        </tr>
+                            foreach (var course in hk.Courses)
+                            {
+                                <tr>
+                                    <td>@stt</td>
+                                    <td>@course.Subject.Code</td>
+                                    <td>@course.Subject.Name</td>
+                                    <td>@course.Credits</td>
+                                    <td>@course.Lesson</td>
+                                    <td>@course.Type.Name</td>
+                                    <td></td>
+                                </tr>
+                                stt++;
+                            }
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+
+}

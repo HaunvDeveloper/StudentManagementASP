@@ -1,0 +1,55 @@
+﻿@model IEnumerable<StudentManagementASP.Models.CourseClass>
+
+@{
+    ViewData["Title"] = "Danh sách lớp học phần";
+    int stt = 1;
+}
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2" style="font-size:35px;font-weight:bold;">DANH SÁCH LỚP HỌC PHẦN</h4>
+        <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary">Filters</button>
+                <button class="btn btn-outline-secondary">Export</button>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th class="text-center text-light">STT</th>
+                    <th class="text-center text-light">Mã lớp học phần</th>
+                    <th class="text-center text-light">Tên lớp học phần</th>
+                    <th class="text-center text-light">STC</th>
+                    <th class="text-center text-light">Sỉ số</th>
+                    <th class="text-center text-light">Phòng</th>
+                    <th width="13%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@stt</td>
+                        <td>@item.Code</td>
+                        <td>@item.Name</td>
+                        <td>@item.Course.Credits</td>
+                        <td>@item.StudentJoinClasses.Count</td>
+                        <td>@item.DefaultRoom?.Name</td>
+                        <td class="text-center">
+                            <a href="" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
+                            <a href="" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
+                        </td>
+                    </tr>
+                    stt++;
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

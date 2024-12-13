@@ -43,13 +43,17 @@
                         <div class="input-group">
                             <input asp-for="Username" placeholder="Tên đăng nhập" type="text" required/>
                         </div>
+                        @Html.ValidationMessageFor(x => x.Username, "", new { @class = "text-danger" })
                         <div class="input-group">
                             <input type="password" asp-for="Password" placeholder="Mật khẩu" required>
                             <i class="fa-solid fa-eye" id="show-password"></i>
                         </div>
+                        @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+
                         <div class="forgot-password">
                             <a asp-action="ForgetPassword" asp-controller="User">Quên mật khẩu?</a>
                         </div>
+                        <span style="color:red;margin-bottom:10px;">@ViewBag.Alert</span>
                         <button type="submit" class="login-btn">Đăng nhập</button>
                     </form>
                 </div>
@@ -67,7 +71,7 @@
     <script>
 
         const showPassword = document.querySelector("#show-password");
-        const passwordField = document.querySelector("#password");
+        const passwordField = document.querySelector("#Password");
         
         showPassword.addEventListener("click", function () {
             if (this.classList.contains("fa-eye")) {

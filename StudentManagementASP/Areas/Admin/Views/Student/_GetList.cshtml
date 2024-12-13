@@ -1,32 +1,37 @@
-﻿@model StudentManagementASP.ViewModels.StudentListViewModel
+﻿@model IEnumerable<StudentManagementASP.Models.Student>
 
-<table class="table table-bordered table-hover">
+@{
+    int CurrentPage = (int)ViewBag.CurrentPage;
+    int TotalPages = (int)ViewBag.TotalPages;
+}
+
+<table id="table-student" class="table table-bordered table-hover">
     <thead>
         <tr class="table-primary">
-            <th class="text-center text-light">Mã giảng viên</th>
+            <th class="text-center text-light">Mã số sinh viên</th>
             <th class="text-center text-light">Họ và tên</th>
             <th class="text-center text-light">Email</th>
             <th class="text-center text-light">Ngày sinh</th>
-            <th class="text-center text-light">Giới tính</th>
+            <th class="text-center text-light">Ngành</th>
             <th class="text-center text-light">Khoa</th>
             <th width="13%"></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Students)
+        @foreach (var item in Model)
         {
-            @* <tr>
+            <tr>
                 <td>@item.Id</td>
                 <td>@item.FullName</td>
                 <td>@item.Email</td>
                 <td>@item.DayOfBirth.ToString("dd/MM/yyyy")</td>
-                <td>@item.LecturerInfos.First().Sex</td>
+                <td>@item.Curriculum.Name</td>
                 <td>@item.Dept.Name</td>
                 <td class="text-center">
                     <a href="" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
                     <a href="" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
                 </td>
-            </tr> *@
+            </tr>
         }
     </tbody>
 </table>
@@ -36,10 +41,10 @@
 <div class="pag-container middle">
     <div class="pagination">
         <ul>
-            @if (Model.CurrentPage > 1)
+            @if (CurrentPage > 1)
             {
-                <a href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })" class="move previous">
-                    <img width="35" height="35" src="~/assets/images/circle-chevron-left-solid.svg" alt="">
+                <a href="#" data-page="@(CurrentPage-1)" class="move previous">
+                    <img width="35" height="35" src="~/assets/images/circle-chevron-right-solid.svg" alt="">
                 </a>
             }
             else
@@ -49,16 +54,16 @@
                 </a>
             }
 
-            @for (var i = 1; i <= Model.TotalPages; i++)
+            @for (var i = 1; i <= TotalPages; i++)
             {
-                <li class="@((i == Model.CurrentPage) ? "active" : "")">
-                    <a href="@Url.Action("Index", new { page = i })">@i</a>
+                <li class="@((i == CurrentPage) ? "active" : "")">
+                    <a href="#" data-page="@i">@i</a>
                 </li>
             }
 
-            @if (Model.CurrentPage < Model.TotalPages)
+            @if (CurrentPage < TotalPages)
             {
-                <a href="@Url.Action("Index", new { page = Model.CurrentPage + 1 })" class="move next">
+                <a href="#" data-page="@(CurrentPage + 1)" class="move next">
                     <img src="~/assets/images/circle-chevron-right-solid.svg" alt="">
                 </a>
             }

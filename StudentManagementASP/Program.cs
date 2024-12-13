@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Database server connection
 builder.Services.AddDbContext<StudentManagementContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("student_management")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("student_management")).UseLazyLoadingProxies());
 
 builder.Services.AddSingleton<EmailSendService>();
 
