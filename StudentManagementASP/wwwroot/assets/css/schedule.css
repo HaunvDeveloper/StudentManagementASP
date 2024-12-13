@@ -7,19 +7,24 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-.cd-schedule html, .cd-schedule body, .cd-schedule div, .cd-schedule span, .cd-schedule applet, .cd-schedule object, .cd-schedule iframe,
-.cd-schedule h1, .cd-schedule h2, .cd-schedule h3, .cd-schedule h4, .cd-schedule h5, .cd-schedule h6, .cd-schedule p, .cd-schedule blockquote, .cd-schedule pre,
-.cd-schedule a, .cd-schedule abbr, .cd-schedule acronym, .cd-schedule address, .cd-schedule big, .cd-schedule cite, .cd-schedule code,
-.cd-schedule del, .cd-schedule dfn, .cd-schedule em, .cd-schedule img, .cd-schedule ins, .cd-schedule kbd, .cd-schedule q, .cd-schedule s, .cd-schedule samp,
-.cd-schedule small, .cd-schedule strike, .cd-schedule strong, .cd-schedule sub, .cd-schedule sup, .cd-schedule tt, .cd-schedule var,
-.cd-schedule b, .cd-schedule u, .cd-schedule i, .cd-schedule center,
+
+.cd-schedule html, .cd-schedule body, .cd-schedule div, .cd-schedule span,
+.cd-schedule applet, .cd-schedule object, .cd-schedule iframe,
+.cd-schedule h1, .cd-schedule h2, .cd-schedule h3, .cd-schedule h4, .cd-schedule h5, .cd-schedule h6,
+.cd-schedule p, .cd-schedule blockquote, .cd-schedule pre,
+.cd-schedule a, .cd-schedule abbr, .cd-schedule acronym, .cd-schedule address, .cd-schedule big,
+.cd-schedule cite, .cd-schedule code, .cd-schedule del, .cd-schedule dfn, .cd-schedule em,
+.cd-schedule img, .cd-schedule ins, .cd-schedule kbd, .cd-schedule q, .cd-schedule s, .cd-schedule samp,
+.cd-schedule small, .cd-schedule strike, .cd-schedule strong, .cd-schedule sub, .cd-schedule sup,
+.cd-schedule tt, .cd-schedule var, .cd-schedule b, .cd-schedule u, .cd-schedule i, .cd-schedule center,
 .cd-schedule dl, .cd-schedule dt, .cd-schedule dd, .cd-schedule ol, .cd-schedule ul, .cd-schedule li,
 .cd-schedule fieldset, .cd-schedule form, .cd-schedule label, .cd-schedule legend,
-.cd-schedule table, .cd-schedule caption, .cd-schedule tbody, .cd-schedule tfoot, .cd-schedule thead, .cd-schedule tr, .cd-schedule th, .cd-schedule td,
-.cd-schedule article, .cd-schedule aside, .cd-schedule canvas, .cd-schedule details, .cd-schedule embed,
-.cd-schedule figure, .cd-schedule figcaption, .cd-schedule footer, .cd-schedule header, .cd-schedule hgroup,
-.cd-schedule menu, .cd-schedule nav, .cd-schedule output, .cd-schedule ruby, .cd-schedule section, .cd-schedule summary,
-.cd-schedule time, .cd-schedule mark, .cd-schedule audio, .cd-schedule video {
+.cd-schedule table, .cd-schedule caption, .cd-schedule tbody, .cd-schedule tfoot, .cd-schedule thead,
+.cd-schedule tr, .cd-schedule th, .cd-schedule td, .cd-schedule article, .cd-schedule aside, .cd-schedule canvas,
+.cd-schedule details, .cd-schedule embed, .cd-schedule figure, .cd-schedule figcaption,
+.cd-schedule footer, .cd-schedule header, .cd-schedule hgroup, .cd-schedule menu, .cd-schedule nav,
+.cd-schedule output, .cd-schedule ruby, .cd-schedule section, .cd-schedule summary, .cd-schedule time,
+.cd-schedule mark, .cd-schedule audio, .cd-schedule video {
     margin: 0;
     padding: 0;
     border: 0;
@@ -28,9 +33,9 @@
     vertical-align: baseline;
 }
 
-/* HTML5 display-role reset for older browsers */
-.cd-schedule article, .cd-schedule aside, .cd-schedule details, .cd-schedule figcaption, .cd-schedule figure,
-.cd-schedule footer, .cd-schedule header, .cd-schedule hgroup, .cd-schedule menu, .cd-schedule nav, .cd-schedule section, .cd-schedule main {
+.cd-schedule article, .cd-schedule aside, .cd-schedule details, .cd-schedule figcaption,
+.cd-schedule figure, .cd-schedule footer, .cd-schedule header, .cd-schedule hgroup,
+.cd-schedule menu, .cd-schedule nav, .cd-schedule section, .cd-schedule main {
     display: block;
 }
 
@@ -46,18 +51,17 @@
     quotes: none;
 }
 
-    .cd-schedule blockquote:before, .cd-schedule blockquote:after,
-    .cd-schedule q:before, .cd-schedule q:after {
-        content: '';
-        content: none;
-    }
+.cd-schedule blockquote:before, .cd-schedule blockquote:after,
+.cd-schedule q:before, .cd-schedule q:after {
+    content: '';
+    content: none;
+}
 
 .cd-schedule table {
     border-collapse: collapse;
     border-spacing: 0;
 }
 
-/* Primary styles chỉ áp dụng trong cd-schedule */
 .cd-schedule *, .cd-schedule *::after, .cd-schedule *::before {
     box-sizing: border-box;
 }
@@ -86,14 +90,18 @@ Main Components
 .cd-schedule {
     position: relative;
     margin: 2em 0;
+    overflow: hidden;
 }
 
+.timeline::before {
+    content: none;
+}
 
-    .cd-schedule::before {
-        /* never visible - this is used in js to check the current MQ */
-        content: 'mobile';
-        display: none;
-    }
+.cd-schedule::before {
+    /* never visible - this is used in js to check the current MQ */
+    content: 'mobile';
+    display: none;
+}
 
 @media only screen and (min-width: 800px) {
     .cd-schedule {
@@ -113,9 +121,6 @@ Main Components
         }
 }
 
-.timeline::before{
-    content: none;
-}
 .cd-schedule .timeline {
     display: none;
 }
@@ -158,7 +163,7 @@ Main Components
 
 @media only screen and (min-width: 1000px) {
     .cd-schedule .timeline li::after {
-        width: calc(100% - 60px);
+        width: calc(100% - 82px);
         left: 60px;
     }
 
@@ -285,10 +290,10 @@ Main Components
             }
 
         .cd-schedule .events .events-group > ul {
-            height: 950px;
+            height: 1450px;
             /* reset style */
             display: block;
-            overflow: hidden;
+            overflow: visible;
             padding: 0;
         }
 
@@ -357,12 +362,12 @@ Main Components
 }
 
 .cd-schedule .event-name {
-    font-size: 22px;
+    font-size: 13px;
 }
 
 @media only screen and (min-width: 800px) {
     .cd-schedule .event-name {
-        font-size: 17px;
+        font-size: 13px;
     }
 }
 
@@ -466,7 +471,7 @@ Main Components
     }
 
         .cd-schedule .event-modal .event-info > div {
-            overflow: hidden;
+            overflow: auto;
             height: 100%;
             padding: 1.4em 5%;
         }
