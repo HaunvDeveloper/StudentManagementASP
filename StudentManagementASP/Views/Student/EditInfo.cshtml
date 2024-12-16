@@ -24,8 +24,17 @@
             <input name="DayOfBirth" type="date" id="birthDate" value="@Model.DayOfBirth.ToString("yyyy-MM-dd")">
         </div>
         <div class="form-group">
+            <label for="birthPlace">Nơi sinh</label>
+            <input name="BirthPlace" type="text" id="BirthPlace" value="@info?.BirthPlace">
+        </div>
+        <div class="form-group">
             <label for="ethnicity">Dân tộc</label>
-            <input name="Nation" type="text" id="ethnicity" value="@info?.Nation">
+            @Html.DropDownList("Nation", (SelectList)ViewBag.NationNames, "Chọn dân tộc", new { id = "ethnicity" })
+        </div>
+        <div class="form-group">
+            <label for="religion">Tôn giáo</label>
+            @Html.DropDownList("Religion", (SelectList)ViewBag.ReligionNames, "Chọn tôn giáo", new { id = "religion" })
+
         </div>
         <div class="form-group">
             <label for="idCard">CMND/CCCD</label>

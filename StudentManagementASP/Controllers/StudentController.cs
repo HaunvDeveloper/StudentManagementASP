@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using StudentManagementASP.Models;
 using StudentManagementASP.Services;
-using System.Drawing;
+using StudentManagementASP.ViewModels;
 using System.Security.Claims;
+using System.IO;
 
 namespace StudentManagementASP.Controllers
 {
@@ -14,33 +16,12 @@ namespace StudentManagementASP.Controllers
     public class StudentController : Controller
     {
         private readonly StudentManagementContext _context;
-        public StudentController(StudentManagementContext context)
+        private readonly IWebHostEnvironment _environment;
+        public StudentController(StudentManagementContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
-        }
-
-        public IActionResult Index()
-        {
-            ViewBag.ClassStudent = _context.StudentClasses
-                .AsNoTracking()
-                .Select(x => new SelectListItem()
-                {
-                    Value = x.Id.ToString(),
-                    Text = x.Code + " - " + x.Name,
-                })                    
-                .ToList();
-            ViewBag.Curriculum = _context.Curricula
-                .AsNoTracking()
-                .Select(x => new SelectListItem()
-                {
-                    Value = x.Id.ToString(),
-                    Text = x.Code + " - " + x.Name,
-                })
-                .ToList();
-
-            ViewBag.Major = new SelectList(_context.Majors.AsNoTracking().ToList(), "Id", "Name");
-            return View();
         }
 
         [HttpPost]
@@ -122,19 +103,31 @@ namespace StudentManagementASP.Controllers
             return View(student);
         }
 
+        [HttpGet]
         public IActionResult EditInfo()
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            var student = _context.Students.AsNoTracking().FirstOrDefault(x => x.UserId == userId);
+            var student = _context.Students.AsNoTracking()
+                .Include(x => x.StudentInfos)
+                .FirstOrDefault(x => x.UserId == userId);
             if (student == null)
             {
                 return NotFound();
             }
+            string filePath = Path.Combine(_environment.WebRootPath, "Data", "nation.json");
+            var jsonData = System.IO.File.ReadAllText(filePath);
+            var ethnicList = JsonConvert.DeserializeObject<List<NationViewModel>>(jsonData);
+            ViewBag.NationNames = new SelectList(ethnicList, "EthnicName", "EthnicName", student.StudentInfos.FirstOrDefault()?.Nation);
+
+            filePath = Path.Combine(_environment.WebRootPath, "Data", "religion.json");
+            jsonData = System.IO.File.ReadAllText(filePath);
+            var religionList = JsonConvert.DeserializeObject<List<ReligionViewModel>>(jsonData);
+            ViewBag.ReligionNames = new SelectList(religionList, "ReligionName", "ReligionName", student.StudentInfos.FirstOrDefault()?.Religion);
             return View(student);
         }
 
         [HttpPost]
-        public IActionResult EditInfo(DateTime DayOfBirth, string Nation, int Province, int District, int Ward, string StreetAddress, string PhoneNo, string Email)
+        public async Task<IActionResult> EditInfo(DateTime DayOfBirth, string Nation, int Province, int District, int Ward, string StreetAddress, string PhoneNo, string Email, string Religion, string BirthPlace)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             var student = _context.Students.FirstOrDefault(x => x.UserId == userId);
@@ -147,9 +140,17 @@ namespace StudentManagementASP.Controllers
             var info = student.StudentInfos.FirstOrDefault();
             if (info != null)
             {
-                
+                info.BirthPlace = BirthPlace;
+                info.Nation = Nation;
+                info.PhoneNo = PhoneNo;
+                info.DistrictCode = District;
+                info.WardCode = Ward;
+                info.StreetAddress = StreetAddress;
+                info.ProvinceCode = Province;
+                info.Religion = Religion;   
             }
-            return View(student);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Info", "Student");
         }
 
     }

@@ -34,7 +34,19 @@ namespace StudentManagementASP.Areas.Admin.Controllers
             return Ok(specializations);
         }
 
-        
 
+        [HttpPost("GetCurriculumByYearId")]
+        public async Task<IActionResult> GetCurriculumByYearId(int yearId)
+        {
+            // Lấy danh sách ngành học theo DeptId từ _context.Major
+            var curriculumList = _context.Curricula.AsNoTracking()
+                .Where(x => x.StudyYearId == yearId)
+                .Select(x => new
+                {
+                    x.Id,x.Name,x.Code
+                })
+                .ToList();
+            return Ok(curriculumList);
+        }
     }
 }

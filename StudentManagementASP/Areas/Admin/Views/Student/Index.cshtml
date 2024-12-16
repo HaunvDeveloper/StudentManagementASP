@@ -50,15 +50,14 @@
                 var deptId = $(this).val();
 
                 if (deptId) {
+                    var specializationSelect = $('#SpecializationId');
+                    specializationSelect.empty();
+                    specializationSelect.append('<option value="">Chọn ngành</option>');
                     $.ajax({
                         url: '/api/API/GetSpecializationByDept?deptid=' + deptId,
                         type: 'POST',
                         success: function(data) {
                             if (data && data.length > 0) {
-                                var specializationSelect = $('#SpecializationId');
-                                specializationSelect.empty();  
-                                specializationSelect.append('<option value="">Chọn ngành</option>'); 
-
                                 $.each(data, function(index, spec) {
                                     specializationSelect.append('<option value="' + spec.id + '">' + spec.name + '</option>');
                                 });

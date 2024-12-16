@@ -25,10 +25,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Contracts" Version="5.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,11 +33,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\Data\nation.json" />
     <_ContentIncludedByDefault Remove="Views\User\ForgetPassword.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\User\ForgetPassword.cshtml" />
+    <None Include="wwwroot\Data\TextFile.txt" />
   </ItemGroup>
 
 </Project>

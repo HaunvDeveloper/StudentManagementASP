@@ -27,10 +27,10 @@ namespace StudentManagementASP.Controllers
 
             var curriculum = _context.Curricula.AsNoTracking()
                 .Where(x => x.Id == student.CurriculumId)
+                .Include(x => x.Courses)
                 .Include(x => x.StudyYear)
                     .ThenInclude(x => x.StudyYearDetails)
                         .ThenInclude(x => x.Semesters)
-                            .ThenInclude(x => x.Courses)
                 .FirstOrDefault();
 
 

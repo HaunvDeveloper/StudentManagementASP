@@ -87,12 +87,6 @@ app.UseSession();
 app.UseAuthorization();
 
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Data")),
-    RequestPath = "/Data"
-});
-
 
 app.MapControllerRoute(
     name: "areas",
