@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using StudentManagementASP.Models;
+using StudentManagementASP.Services;
+using System.Drawing;
 using System.Security.Claims;
 
 namespace StudentManagementASP.Controllers
@@ -122,9 +124,33 @@ namespace StudentManagementASP.Controllers
 
         public IActionResult EditInfo()
         {
-            return View();
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var student = _context.Students.AsNoTracking().FirstOrDefault(x => x.UserId == userId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return View(student);
         }
 
+        [HttpPost]
+        public IActionResult EditInfo(DateTime DayOfBirth, string Nation, int Province, int District, int Ward, string StreetAddress, string PhoneNo, string Email)
+        {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var student = _context.Students.FirstOrDefault(x => x.UserId == userId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            student.DayOfBirth = DayOfBirth;
+            student.Email = Email;
+            var info = student.StudentInfos.FirstOrDefault();
+            if (info != null)
+            {
+                
+            }
+            return View(student);
+        }
 
     }
 }

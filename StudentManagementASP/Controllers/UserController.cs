@@ -11,6 +11,7 @@ using StudentManagementASP.Services;
 using Newtonsoft.Json;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Text.RegularExpressions;
+using StudentManagementASP.ViewModels;
 
 namespace StudentManagementASP.Controllers
 {
@@ -138,8 +139,8 @@ namespace StudentManagementASP.Controllers
             Random random = new Random();
             model.Otp = random.Next(100000, 999999).ToString();
             model.OtplastestSend = DateTime.Now;
-            HttpContext.Session.SetString("VerifyAccount", JsonConvert.SerializeObject(model));
 
+            HttpContext.Session.SetString("VerifyAccount", JsonConvert.SerializeObject(new UserViewModel(model)));
             bool emailSent = await _emailSendService.SendOtpToEmail(model.Email ?? "", model.Otp);
             if (!emailSent)
             {
@@ -159,7 +160,7 @@ namespace StudentManagementASP.Controllers
             {
                 return RedirectToAction("Login");
             }
-            var user = JsonConvert.DeserializeObject<User>(userJson);
+            var user = JsonConvert.DeserializeObject<UserViewModel>(userJson);
             if (user == null)
             {
                 return RedirectToAction("Login");
@@ -177,8 +178,7 @@ namespace StudentManagementASP.Controllers
             {
                 return RedirectToAction("Login");
             }
-
-            var user = JsonConvert.DeserializeObject<User>(userJson);
+            var user = JsonConvert.DeserializeObject<UserViewModel>(userJson);
             if (user == null)
             {
                 return RedirectToAction("Login");
@@ -187,7 +187,7 @@ namespace StudentManagementASP.Controllers
             if (user.OtplastestSend.HasValue && (DateTime.Now - user.OtplastestSend.Value).TotalMinutes > 10)
             {
                 ViewBag.Alert = "Mã OTP đã hết hạn!!!";
-                HttpContext.Session.Clear();
+                TempData.Remove("VerifyAccount");
                 return View();
             }
             if (user.Otp != otp)
@@ -220,8 +220,14 @@ namespace StudentManagementASP.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string password)
+        public async Task<IActionResult> ChangePassword(string password, string password2)
         {
+            if(password != password2)
+            {
+                TempData.Keep("ChangePassword");
+                ViewBag.Alert = "Password nhập lại không khớp!";
+                return View();
+            }
             if (TempData["ChangePassword"] == null)
             {
                 return RedirectToAction("Login");
@@ -241,7 +247,7 @@ namespace StudentManagementASP.Controllers
             }
 
             // Chuyển đổi từ string sang long
-            if (!long.TryParse(TempData["ChangePassword"]?.ToString(), out long id))
+            if (!int.TryParse(TempData["ChangePassword"]?.ToString(), out int id))
             {
                 return RedirectToAction("Login");
             }

@@ -48,7 +48,7 @@
         font-weight: bold;
     }
 
-    .form-group input {
+    .form-group input,select {
         flex: 1;
         padding: 8px;
         border: 1px solid #ccc;

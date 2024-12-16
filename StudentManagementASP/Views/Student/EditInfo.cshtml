@@ -1,7 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Chỉnh sửa thông tin";
-}
+﻿@model StudentManagementASP.Models.Student
 
+
+@{
+    ViewData["Title"] = "Chỉnh sửa thông tin";
+    var info = Model.StudentInfos.FirstOrDefault();
+}
 
 @section Links {
     <link rel="stylesheet" href="~/assets/css/editInfo.css">
@@ -10,57 +13,145 @@
 
 <div class="_container">
     <div class="header-title"><i class="fa-solid fa-pen"></i> Chỉnh sửa thông tin</div>
-    <div class="scrollable">
+    <form asp-action="EditInfo" asp-controller="Student" method="post" class="scrollable">
         <div class="section-title">Thông tin cá nhân</div>
         <div class="form-group">
             <label for="fullName">Họ và tên</label>
-            <input type="text" id="fullName" value="Nguyễn Văn A">
+            <input type="text" id="fullName" value="@Model.FullName" disabled>
         </div>
         <div class="form-group">
             <label for="birthDate">Ngày sinh</label>
-            <input type="date" id="birthDate" value="2004-01-01">
+            <input name="DayOfBirth" type="date" id="birthDate" value="@Model.DayOfBirth.ToString("yyyy-MM-dd")">
         </div>
         <div class="form-group">
             <label for="ethnicity">Dân tộc</label>
-            <input type="text" id="ethnicity" value="Kinh">
+            <input name="Nation" type="text" id="ethnicity" value="@info?.Nation">
         </div>
         <div class="form-group">
             <label for="idCard">CMND/CCCD</label>
-            <input type="text" id="idCard" value="079204011111">
+            <input type="text" id="idCard" value="@info?.NationId" disabled>
         </div>
 
         <div class="section-title">Thông tin liên lạc</div>
         <div class="form-group">
-            <label for="country">Quốc gia</label>
-            <input type="text" id="country" value="Việt Nam">
-        </div>
-        <div class="form-group">
             <label for="province">Tỉnh/Thành</label>
-            <input type="text" id="province" value="TP. Hồ Chí Minh">
+            <select id="province" class="form-control" name="Province" required>
+                <option value="">Chọn Tỉnh/Thành</option>
+            </select>
+
         </div>
         <div class="form-group">
             <label for="district">Quận/Huyện</label>
-            <input type="text" id="district" value="Quận 8">
+            <select id="district" class="form-control" name="District" required disabled>
+                <option value="">Chọn Quận/Huyện</option>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label for="ward">Xã/Phường</label>
+            <select id="ward" class="form-control" name="Ward" required disabled>
+                <option value="">Chọn Xã/Phường</option>
+            </select>
+
         </div>
         <div class="form-group">
             <label for="address">Địa chỉ</label>
-            <input type="text" id="address" value="123 Phạm Thế Hiển">
+            <input name="StreetAddress" type="text" id="address" value="@info?.StreetAddress">
         </div>
         <div class="form-group">
             <label for="phone">Số điện thoại</label>
-            <input type="text" id="phone" value="098 7654 321">
+            <input name="PhoneNo" type="text" id="phone" value="@info?.PhoneNo">
         </div>
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" value="nguyenvana@gmail.com">
+            <input name="Email" type="email" id="email" value="@Model.Email">
         </div>
 
-    <div class="actions">
-        <button class="save-button btn btn-primary">Lưu</button>
-        <button class="cancel-button btn btn-danger">Huỷ</button>
-    </div>
+        <div class="actions">
+            <button type="submit" class="save-button btn btn-primary">Lưu</button>
+            <a asp-action="Info" class="cancel-button btn btn-danger">Huỷ</a>
+        </div>
+    </form>
 </div>
 
-@section Scripts{
+@section Scripts {
+    <script>
+        var deProvince = "@info?.ProvinceCode";
+        var deDistrict = "@info?.DistrictCode";
+        var deWard = "@info?.WardCode";
 
+        $(document).ready(function () {
+            const apiBaseUrl = "/api/AddressAPI/";
+
+            let selectedProvinceName = "";
+            let selectedDistrictName = "";
+            let selectedWardName = "";
+
+            // Load tỉnh/thành
+            $.get(apiBaseUrl + "GetProvince", function (data) {
+                const provinces = data; // Parse the JSON string
+                provinces.forEach(function (province) {
+                    if (deProvince == province.code) {
+                        $('#province').append(`<option selected value="${province.code}">${province.name}</option>`);
+                    } else {
+                        $('#province').append(`<option value="${province.code}">${province.name}</option>`);
+                    }
+                });
+                // Kích hoạt sự kiện onchange sau khi chọn tỉnh/thành
+                $('#province').trigger('change');
+            });
+
+            // Khi tỉnh/thành thay đổi
+            $('#province').on('change', function () {
+                const provinceCode = $(this).val();
+                selectedProvinceName = $(this).find('option:selected').text();  // Get the selected name
+                $('#district').html('<option value="">Chọn Quận/Huyện</option>');
+                $('#ward').html('<option value="">Chọn Xã/Phường</option>');
+                $('#district').prop('disabled', true);
+                $('#ward').prop('disabled', true);
+
+                if (provinceCode) {
+                    // Lấy quận theo tỉnh
+                    $.get(apiBaseUrl + `GetDistrictByProvince?provinceCode=${provinceCode}`, function (data) {
+                        const districts = data; // Parse the JSON string
+                        districts.forEach(function (district) {
+                            $('#district').append(`<option value="${district.code}" ${deDistrict == district.code ? 'selected' : ''}>${district.name}</option>`);
+                        });
+                        $('#district').prop('disabled', false);
+
+                        // Kích hoạt onchange cho quận nếu có giá trị mặc định
+                        $('#district').trigger('change');
+                    });
+                }
+            });
+
+            // Khi quận/huyện thay đổi
+            $('#district').on('change', function () {
+                const districtCode = $(this).val();
+                selectedDistrictName = $(this).find('option:selected').text();  // Get the selected name
+                $('#ward').html('<option value="">Chọn Xã/Phường</option>');
+                $('#ward').prop('disabled', true);
+
+                if (districtCode) {
+                    // Lấy xã/phường theo quận
+                    $.get(apiBaseUrl + `GetWardByDistrict?districtCode=${districtCode}`, function (data) {
+                        const wards = data; // Parse the JSON string
+                        wards.forEach(function (ward) {
+                            $('#ward').append(`<option value="${ward.code}" ${deWard == ward.code ? 'selected' : ''}>${ward.name}</option>`);
+                        });
+                        $('#ward').prop('disabled', false);
+                    });
+                }
+            });
+
+            // Kích hoạt sự kiện onchange khi trang tải (để load dữ liệu quận/phường mặc định nếu có)
+            if (deDistrict) {
+                $('#district').trigger('change');
+            }
+            if (deWard) {
+                $('#ward').trigger('change');
+            }
+        });
+
+    </script>
 }

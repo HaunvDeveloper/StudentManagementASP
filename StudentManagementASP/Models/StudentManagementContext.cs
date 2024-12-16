@@ -27,6 +27,8 @@ public partial class StudentManagementContext : DbContext
 
     public virtual DbSet<Department> Departments { get; set; }
 
+    public virtual DbSet<District> Districts { get; set; }
+
     public virtual DbSet<Lecturer> Lecturers { get; set; }
 
     public virtual DbSet<LecturerInfo> LecturerInfos { get; set; }
@@ -36,6 +38,8 @@ public partial class StudentManagementContext : DbContext
     public virtual DbSet<LessonInfo> LessonInfos { get; set; }
 
     public virtual DbSet<Major> Majors { get; set; }
+
+    public virtual DbSet<Province> Provinces { get; set; }
 
     public virtual DbSet<Room> Rooms { get; set; }
 
@@ -58,6 +62,8 @@ public partial class StudentManagementContext : DbContext
     public virtual DbSet<Subject> Subjects { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<Ward> Wards { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     { }
@@ -182,6 +188,20 @@ public partial class StudentManagementContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(255);
         });
 
+        modelBuilder.Entity<District>(entity =>
+        {
+            entity.HasKey(e => e.Code);
+
+            entity.ToTable("District");
+
+            entity.Property(e => e.Code).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(100);
+
+            entity.HasOne(d => d.ProvinceCodeNavigation).WithMany(p => p.Districts)
+                .HasForeignKey(d => d.ProvinceCode)
+                .HasConstraintName("FK_District_Province");
+        });
+
         modelBuilder.Entity<Lecturer>(entity =>
         {
             entity.ToTable("Lecturer");
@@ -209,7 +229,6 @@ public partial class StudentManagementContext : DbContext
 
             entity.Property(e => e.BirthName).HasMaxLength(255);
             entity.Property(e => e.BirthPlace).HasMaxLength(255);
-            entity.Property(e => e.DistrictAddress).HasMaxLength(100);
             entity.Property(e => e.Nation).HasMaxLength(100);
             entity.Property(e => e.NationId)
                 .HasMaxLength(50)
@@ -217,17 +236,27 @@ public partial class StudentManagementContext : DbContext
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.ProvinceAddress).HasMaxLength(100);
             entity.Property(e => e.Religion).HasMaxLength(100);
             entity.Property(e => e.Sex)
                 .HasMaxLength(10)
                 .HasDefaultValue("Nam");
             entity.Property(e => e.StreetAddress).HasMaxLength(255);
-            entity.Property(e => e.WardAddress).HasMaxLength(100);
+
+            entity.HasOne(d => d.DistrictCodeNavigation).WithMany(p => p.LecturerInfos)
+                .HasForeignKey(d => d.DistrictCode)
+                .HasConstraintName("FK_LecturerInfo_District");
 
             entity.HasOne(d => d.Lecturer).WithMany(p => p.LecturerInfos)
                 .HasForeignKey(d => d.LecturerId)
                 .HasConstraintName("FK_lecturer_info_lecturer");
+
+            entity.HasOne(d => d.ProvinceCodeNavigation).WithMany(p => p.LecturerInfos)
+                .HasForeignKey(d => d.ProvinceCode)
+                .HasConstraintName("FK_LecturerInfo_Province");
+
+            entity.HasOne(d => d.WardCodeNavigation).WithMany(p => p.LecturerInfos)
+                .HasForeignKey(d => d.WardCode)
+                .HasConstraintName("FK_LecturerInfo_Ward");
         });
 
         modelBuilder.Entity<Lesson>(entity =>
@@ -276,6 +305,16 @@ public partial class StudentManagementContext : DbContext
             entity.HasOne(d => d.Dept).WithMany(p => p.Majors)
                 .HasForeignKey(d => d.DeptId)
                 .HasConstraintName("FK_major_department");
+        });
+
+        modelBuilder.Entity<Province>(entity =>
+        {
+            entity.HasKey(e => e.Code);
+
+            entity.ToTable("Province");
+
+            entity.Property(e => e.Code).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Room>(entity =>
@@ -372,7 +411,6 @@ public partial class StudentManagementContext : DbContext
 
             entity.Property(e => e.BirthName).HasMaxLength(255);
             entity.Property(e => e.BirthPlace).HasMaxLength(255);
-            entity.Property(e => e.DistrictAddress).HasMaxLength(100);
             entity.Property(e => e.FaceData).HasMaxLength(255);
             entity.Property(e => e.Nation).HasMaxLength(100);
             entity.Property(e => e.NationId)
@@ -381,7 +419,6 @@ public partial class StudentManagementContext : DbContext
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.ProvinceAddress).HasMaxLength(100);
             entity.Property(e => e.Religion).HasMaxLength(100);
             entity.Property(e => e.Sex)
                 .HasMaxLength(10)
@@ -390,11 +427,22 @@ public partial class StudentManagementContext : DbContext
             entity.Property(e => e.StudentId)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.WardAddress).HasMaxLength(100);
+
+            entity.HasOne(d => d.DistrictCodeNavigation).WithMany(p => p.StudentInfos)
+                .HasForeignKey(d => d.DistrictCode)
+                .HasConstraintName("FK_StudentInfo_District");
+
+            entity.HasOne(d => d.ProvinceCodeNavigation).WithMany(p => p.StudentInfos)
+                .HasForeignKey(d => d.ProvinceCode)
+                .HasConstraintName("FK_StudentInfo_Province");
 
             entity.HasOne(d => d.Student).WithMany(p => p.StudentInfos)
                 .HasForeignKey(d => d.StudentId)
                 .HasConstraintName("FK_student_info_student");
+
+            entity.HasOne(d => d.WardCodeNavigation).WithMany(p => p.StudentInfos)
+                .HasForeignKey(d => d.WardCode)
+                .HasConstraintName("FK_StudentInfo_Ward");
         });
 
         modelBuilder.Entity<StudentJoinClass>(entity =>
@@ -498,6 +546,20 @@ public partial class StudentManagementContext : DbContext
             entity.HasOne(d => d.Auth).WithMany(p => p.Users)
                 .HasForeignKey(d => d.AuthId)
                 .HasConstraintName("FK_User_Authentication");
+        });
+
+        modelBuilder.Entity<Ward>(entity =>
+        {
+            entity.HasKey(e => e.Code);
+
+            entity.ToTable("Ward");
+
+            entity.Property(e => e.Code).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(100);
+
+            entity.HasOne(d => d.DistrictCodeNavigation).WithMany(p => p.Wards)
+                .HasForeignKey(d => d.DistrictCode)
+                .HasConstraintName("FK_Ward_District");
         });
 
         OnModelCreatingPartial(modelBuilder);

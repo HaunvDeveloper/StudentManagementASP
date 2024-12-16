@@ -31,7 +31,7 @@ namespace StudentManagementASP.Controllers
                         .ThenInclude(x => x.Semesters)
                 .FirstOrDefault();
 
-            ViewBag.CourseClass = _context.StudentJoinClasses
+            ViewBag.CourseClass = _context.StudentJoinClasses.AsNoTracking()
                 .Where(sjc => sjc.StudentId == student.Id)
                 .Include(sjc => sjc.CourseClass) // Bao gồm thông tin CourseClass
                     .ThenInclude(cc => cc.Course) // Bao gồm thông tin Course từ CourseClass

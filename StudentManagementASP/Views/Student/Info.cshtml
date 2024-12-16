@@ -1,7 +1,12 @@
-﻿@{
+﻿@model StudentManagementASP.Models.Student
+
+
+@{
     ViewData["Title"] = "Thông tin cá nhân";
+    var info = Model.StudentInfos.FirstOrDefault();
+    var curriculum = Model.Curriculum;
+    var studyYear = curriculum.StudyYear;
 }
-@model StudentManagementASP.Models.Student
 
 @section Links {
     <link rel="stylesheet" href="~/assets/css/infoStudent.css">
@@ -12,8 +17,8 @@
 <div class="_container">
     <div class="left-section">
         <img src="~/assets/images/user.png" alt="">
-        <button class="face-button"><i class="fa-regular fa-face-laugh"></i> Định danh khuôn mặt</button>
-        <button class="update-button"><i class="fa-solid fa-pen"></i> Cập nhật thông tin</button>
+        <button  class="face-button"><i class="fa-regular fa-face-laugh"></i> Định danh khuôn mặt</button>
+        <a asp-action="EditInfo" asp-controller="Student" class="update-button"><i class="fa-solid fa-pen"></i> Cập nhật thông tin</a>
     </div>
 
     <div class="right-section">
@@ -35,19 +40,21 @@
                     <th>Ngày sinh</th>
                     <td>@Model.DayOfBirth.ToShortDateString()</td>
                     <th>Nơi sinh</th>
-                    <td>@Model.StudentInfos.FirstOrDefault()?.BirthPlace</td>
+                    <td>@info?.BirthPlace</td>
+                </tr>
+                <tr>
+                    <th>Dân tộc</th>
+                    <td>@info?.Nation</td>
+                    <th>Tôn giáo</th>
+                    <td>@info?.Religion</td>
                 </tr>
                 <tr>
                     <th>Giới tính</th>
-                    <td>@Model.StudentInfos.FirstOrDefault()?.Sex</td>
+                    <td>@info?.Sex</td>
                     <th>CMND/CCCD</th>
-                    <td>@Model.StudentInfos.FirstOrDefault()?.NationId</td>
+                    <td>@info?.NationId</td>
                 </tr>
-                @* <tr>
-                    <th>CMND/CCCD</th>
-                    <td>079204011111</td>
-                    <td colspan="2"></td>
-                </tr> *@
+
             </table>
         </div>
 
@@ -57,23 +64,23 @@
                     <th>Quốc gia</th>
                     <td>Việt Nam</td>
                     <th>Tỉnh/Thành</th>
-                    <td>TP. Hồ Chí Minh</td>
+                    <td>@info?.ProvinceCodeNavigation?.Name</td>
                 </tr>
                 <tr>
                     <th>Quận/Huyện</th>
-                    <td>Quận 8</td>
+                    <td>@info?.DistrictCodeNavigation?.Name</td>
                     <th>Phường/Xã</th>
-                    <td>Phường 3</td>
+                    <td>@info?.WardCodeNavigation?.Name</td>
                 </tr>
                 <tr>
                     <th>Địa chỉ</th>
-                    <td colspan="3">123 Phạm Thế Hiển</td>
+                    <td colspan="3">@info?.StreetAddress</td>
                 </tr>
                 <tr>
                     <th>Số điện thoại</th>
-                    <td>098 7654 321</td>
+                    <td>@info?.PhoneNo</td>
                     <th>Email</th>
-                    <td>nguyenvana@gmail.com</td>
+                    <td>@Model.Email</td>
                 </tr>
             </table>
         </div>
@@ -82,27 +89,27 @@
             <table>
                 <tr>
                     <th>Khoa</th>
-                    <td>Công nghệ Thông tin</td>
+                    <td>@Model.Dept.Name</td>
                     <th>Chương trình đào tạo</th>
-                    <td>Sư phạm Tin học</td>
+                    <td>@curriculum.Name</td>
                 </tr>
                 <tr>
                     <th>Khoá</th>
-                    <td>48</td>
+                    <td>@studyYear.Number</td>
                     <th>Lớp</th>
-                    <td>48.01.TIN.SPB</td>
+                    <td>@Model.StudentClass?.Code</td>
                 </tr>
                 <tr>
                     <th>Cố vấn học tập</th>
-                    <td>TS. Lê Đức Long</td>
+                    <td>@Model.StudentClass?.Lecturer?.FullName</td>
                     <th>Niên khoá</th>
-                    <td>2022-2026</td>
+                    <td>@studyYear.StartYear.Year - @studyYear.EndYear.Year</td>
                 </tr>
                 <tr>
                     <th>Hệ</th>
                     <td>Chính quy</td>
                     <th>Tình trạng học</th>
-                    <td>Còn học</td>
+                    <td>@Model.Status</td>
                 </tr>
             </table>
         </div>

@@ -9,7 +9,7 @@ namespace StudentManagementASP.Services
         {
             try
             {
-                var fromAddress = new MailAddress("haunv.cntt@gmail.com", "Online Coding Website");
+                var fromAddress = new MailAddress("haunv.cntt@gmail.com", "Trang quản lý và điểm danh Sinh viên HCMUE");
                 var toAddress = new MailAddress(email);
                 const string fromPassword = "edss szph iorj ymbs";
                 const string subject = "Verify Email address";

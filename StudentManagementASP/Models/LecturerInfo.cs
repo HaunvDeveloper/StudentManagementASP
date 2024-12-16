@@ -15,11 +15,11 @@ public partial class LecturerInfo
 
     public string BirthPlace { get; set; } = null!;
 
-    public string? ProvinceAddress { get; set; }
+    public int? ProvinceCode { get; set; }
 
-    public string? DistrictAddress { get; set; }
+    public int? DistrictCode { get; set; }
 
-    public string? WardAddress { get; set; }
+    public int? WardCode { get; set; }
 
     public string? StreetAddress { get; set; }
 
@@ -31,5 +31,11 @@ public partial class LecturerInfo
 
     public string? Religion { get; set; }
 
+    public virtual District? DistrictCodeNavigation { get; set; }
+
     public virtual Lecturer Lecturer { get; set; } = null!;
+
+    public virtual Province? ProvinceCodeNavigation { get; set; }
+
+    public virtual Ward? WardCodeNavigation { get; set; }
 }

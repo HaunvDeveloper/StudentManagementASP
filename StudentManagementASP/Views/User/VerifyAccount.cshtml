@@ -1,14 +1,13 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="~/assets/css/checkotp.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap" rel="stylesheet">
@@ -19,20 +18,46 @@
 </head>
 
 <body>
-    <img src="assets/images/logo.png" alt="logo" id="logo">
     <main>
-        <h1>Quản lý sinh viên</h1>
         <!-- Form nhập mã OTP và mật khẩu mới -->
-        <form action="<?= base_url('/resetpassword') ?>" method="get">
-            <h4>QUÊN MẬT KHẨU</h4>
-            <div class="group">
-                <label for="otp">Nhập mã OTP</label>
-                <input type="text" id="otp" name="otp" placeholder="Nhập mã OTP" required>
+        <form asp-action="VerifyAccount" asp-controller="User" method="post">
+            <div class="container">
+                <div class="left-section">
+                    <div class="information">
+                        <img src="~/assets/images/logo-HCMUE.png" alt="Logo" class="logo">
+                        <h1>Sign in to</h1>
+                        <h2>Student Information System</h2>
+                    </div>
+
+                    <img src="~/assets/images/Toa-nha-A-01.png" alt="Building Illustration" class="building">
+                </div>
+                <div class="right-section">
+                    <div class="login-box">
+                        <h3>Quên mật khẩu?</h3>
+                        <div>
+                            <div style="color:white;margin-bottom:1rem;">Chúng tôi đã gửi mã xác thực đến @ViewBag.Email</div>
+                            <div class="input-group">
+                                <input type="text" name="otp" placeholder="Nhập mã OTP" required>
+                            </div>
+                            <button type="submit" class="button-24" id="forget-password-btn">Xác nhận</button>
+                            <div class="alert" style="color:red;margin-top:1rem;">@ViewBag.Alert</div>
+
+                            <div class="back-login">
+                                <a href="@Url.Action("ForgetPassword", "User")">Quay lại</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="button-24" id="reset-password-btn">Xác nhận</button>
+            <!------ <h4>QUÊN MẬT KHẨU</h4>
+             <div class="group">
+                 <label for="otp">Nhập mã OTP</label>
+                 <input type="text" id="otp" name="otp" placeholder="Nhập mã OTP" required>
+             </div>
+             <button type="submit" class="button-24" id="reset-password-btn">Xác nhận</button> ----->
         </form>
     </main>
 
 </body>
 
-</html>
+</html> 

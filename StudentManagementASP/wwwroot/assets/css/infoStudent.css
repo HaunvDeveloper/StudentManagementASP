@@ -35,7 +35,9 @@
         margin-bottom: 20px;
     }
 
-    .left-section button {
+    .left-section button,a {
+        text-decoration: none;
+        text-align:center;
         width: 64%;
         margin: 10px 0;
         padding: 10px;
