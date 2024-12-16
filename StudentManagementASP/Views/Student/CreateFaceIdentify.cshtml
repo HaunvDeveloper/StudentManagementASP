@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Tạo định danh khuôn mặt";
+}
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/faceIdentify.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+
+<div class="main-wrapper">
+    <div class="header-bar">
+        <span class="header-title"><i class="fa-solid fa-face-grin-wide"></i>Định danh khuôn mặt</span>
+    </div>
+    <div class="content-wrapper">
+        <div class="horizontal-layout">
+            <div class="instruction-left-box">
+                <span>
+                    Di chuyển chậm khuôn mặt của bạn để hoàn thành vòng tròn.
+                </span>
+            </div>
+
+            <div class="camera-frame" onclick="startCamera()">
+                <video id="camera" autoplay playsinline></video>
+                <div class="camera-placeholder" id="camera-placeholder">
+                    <i class="fa-solid fa-face-grin-wide"></i>
+                </div>
+            </div>  
+
+            <div class="instruction-right-box">
+                <span>
+                    Di chuyển chậm khuôn mặt của bạn để hoàn thành vòng tròn.
+                </span>
+            </div>
+        </div>
+
+        <button class="confirm-button">Xong</button>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        async function startCamera() {
+            const camera = document.getElementById('camera');
+            const placeholder = document.getElementById('camera-placeholder');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                camera.srcObject = stream;
+                placeholder.style.display = 'none';
+            } catch (err) {
+                alert('Không thể truy cập camera: ' + err.message);
+            }
+        }
+    </script>
+}

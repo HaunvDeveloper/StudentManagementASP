@@ -122,6 +122,11 @@ namespace StudentManagementASP.Controllers
             return View(student);
         }
 
+        public IActionResult CreateFaceIdentify()
+        {
+            return View();
+        }
+
         public IActionResult EditInfo()
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
@@ -151,6 +156,8 @@ namespace StudentManagementASP.Controllers
             }
             return View(student);
         }
+
+
 
     }
 }
