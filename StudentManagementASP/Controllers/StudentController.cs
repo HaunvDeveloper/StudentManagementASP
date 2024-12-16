@@ -103,7 +103,15 @@ namespace StudentManagementASP.Controllers
             return View(student);
         }
 
+<<<<<<< HEAD
         [HttpGet]
+=======
+        public IActionResult CreateFaceIdentify()
+        {
+            return View();
+        }
+
+>>>>>>> 697d044a3491894b8072735ff9819b7d941a011a
         public IActionResult EditInfo()
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
@@ -152,6 +160,8 @@ namespace StudentManagementASP.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Info", "Student");
         }
+
+
 
     }
 }
