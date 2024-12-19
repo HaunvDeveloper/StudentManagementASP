@@ -29,9 +29,10 @@
                     <button id="btn-search" onclick="search(1)" class="btn btn-primary">LỌC</button>
                 </div>
             </div>
-            
+                <button class="btn btn-outline-secondary" onclick="downloadExcel()">Export</button>
+                <a asp-action="CreateWithList" asp-controller="Student" asp-area="Admin" class="btn btn-primary">+ Thêm sinh viên</a>
 
-            <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary" style="height:40px">+ Thêm sinh viên</button>
+            
         </div>
 
         <div class="table-data">
@@ -42,9 +43,78 @@
 
 @section Scripts {
     <script>
+        function downloadExcel() {
+            const params = {
+                StudyYearId: $('#StudyYearId').val(),
+                DeptId: $('#DeptId').val(),
+                SpecializationId: $('#SpecializationId').val()
+            };
+
+            $.ajax({
+                url: '/Admin/Student/DownloadListStudent', // Đường dẫn đến action
+                method: 'GET',
+                data: params,
+                xhrFields: {
+                    responseType: 'blob' // Đảm bảo nhận dữ liệu dạng binary
+                },
+                success: function (data, status, xhr) {
+                    const blob = new Blob([data], { type: xhr.getResponseHeader('Content-Type') });
+                    const downloadUrl = window.URL.createObjectURL(blob);
+
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+
+                    // Tên file được lấy từ header Content-Disposition
+                    const disposition = xhr.getResponseHeader('Content-Disposition');
+                    let fileName = 'Download.xlsx';
+                    if (disposition && disposition.indexOf('filename=') !== -1) {
+                        const matches = /filename="([^"]*)"/.exec(disposition);
+                        if (matches != null && matches[1]) fileName = matches[1];
+                    }
+
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Cleanup
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(downloadUrl);
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra trong quá trình tải xuống.');
+                }
+            });
+        }
+        function search(p) {
+            let data = {
+                StudyYearId: $('#StudyYearId').val(),
+                DeptId: $('#DeptId').val(),
+                SpecializationId: $('#SpecializationId').val(),
+                keyword: $('#keyword').val(),
+                p: p
+            }
+            $.ajax({
+                url: '@Url.Action("_GetList", "Student", new { area = "Admin" })',
+                method: 'POST',
+                data: data,
+                success: function (response) {
+                    $('.table-data').html(response);
+                    attachPaginationEvents();
+                }
+            });
+        }
+
+
+        function attachPaginationEvents() {
+            $('.pagination a').off('click').on('click', function (e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                search(page);
+            });
+        }
         $(document).ready(function() {
             
-
+            search(1);
 
             $('#DeptId').on('change', function() {
                 var deptId = $(this).val();
@@ -76,32 +146,6 @@
                 }
             });
         });
-        function search(p) {
-            let data = {
-                StudyYearId: $('#StudyYearId').val(),
-                DeptId: $('#DeptId').val(),
-                SpecializationId: $('#SpecializationId').val(),
-                keyword: $('#keyword').val(),
-                p: p
-            }
-            $.ajax({
-                url: '@Url.Action("_GetList", "Student", new { area = "Admin" })',
-                method: 'POST',
-                data: data,
-                success: function (response) {
-                    $('.table-data').html(response);
-                    attachPaginationEvents();
-                }
-            });
-        }
-
-
-        function attachPaginationEvents() {
-            $('.pagination a').off('click').on('click', function (e) {
-                e.preventDefault();
-                var page = $(this).data('page');
-                search(page);
-            });
-        }
+        
     </script>
 }

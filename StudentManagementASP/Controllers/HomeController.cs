@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementASP.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace StudentManagementASP.Controllers
 {
@@ -18,6 +19,12 @@ namespace StudentManagementASP.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+
+        public IActionResult _MenuAdmin()
+        {
+            return PartialView("_MenuAdmin");
         }
 
         public IActionResult Privacy()

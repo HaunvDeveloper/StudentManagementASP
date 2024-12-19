@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Danh sách lớp học phần";
+}
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">DANH SÁCH LỚP HỌC PHẦN</h4>
+        <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+            <div>
+                <div class="d-flex gap-2 align-items-center w-100">
+                    <span style="text-wrap: nowrap;">Chọn khoa:</span>
+                    @Html.DropDownList("DeptId", (SelectList)ViewBag.Depts, "Tất cả", new { @class = "form-control"})
+
+                    <span style="text-wrap: nowrap;">Chọn khóa:</span>
+                    @Html.DropDownList("StudyYearDetailId", (List<SelectListItem>)ViewBag.StudyYearDetails, "Tất cả", new { @class = "form-control" })
+
+                    <span style="text-wrap: nowrap;">Học kỳ:</span>
+                    <select id="SemesterId" class="form-control" disabled>
+                        <option value="">Chọn học kỳ</option>
+                    </select>
+                    <button id="filter" class="btn btn-primary">LỌC</button>
+                </div>
+            </div>
+            <a data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-add-course">+ Thêm lớp học phần</a>
+        </div>
+
+        <div class="table-data table-reponsive">
+            <!-- Nội dung bảng danh sách sinh viên sẽ được hiển thị ở đây -->
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm Môn Học</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <div class="row">
+                    <div class="col-6">
+                        <a class="btn btn-lg btn-primary" asp-action="Create" asp-controller="CourseClass" asp-area="Admin">Tạo thủ công</a>
+                    </div>
+                    <div class="col-6">
+                        <a class="btn btn-lg btn-danger" asp-action="CreateWithList" asp-controller="CourseClass" asp-area="Admin">Tải danh sách</a>
+                    </div>
+                </div>
+                
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#filter').on('click', function () {
+                $('.table-data').html('');
+                $.ajax({
+                    url: '@Url.Action("_GetListClass", "CourseClass", new{area="Admin"})',
+                    method: 'get',
+                    data: { deptId: $('#DeptId').val(), yearDetailId: $('#StudyYearDetailId').val(), semesterId: $('#SemesterId').val() },
+                    success: function(response){
+                        $('.table-data').html(response);
+                    },
+                    error: function (err) {
+                        $('.table-data').html(err);
+
+                    }
+                })
+            });
+
+            $('#StudyYearDetailId').on('change', function () {
+                var yearId = $(this).val();
+                if (yearId) {
+                    $.ajax({
+                        url: '/api/API/GetSemesterByYearDetail?yearDetailId=' + yearId,
+                        type: 'GET',
+                        success: function (data) {
+                            if (data && data.length > 0) {
+                                var curriculumSelect = $('#SemesterId');
+                                curriculumSelect.empty();
+                                curriculumSelect.append('<option value="">Chọn học kỳ</option>');
+
+                                $.each(data, function (index, item) {
+                                    curriculumSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                                });
+
+                                curriculumSelect.prop('disabled', false);  // Kích hoạt dropdown Chọn ngành
+                            } else {
+                                $('#SemesterId').prop('disabled', true);  // Nếu không có ngành thì disable dropdown
+                            }
+                        },
+                        error: function () {
+                            alert('Không thể lấy dữ liệu.');
+                        }
+                    });
+                } 
+                else {
+                    $('#SemesterId').prop('disabled', true);  // Nếu không chọn khoa thì disable dropdown Chọn ngành
+                }
+            });
+
+            
+
+        });
+
+    </script>
+}

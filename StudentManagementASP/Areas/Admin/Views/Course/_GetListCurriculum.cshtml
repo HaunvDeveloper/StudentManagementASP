@@ -1,6 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "Chương trình đào tạo";
+    
     int stt = 1;
+    List<StudyYearDetail> listYear = (List<StudyYearDetail>)ViewBag.ListYear;
 }
 @model StudentManagementASP.Models.Curriculum
 
@@ -18,16 +19,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.StudyYear.StudyYearDetails)
+        @foreach (var year in listYear)
         {
-            if (item.EndYear.Year > Model.StudyYear.EndYear.Year)
-            {
-                break;
-            }
             <tr class="table-success">
-                <td colspan="7">Năm học @item.StartYear.Year - @item.EndYear.Year</td>
+                <td colspan="7">Năm học @year.StartYear - @year.EndYear</td>
             </tr>
-            foreach (var hk in item.Semesters)
+            foreach (var hk in year.Semesters)
             {
                 <tr class="table-secondary">
                     <td colspan="7">@hk.Name</td>
@@ -41,7 +38,9 @@
                         <td>@course.Credits</td>
                         <td>@course.Lesson</td>
                         <td>@course.Type.Name</td>
-                        <td></td>
+                        <td>
+                            <a asp-action="GetClassBySubject" asp-controller="CourseClass" asp-area="Admin" asp-route-subjectId="@course.Subject.Id">Xem lớp học phần</a>
+                        </td>
                     </tr>
                     stt++;
                 }

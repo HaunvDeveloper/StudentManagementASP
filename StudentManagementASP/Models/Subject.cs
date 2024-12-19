@@ -17,5 +17,7 @@ public partial class Subject
 
     public int? DefaultLesson { get; set; }
 
+    public virtual ICollection<CourseClass> CourseClasses { get; set; } = new List<CourseClass>();
+
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 }

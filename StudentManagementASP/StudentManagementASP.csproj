@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
+    <Content Remove="Areas\Admin\Views\Student\Create.cshtml" />
     <Content Remove="Views\User\ForgetPassword.cshtml" />
   </ItemGroup>
 
@@ -33,13 +35,125 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Student\Create.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\Data\nation.json" />
     <_ContentIncludedByDefault Remove="Views\User\ForgetPassword.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
+    <None Include="Areas\Admin\Views\Student\Create.cshtml" />
     <None Include="Views\User\ForgetPassword.cshtml" />
     <None Include="wwwroot\Data\TextFile.txt" />
+    <None Include="wwwroot\lib\sweetalert2\dist\sweetalert2.all.js" />
+    <None Include="wwwroot\lib\sweetalert2\dist\sweetalert2.all.min.js" />
+    <None Include="wwwroot\lib\sweetalert2\dist\sweetalert2.js" />
+    <None Include="wwwroot\lib\sweetalert2\dist\sweetalert2.min.js" />
+    <None Include="wwwroot\lib\sweetalert2\LICENSE" />
+    <None Include="wwwroot\lib\sweetalert2\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\src\buttons-handlers.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\constants.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\globalState.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods\close.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods\enable-disable-elements.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods\getInput.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods\hideLoading.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods\update.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods\validation-message.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\instanceMethods\_destroy.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\keydown-handler.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\popup-click-handler.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\privateMethods.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\privateProps.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_animations.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_body.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_core.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_icons.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_mixins.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_theming.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_toasts-animations.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_toasts-body.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\scss\_toasts.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods\argsToParams.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods\bindClickHandler.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods\dom.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods\fire.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods\mixin.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods\showLoading.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\staticMethods\timer.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\SweetAlert.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\sweetalert2.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\sweetalert2.scss" />
+    <None Include="wwwroot\lib\sweetalert2\src\types.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\aria.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\classes.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\defaultInputValidators.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\DismissReason.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\animationEndEvent.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\domUtils.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\getters.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\index.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\init.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\inputUtils.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\parseHtmlToContainer.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\render.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderActions.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderCloseButton.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderContainer.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderContent.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderFooter.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderIcon.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderImage.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderInput.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderPopup.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderProgressSteps.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\dom\renderers\renderTitle.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\getTemplateParams.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\iosFix.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\isNodeEnv.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\openPopup.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\params.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\scrollbar.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\setParameters.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\Timer.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\utils\utils.js" />
+    <None Include="wwwroot\lib\sweetalert2\src\variables.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\bootstrap-4\bootstrap-4.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\bootstrap-4\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\borderless\borderless.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\borderless\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\bulma\bulma.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\bulma\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\CHANGELOG.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\dark\dark.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\dark\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\default\default.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\default\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\LICENSE" />
+    <None Include="wwwroot\lib\sweetalert2\themes\material-ui\material-ui.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\material-ui\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\minimal\minimal.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\minimal\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\vite.config.js" />
+    <None Include="wwwroot\lib\sweetalert2\themes\wordpress-admin\animations.scss" />
+    <None Include="wwwroot\lib\sweetalert2\themes\wordpress-admin\README.md" />
+    <None Include="wwwroot\lib\sweetalert2\themes\wordpress-admin\wordpress-admin.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\lib\sweetalert2\sweetalert2.d.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Student\Create.cshtml" />
   </ItemGroup>
 
 </Project>

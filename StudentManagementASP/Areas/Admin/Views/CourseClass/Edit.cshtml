@@ -1,0 +1,253 @@
+﻿@model StudentManagementASP.Models.CourseClass
+@{
+    ViewData["Title"] = "Sửa lớp học phần";
+    var lessons = Model.Lessons as List<Lesson>;
+}
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        th{
+            color:white !important;
+            text-align:center !important;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">SỬA LỚP HỌC PHẦN</h4>
+        <form id="form-create" asp-action="Create" asp-controller="CourseClass" asp-area="Admin" method="post" class="container">
+            @Html.HiddenFor(x => x.Id);
+            <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    @Html.LabelFor(x => x.Code, "Mã lớp học phần", new { @class = "form-label text-danger", style = "text-wrap: nowrap;" })
+                    @Html.TextBoxFor(x => x.Code, new { @class = "form-control", type = "text", required = "required" })
+                </div>
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    @Html.LabelFor(x => x.Name, "Tên lớp học phần", new { @class = "form-label text-danger", style = "text-wrap: nowrap;" })
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control", type = "text", required = "required" })
+                </div>
+            </div>
+            <hr />
+            <div class="row info-detail">
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.SubjectId, "Môn học", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.SubjectId, (SelectList)ViewBag.Subjects, "Chọn môn học", new { @class = "form-control select2", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.StudentClassId, "Lớp sinh viên", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.StudentClassId, (SelectList)ViewBag.StudentClasses, "Không có", new { @class = "form-control select2", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.MaxQuantity, "Sĩ số tối đa", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.MaxQuantity, new { @class = "form-control ", required = "required", min = "1", max = "500", type = "number" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.StartDate, "Ngày bắt đầu", new { @class = "form-label" })
+                        <input type="date" class="form-control" required id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.EndDate, "Ngày kết thúc", new { @class = "form-label" })
+                        <input type="date" class="form-control" required id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+                    </div>
+                    
+                </div>
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.DefaultRoomId, "Phòng", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.DefaultRoomId, (IEnumerable<SelectListItem>)ViewBag.Rooms, new { @class = "form-control select2", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.LecturerId, "Giảng viên", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.LecturerId, (IEnumerable<SelectListItem>)ViewBag.Lecturers, new { @class = "form-control select2", required = "required" })
+                    </div>
+                </div>
+            </div>
+            <hr />  
+            <div class="lessonList">
+                <h5 class="text-center text-primary">CÁC BUỔI HỌC</h5>
+                <table class="table table-sm table-hover table-bordered">
+                    <thead class="table-primary table-hover table-striped">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tiết bắt đầu</th>
+                            <th>Tiết kết thúc</th>
+                            <th>Ngày</th>
+                            <th>Phòng</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (lessons != null && lessons.Any())
+                        {
+                            int stt = 0;
+                            foreach(var buoi in lessons)
+                            {
+                                <tr>
+                                    <input type="hidden" name="Lessons[@stt].Id" value="@buoi.Id" />
+                                    <td>@(stt+1)</td>
+                                    <td>
+                                        @Html.DropDownList($"Lessons[{stt}].StartLesson", new SelectList(ViewBag.Lessons, "Value", "Text", buoi.StartLesson), new { @class = "form-control-sm startLesson" })
+                                    </td>
+                                    <td>
+                                        @Html.DropDownList($"Lessons[{stt}].EndLesson", new SelectList(ViewBag.Lessons, "Value", "Text", buoi.EndLesson), new { @class = "form-control-sm endLesson" })
+                                    </td>
+                                    <td>
+                                        <input name="Lessons[@stt].Date" id="Lessons[@stt].Date" type="date" value="@buoi.Date?.ToString("yyyy-MM-dd")" />
+                                    </td>
+                                    <td>
+                                        @Html.DropDownList($"Lessons[{stt}].RoomId", new SelectList((IEnumerable<SelectListItem>)ViewBag.Rooms, "Value", "Text", buoi.RoomId), new { @class = "form-control-sm roomId select2", required = "required" })
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button>
+                                    </td>
+                                </tr>
+                                stt++;
+                            }
+                           
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3 text-lg-end">
+                <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+                <button id="btn-create" type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $('.select2').select2({
+            placeholder: "Chọn môn học",
+        });
+    </script>
+    <script>
+        function getDayOfWeek(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date)) return "";
+            const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+
+            return days[date.getDay()];
+        }
+
+        function deleteRow(elem) {
+            // Xóa hàng hiện tại
+            $(elem).closest('tr').remove();
+
+            // Cập nhật lại các chỉ số stt
+            $('tbody tr').each(function (index) {
+                $(this).find('input, select').each(function () {
+                    let name = $(this).attr('name');
+                    let id = $(this).attr('id');
+                    if (name) {
+                        $(this).attr('name', name.replace(/\[\d+\]/, `[${index}]`));
+                    }
+                    if (id) {
+                        $(this).attr('id', id.replace(/\_\d+\_/, `_${index}_`));
+                    }
+                });
+
+                $(this).find('td:first').text(index + 1);
+            });
+        }
+
+
+        $(document).ready(function () {
+            $('#StudyYearDetailId').on('change', function () {
+                var yearId = $(this).val();
+                if (yearId) {
+                    $.ajax({
+                        url: '/api/API/GetSemesterByYearDetail?yearDetailId=' + yearId,
+                        type: 'GET',
+                        success: function (data) {
+                            if (data && data.length > 0) {
+                                var curriculumSelect = $('#SemesterId');
+                                curriculumSelect.empty();
+                                curriculumSelect.append('<option value="">Chọn học kỳ</option>');
+
+                                $.each(data, function (index, item) {
+                                    curriculumSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                                });
+
+                                curriculumSelect.prop('disabled', false);  // Kích hoạt dropdown Chọn ngành
+                            } else {
+                                $('#SemesterId').prop('disabled', true);  // Nếu không có ngành thì disable dropdown
+                            }
+                        },
+                        error: function () {
+                            alert('Không thể lấy dữ liệu.');
+                        }
+                    });
+                }
+                else {
+                    $('#SemesterId').val(null);
+                    $('#SemesterId').trigger('change');
+                    $('#SemesterId').prop('disabled', true);  // Nếu không chọn khoa thì disable dropdown Chọn ngành
+                }
+            });
+
+            $("#SemesterId").on('change', function () {
+                var value = $(this).val();
+                if (value) {
+                    $('.info-detail').removeClass("d-none");
+                    $('#btn-create').removeClass("d-none");
+                } else {
+                    $('.info-detail').addClass("d-none");
+                    $('#btn-create').addClass("d-none");
+
+                }
+            })
+
+            $("#EndLesson, #StartLesson").on('change', function () {
+                var startLesson = parseInt($("#StartLesson").val());
+                var endLesson = parseInt($('#EndLesson').val());
+                if (endLesson < startLesson) {
+                    showAlert("warning", "Sai dữ liệu", "Tiết đầu luôn phải nhỏ hơn tiết cuối");
+                    $("#StartLesson").val("1");
+                    $('#EndLesson').val("2");
+                }
+            })
+            $("#StartDate").on("change", function () {
+                const startDate = $(this).val(); // Lấy giá trị ngày bắt đầu
+                const dayOfWeek = getDayOfWeek(startDate); // Tính thứ trong tuần
+                $("#WeakDay").val(dayOfWeek); // Điền vào trường WeakDay
+            });
+
+            $('#StartDate').trigger('change');
+
+
+            $('#form-create').submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: '@Url.Action("Edit", "CourseClass", new { area = "Admin" })',
+                    method: 'post',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert("success", "Sửa thành công");
+                            setTimeout(function () {
+                                window.location.href = response.redirect;
+                            }, 1500);
+                        } else {
+                            showAlert("error", "Tạo thất bại");
+                        }
+                    }
+                })
+            });
+
+
+        });
+
+    </script>
+}

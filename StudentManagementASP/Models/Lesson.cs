@@ -7,13 +7,11 @@ public partial class Lesson
 {
     public int Id { get; set; }
 
-    public DateTime StartTime { get; set; }
-
-    public DateTime EndTime { get; set; }
-
     public int StartLesson { get; set; }
 
     public int EndLesson { get; set; }
+
+    public DateOnly? Date { get; set; }
 
     public int CourseClassId { get; set; }
 

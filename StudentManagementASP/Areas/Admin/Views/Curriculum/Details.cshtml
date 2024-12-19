@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Chương trình đào tạo";
+    int stt = 1;
+    List<StudyYearDetail> listYear = (List<StudyYearDetail>)ViewBag.ListYear;
+}
+@model StudentManagementASP.Models.Curriculum
+
+<div class="container mt-3">
+    <div class="table-container">
+        <h4 class="text-center mb-4 mt-2" style="font-size:35px;font-weight:bold;">CHƯƠNG TRÌNH ĐÀO TẠO</h4>
+        <div class="d-flex justify-content-between">
+            <h5 class="my-2">@Model.Code - @Model.Name</h5>
+            <a class="btn btn-primary" asp-action="EditCourses" asp-controller="Curriculum" asp-area="Admin" asp-route-id="@Model.Id">Chỉnh sửa</a>
+        </div>
+        <table class="table mt-2 table-hover table-bordered">
+            <thead class="table-primary">
+                <tr>
+                    <th>STT</th>
+                    <th>Mã học phần</th>
+                    <th>Tên học phần</th>
+                    <th>STC</th>
+                    <th>Số Tiết</th>
+                    <th>Loại HP</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var year in listYear)
+                {
+                    foreach (var hk in year.Semesters)
+                    {
+                        var courses = Model.Courses.Where(x => x.SemesterId == hk.Id);
+                        if (courses != null && courses.Any())
+                        {
+                            <tr class="table-success">
+                                <td colspan="7">Năm học @year.StartYear - @year.EndYear | @hk.Name</td>
+                           
+                            </tr>
+                            foreach (var course in courses)
+                            {
+                                <tr>
+                                    <td>@stt</td>
+                                    <td>@course.Subject.Code</td>
+                                    <td>@course.Subject.Name</td>
+                                    <td>@course.Credits</td>
+                                    <td>@course.Lesson</td>
+                                    <td>@course.Type.Name</td>
+                                    <td>
+                                        <a asp-action="GetClassBySubject" asp-controller="CourseClass" asp-route-subjectId="@course.Subject.Id">Xem lớp học phần</a>
+                                    </td>
+                                </tr>
+                                stt++;
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

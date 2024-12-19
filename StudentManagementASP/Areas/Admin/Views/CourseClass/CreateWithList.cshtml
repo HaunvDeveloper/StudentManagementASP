@@ -1,0 +1,134 @@
+﻿@model StudentManagementASP.Models.CourseClass
+@{
+    ViewData["Title"] = "Thêm lớp học phần";
+}
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">THÊM LỚP HỌC PHẦN</h4>
+        <div id="form-create"  class="container">
+            <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+                <div class="d-flex gap-2 align-items-center w-75">
+                    <span style="text-wrap: nowrap;">Chọn khóa:</span>
+                    @Html.DropDownList("StudyYearDetailId", (List<SelectListItem>)ViewBag.StudyYearDetails, "Chọn năm học", new { @class = "form-control" })
+                    <span style="text-wrap: nowrap;">Học kỳ:</span>
+                    <select id="SemesterId" name="SemesterId" class="form-control" disabled required>
+                        <option value="">Chọn học kỳ</option>
+                    </select>
+
+                </div>
+                <a asp-action="DownloadExcelFile" asp-controller="CourseClass" asp-area="Admin" class="btn btn-outline-primary">Tải mẫu danh sách</a>
+
+            </div>
+            <hr />
+            <div class="info-detail d-none">
+                <label for="file">Tải file Excel:</label>
+                <input type="file" id="file" class="form-control" />
+            </div>
+            <div class="mt-3 text-lg-end">
+                <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+                <button id="btn-create" type="submit" class="btn btn-primary d-none">Tạo</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    
+    <script>
+        $(document).ready(function () {
+            $('#StudyYearDetailId').on('change', function () {
+                var yearId = $(this).val();
+                if (yearId) {
+                    $.ajax({
+                        url: '/api/API/GetSemesterByYearDetail?yearDetailId=' + yearId,
+                        type: 'GET',
+                        success: function (data) {
+                            if (data && data.length > 0) {
+                                var curriculumSelect = $('#SemesterId');
+                                curriculumSelect.empty();
+                                curriculumSelect.append('<option value="">Chọn học kỳ</option>');
+
+                                $.each(data, function (index, item) {
+                                    curriculumSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                                });
+
+                                curriculumSelect.prop('disabled', false);  // Kích hoạt dropdown Chọn ngành
+                            } else {
+                                $('#SemesterId').prop('disabled', true);  // Nếu không có ngành thì disable dropdown
+                            }
+                        },
+                        error: function () {
+                            alert('Không thể lấy dữ liệu.');
+                        }
+                    });
+                }
+                else {
+                    $('#SemesterId').val(null);
+                    $('#SemesterId').trigger('change');
+                    $('#SemesterId').prop('disabled', true);  // Nếu không chọn khoa thì disable dropdown Chọn ngành
+                }
+            });
+
+            $("#SemesterId").on('change', function () {
+                var value = $(this).val();
+                if (value) {
+                    $('.info-detail').removeClass("d-none");
+                    $('#btn-create').removeClass("d-none");
+                } else {
+                    $('.info-detail').addClass("d-none");
+                    $('#btn-create').addClass("d-none");
+
+                }
+            });
+
+            $("#btn-create").on("click", function () {
+                const fileInput = $("#file")[0];
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    showAlert("error", "Vui lòng chọn file trước khi tải lên.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("SemesterId", $('#SemesterId').val());
+
+                $.ajax({
+                    url: '@Url.Action("CreateWithList", "CourseClass", new{area="Admin"})', // Đường dẫn tới action
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert("success", "Tạo thành công");
+                            setTimeout(function () {
+                                window.location.href = response.redirect;
+                            }, 1500);
+                        } else {
+                            showAlert("error", response.error);
+                        }
+                    },
+                    error: function () {
+                        showAlert("error", "Có lỗi xảy ra khi gửi yêu cầu.");
+                    }
+                });
+            });
+
+
+        });
+
+    </script>
+}

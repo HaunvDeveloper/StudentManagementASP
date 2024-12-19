@@ -29,15 +29,15 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                 .Where(x => x.Id == CurriculumId)
                 .Include(x => x.Courses)
                 .Include(x => x.StudyYear)
-                    .ThenInclude(x => x.StudyYearDetails)
-                        .ThenInclude(x => x.Semesters)
                 .FirstOrDefault();
-           
+
             if(curriculum == null)
             {
                 return NotFound();
             }
-
+            ViewBag.ListYear = _context.StudyYearDetails.AsNoTracking()
+                .Where(x => x.Id >= curriculum.StudyYear.StartYearId && x.Id <= curriculum.StudyYear.EndYearId)
+                .ToList();
             return PartialView(curriculum);
         }
     }

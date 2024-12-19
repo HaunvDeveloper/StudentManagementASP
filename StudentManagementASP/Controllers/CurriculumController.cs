@@ -26,12 +26,18 @@ namespace StudentManagementASP.Controllers
             }
 
             var curriculum = _context.Curricula.AsNoTracking()
-                .Where(x => x.Id == student.CurriculumId)
-                .Include(x => x.Courses)
-                .Include(x => x.StudyYear)
-                    .ThenInclude(x => x.StudyYearDetails)
-                        .ThenInclude(x => x.Semesters)
-                .FirstOrDefault();
+                 .Where(x => x.Id == student.CurriculumId)
+                 .Include(x => x.Courses)
+                 .Include(x => x.StudyYear)
+                 .FirstOrDefault();
+
+            if (curriculum == null)
+            {
+                return NotFound();
+            }
+            ViewBag.ListYear = _context.StudyYearDetails.AsNoTracking()
+                .Where(x => x.Id >= curriculum.StudyYear.StartYearId && x.Id <= curriculum.StudyYear.EndYearId)
+                .ToList();
 
 
 

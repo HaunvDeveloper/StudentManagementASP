@@ -39,11 +39,11 @@
                         <td>@item.FullName</td>
                         <td>@item.Email</td>
                         <td>@item.DayOfBirth.ToString("dd/MM/yyyy")</td>
-                        <td>@item.LecturerInfos.First().Sex</td>
+                        <td>@item.Sex</td>
                         <td>@item.Dept.Name</td>
                         <td class="text-center">
-                            <a href="" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
-                            <a href="" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
+                            <a asp-action="Edit" asp-controller="Lecturer" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
+                            <a asp-action="Delete" asp-controller="Lecturer" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
                         </td>
                     </tr>
                 }
@@ -87,6 +87,32 @@
                         </a>
                     }
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm Giảng viên</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <div class="row">
+                    <div class="col-6">
+                        <a class="btn btn-lg btn-primary" asp-action="Create" asp-controller="Lecturer" asp-area="Admin">Tạo thủ công</a>
+                    </div>
+                    <div class="col-6">
+                        <a class="btn btn-lg btn-danger" asp-action="CreateWithList" asp-controller="Lecturer" asp-area="Admin">Tải danh sách</a>
+                    </div>
+                </div>
+
+            </div>
+
+
         </div>
     </div>
 </div>

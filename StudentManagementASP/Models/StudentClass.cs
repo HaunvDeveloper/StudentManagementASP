@@ -13,6 +13,8 @@ public partial class StudentClass
 
     public int? LecturerId { get; set; }
 
+    public virtual ICollection<CourseClass> CourseClasses { get; set; } = new List<CourseClass>();
+
     public virtual Lecturer? Lecturer { get; set; }
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();

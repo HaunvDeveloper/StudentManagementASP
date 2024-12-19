@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Danh sách học phần";
     List<CourseClass> courseClasses = ViewBag.CourseClass as List<CourseClass>;
+    List<Semester> semesters = (List<Semester>)ViewBag.ListSemester;
     int stt = 1;
 }
 @model StudentManagementASP.Models.Curriculum
@@ -25,43 +26,36 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.StudyYear.StudyYearDetails)
+            @foreach (var hk in semesters)
             {
-                if (item.EndYear.Year > Model.StudyYear.EndYear.Year)
+                var currentCourse = courseClasses?.Where(x => x.SemesterId == hk.Id).ToList();
+                if (currentCourse != null && currentCourse.Any())
                 {
-                    break;
-                }
-                foreach (var hk in item.Semesters)
-                {
-                    var currentCourse = courseClasses?.Where(x => x.SemesterId == hk.Id).ToList();
-                    if (currentCourse != null && currentCourse.Any())
+                    <tr class="semester-header">
+                        <td colspan="7" style="text-align: left;">Năm học @hk.SchoolYearDetail.StartYear - @hk.SchoolYearDetail.EndYear | @hk.Name</td>
+                    </tr>
+                    foreach (var course in currentCourse)
                     {
-                        <tr class="semester-header">
-                            <td colspan="7" style="text-align: left;">Năm học @item.StartYear.Year - @item.EndYear.Year | @hk.Name</td>
+                        <tr>
+                            <td>@stt</td>
+                            <td>@course.Course.Subject.Code</td>
+                            <td>@course.Course.Subject.Name</td>
+                            <td>@course.Course.Credits</td>
+                            <td>@course.Course.Lesson</td>
+                            <td>@course.Course.Type.Name</td>
+                            <td>
+                                <a asp-action="CourseInfo" asp-controller="Course" asp-route-id="@course.Id" class="btn btn-primary">
+                                    <i class="fa-solid fa-eye"></i>
+                                    Chi tiết
+                                </a>
+                            </td>
                         </tr>
-                        foreach (var course in currentCourse)
-                        {
-                            <tr>
-                                <td>@stt</td>
-                                <td>@course.Course.Subject.Code</td>
-                                <td>@course.Course.Subject.Name</td>
-                                <td>@course.Course.Credits</td>
-                                <td>@course.Course.Lesson</td>
-                                <td>@course.Course.Type.Name</td>
-                                <td>
-                                    <a asp-action="CourseInfo" asp-controller="Course" asp-route-id="@course.Id" class="btn btn-primary">
-                                        <i class="fa-solid fa-eye"></i> 
-                                        Chi tiết
-                                    </a>
-                                </td>
-                            </tr>
-                            stt++;
-                        }
+                        stt++;
                     }
-                    
+
                 }
             }
-              
+
         </tbody>
     </table>
 </div>

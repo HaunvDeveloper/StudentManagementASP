@@ -26,11 +26,11 @@ namespace StudentManagementASP.Controllers
             }
             var curriculum = _context.Curricula.AsNoTracking()
                 .Where(x => x.Id == student.CurriculumId)
-                .Include(x => x.StudyYear)
-                    .ThenInclude(x => x.StudyYearDetails)
-                        .ThenInclude(x => x.Semesters)
                 .FirstOrDefault();
-
+            ViewBag.ListSemester = _context.Semesters.AsNoTracking()
+                .Where(x => x.SchoolYearDetailId >= curriculum.StudyYear.StartYearId && x.SchoolYearDetailId <= curriculum.StudyYear.EndYearId)
+                .ToList();
+            
             ViewBag.CourseClass = _context.StudentJoinClasses.AsNoTracking()
                 .Where(sjc => sjc.StudentId == student.Id)
                 .Include(sjc => sjc.CourseClass) // Bao gồm thông tin CourseClass

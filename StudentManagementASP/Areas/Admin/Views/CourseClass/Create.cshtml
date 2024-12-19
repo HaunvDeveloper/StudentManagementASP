@@ -1,0 +1,289 @@
+﻿@model StudentManagementASP.Models.CourseClass
+@{
+    ViewData["Title"] = "Thêm lớp học phần";
+}
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">THÊM LỚP HỌC PHẦN</h4>
+        <div id="form-create" class="container">
+            <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+                <div class="d-flex gap-2 align-items-center w-75">
+                    <span style="text-wrap: nowrap;">Chọn khóa:</span>
+                    @Html.DropDownList("StudyYearDetailId", (List<SelectListItem>)ViewBag.StudyYearDetails, "Chọn năm học", new { @class = "form-control" })
+                    <span style="text-wrap: nowrap;">Học kỳ:</span>
+                    <select id="SemesterId" name="SemesterId" class="form-control" disabled required>
+                        <option value="">Chọn học kỳ</option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    @Html.LabelFor(x => x.Code, "Mã lớp học phần", new { @class = "form-label text-danger", style = "text-wrap: nowrap;" })
+                    @Html.TextBoxFor(x => x.Code, new { @class = "form-control", type = "text", required = "required" })
+                </div>
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    @Html.LabelFor(x => x.Name, "Tên lớp học phần", new { @class = "form-label text-danger", style = "text-wrap: nowrap;" })
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control", type = "text", required = "required" })
+                </div>
+            </div>
+            <hr />
+            <div class="row info-detail d-none">
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.SubjectId, "Môn học", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.SubjectId, (SelectList)ViewBag.Subjects, "Chọn môn học", new { @class = "form-control select2", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.StudentClassId, "Lớp sinh viên", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.StudentClassId, (SelectList)ViewBag.StudentClasses, "Không có", new { @class = "form-control select2", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.Label("LessonNo" ,"Số Tiết", new { @class = "form-label" })
+                        <input class="form-control" disabled id="LessonNo" type="number"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.StartDate, "Ngày bắt đầu", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.StartDate, "dd/MM/yyyy", new { @class = "form-control", type = "date", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.EndDate, "Ngày kết thúc", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.EndDate, "dd/MM/yyyy", new { @class = "form-control", type = "date", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.MaxQuantity, "Sĩ số tối đa", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.MaxQuantity, new { @class = "form-control ", required = "required", min = "1", max = "500", type = "number" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.DefaultRoomId, "Phòng mặc định", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.DefaultRoomId, (IEnumerable<SelectListItem>)ViewBag.Rooms, new { @class = "form-control select2", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.LecturerId, "Giảng viên", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.LecturerId, (IEnumerable<SelectListItem>)ViewBag.Lecturers, new { @class = "form-control select2", required = "required" })
+                    </div>
+                </div>
+            </div>
+            <div class="lessonList d-none">
+                <h5 class="text-center text-primary">NGÀY HỌC TRONG TUẦN</h5>
+                <table class="table table-sm table-hover table-bordered">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>STT</th>
+                            <th>Thứ</th>
+                            <th>Tiết bắt đầu</th>
+                            <th>Tiết kết thúc</th>
+                            <th>Phòng</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="list-row-weekday">
+                       
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="text-center mt-2">
+                                <button onclick="addRow()" type="button" class="btn btn-info">Thêm buổi</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+            <div class="mt-3 text-lg-end">
+                <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+                <button id="btn-create" type="submit" class="btn btn-primary d-none">Tạo</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $('.select2').select2({
+            placeholder: "Chọn môn học",
+        });
+    </script>
+    <script>
+        var newRow = `
+                
+                                    <td class="stt">1</td>
+                                    <td>
+        @Html.DropDownList("WeekDay", new SelectList(ViewBag.WeekDays, "Value", "Text"), new { @class = "form-control weekDay", required = "required" })
+                                    </td>
+                                    <td>
+        @Html.DropDownList("LessonStart", new SelectList(ViewBag.Lessons, "Value", "Text"), new { @class = "form-control startLesson", required = "required" })
+                                    </td>
+                                    <td>
+        @Html.DropDownList("LessonEnd", new SelectList(ViewBag.Lessons, "Value", "Text"), new { @class = "form-control endLesson", required = "required" })
+                                    </td>
+                                    <td>
+        @Html.DropDownList($"LessonRoom", new SelectList((IEnumerable<SelectListItem>)ViewBag.Rooms, "Value", "Text"), new { @class = "form-control-sm lessonRoom", required = "required" })
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button>
+                                    </td>
+                                
+                `;
+
+        function getDayOfWeek(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date)) return "";
+            const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+
+            return days[date.getDay()];
+        }
+
+        function deleteRow(elem) {
+            $(elem).closest('tr').remove();
+            $('tbody tr').each(function (index) {
+                $(this).find('td:first').text(index + 1);
+            });
+        }
+        
+        function addRow() {
+            var tbody = $('.list-row-weekday');
+            var newTr = document.createElement('tr');
+            newTr.innerHTML = newRow;
+            $(tbody).append($(newTr));
+            $('tbody tr').each(function (index) {
+                $(this).find('td:first').text(index + 1);
+            });
+        }
+
+
+        $(document).ready(function () {
+            addRow();
+            $('#StudyYearDetailId').on('change', function () {
+                var yearId = $(this).val();
+                if (yearId) {
+                    $.ajax({
+                        url: '/api/API/GetSemesterByYearDetail?yearDetailId=' + yearId,
+                        type: 'GET',
+                        success: function (data) {
+                            if (data && data.length > 0) {
+                                var curriculumSelect = $('#SemesterId');
+                                curriculumSelect.empty();
+                                curriculumSelect.append('<option value="">Chọn học kỳ</option>');
+
+                                $.each(data, function (index, item) {
+                                    curriculumSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                                });
+
+                                curriculumSelect.prop('disabled', false);  // Kích hoạt dropdown Chọn ngành
+                            } else {
+                                $('#SemesterId').prop('disabled', true);  // Nếu không có ngành thì disable dropdown
+                            }
+                        },
+                        error: function () {
+                            alert('Không thể lấy dữ liệu.');
+                        }
+                    });
+                }
+                else {
+                    $('#SemesterId').val(null);
+                    $('#SemesterId').trigger('change');
+                    $('#SemesterId').prop('disabled', true);  // Nếu không chọn khoa thì disable dropdown Chọn ngành
+                }
+            });
+
+            $("#SemesterId").on('change', function () {
+                var value = $(this).val();
+                if (value) {
+                    $('.info-detail').removeClass("d-none");
+                    $('#btn-create').removeClass("d-none");
+                    $('.lessonList').removeClass("d-none");
+                } else {
+                    $('.info-detail').addClass("d-none");
+                    $('#btn-create').addClass("d-none");
+                    $('.lessonList').addClass("d-none");
+
+                }
+            })
+
+            $("#EndLesson, #StartLesson").on('change', function () {
+                var startLesson = parseInt($("#StartLesson").val());
+                var endLesson = parseInt($('#EndLesson').val());
+                if (endLesson < startLesson) {
+                    showAlert("warning", "Sai dữ liệu", "Tiết đầu luôn phải nhỏ hơn tiết cuối");
+                    $("#StartLesson").val("1");
+                    $('#EndLesson').val("2");
+                }
+            })
+            $("#StartDate").on("change", function () {
+                const startDate = $(this).val(); // Lấy giá trị ngày bắt đầu
+                const dayOfWeek = getDayOfWeek(startDate); // Tính thứ trong tuần
+                $("#WeakDay").val(dayOfWeek); // Điền vào trường WeakDay
+            });
+
+            $('#SubjectId').on('change', function () {
+                $.ajax({
+                    url: '/api/API/GetNewCodeCourseClass',
+                    method: 'get',
+                    data: { subjectId: $('#SubjectId').val(), semesterId: $('#SemesterId').val() },
+                    success: function (response) {
+                        $('#Code').val(response.code);
+                        $('#Name').val(response.name);
+                        $('#LessonNo').val(response.lessonNo);
+                    }
+                })
+            });
+
+            $('#btn-create').on('click', function (event) {
+                var model = {
+                    SemesterId: $('#SemesterId').val(),
+                    Code: $('#Code').val(),
+                    Name: $('#Name').val(),
+                    SubjectId: $('#SubjectId').val(),
+                    StudentClassId: $('#StudentClassId').val(),
+                    StartDate: $('#StartDate').val(),
+                    EndDate: $('#EndDate').val(),
+                    MaxQuantity: $('#MaxQuantity').val(),
+                    DefaultRoomId: $('#DefaultRoomId').val(),
+                    LecturerId: $('#LecturerId').val()
+                }
+                var weekDays = [];
+                $('.list-row-weekday').find('tr').each(function (index, elem) {
+                    var ob = {
+                        WeekDayId: $(elem).find('.weekDay').val(),
+                        StartLessonId: $(elem).find('.startLesson').val(),
+                        EndLessonId: $(elem).find('.endLesson').val(),
+                        RoomId: $(elem).find('.lessonRoom').val()
+                    }
+                    weekDays.push(ob);
+                });
+
+                $.ajax({
+                    url: '@Url.Action("Create", "CourseClass", new { area = "Admin" })',
+                    method: 'post',
+                    data: { model, weekDays },
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert("success", "Tạo thành công");
+                            setTimeout(function () {
+                                window.location.href = response.redirect;
+                            }, 1500);
+                        } else {
+                            showAlert("error", "Tạo thất bại");
+                        }
+                    }
+                })
+            });
+
+
+        });
+
+    </script>
+}

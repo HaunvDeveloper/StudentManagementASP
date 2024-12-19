@@ -3,7 +3,6 @@
 
 @{
     ViewData["Title"] = "Thông tin cá nhân";
-    var info = Model.StudentInfos.FirstOrDefault();
     var curriculum = Model.Curriculum;
     var studyYear = curriculum.StudyYear;
 }
@@ -40,19 +39,19 @@
                     <th>Ngày sinh</th>
                     <td>@Model.DayOfBirth.ToString("dd/MM/yyyy")</td>
                     <th>Nơi sinh</th>
-                    <td>@info?.BirthPlace</td>
+                    <td>@Model.BirthPlace</td>
                 </tr>
                 <tr>
                     <th>Dân tộc</th>
-                    <td>@info?.Nation</td>
+                    <td>@Model.Nation</td>
                     <th>Tôn giáo</th>
-                    <td>@info?.Religion</td>
+                    <td>@Model.Religion</td>
                 </tr>
                 <tr>
                     <th>Giới tính</th>
-                    <td>@info?.Sex</td>
+                    <td>@Model.Sex</td>
                     <th>CMND/CCCD</th>
-                    <td>@info?.NationId</td>
+                    <td>@Model.NationId</td>
                 </tr>
 
             </table>
@@ -64,21 +63,21 @@
                     <th>Quốc gia</th>
                     <td>Việt Nam</td>
                     <th>Tỉnh/Thành</th>
-                    <td>@info?.ProvinceCodeNavigation?.Name</td>
+                    <td>@Model?.ProvinceCodeNavigation?.Name</td>
                 </tr>
                 <tr>
                     <th>Quận/Huyện</th>
-                    <td>@info?.DistrictCodeNavigation?.Name</td>
+                    <td>@Model.DistrictCodeNavigation?.Name</td>
                     <th>Phường/Xã</th>
-                    <td>@info?.WardCodeNavigation?.Name</td>
+                    <td>@Model.WardCodeNavigation?.Name</td>
                 </tr>
                 <tr>
                     <th>Địa chỉ</th>
-                    <td colspan="3">@info?.StreetAddress</td>
+                    <td colspan="3">@Model.StreetAddress</td>
                 </tr>
                 <tr>
                     <th>Số điện thoại</th>
-                    <td>@info?.PhoneNo</td>
+                    <td>@Model.PhoneNo</td>
                     <th>Email</th>
                     <td>@Model.Email</td>
                 </tr>
@@ -103,7 +102,7 @@
                     <th>Cố vấn học tập</th>
                     <td>@Model.StudentClass?.Lecturer?.FullName</td>
                     <th>Niên khoá</th>
-                    <td>@studyYear.StartYear.Year - @studyYear.EndYear.Year</td>
+                    <td>@studyYear.StartYear.StartYear - @studyYear.EndYear.EndYear</td>
                 </tr>
                 <tr>
                     <th>Hệ</th>

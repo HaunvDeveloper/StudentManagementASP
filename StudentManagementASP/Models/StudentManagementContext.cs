@@ -31,8 +31,6 @@ public partial class StudentManagementContext : DbContext
 
     public virtual DbSet<Lecturer> Lecturers { get; set; }
 
-    public virtual DbSet<LecturerInfo> LecturerInfos { get; set; }
-
     public virtual DbSet<Lesson> Lessons { get; set; }
 
     public virtual DbSet<LessonInfo> LessonInfos { get; set; }
@@ -49,8 +47,6 @@ public partial class StudentManagementContext : DbContext
 
     public virtual DbSet<StudentClass> StudentClasses { get; set; }
 
-    public virtual DbSet<StudentInfo> StudentInfos { get; set; }
-
     public virtual DbSet<StudentJoinClass> StudentJoinClasses { get; set; }
 
     public virtual DbSet<StudentJoinLesson> StudentJoinLessons { get; set; }
@@ -66,7 +62,7 @@ public partial class StudentManagementContext : DbContext
     public virtual DbSet<Ward> Wards { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    { }
+    {  }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Authentication>(entity =>
@@ -115,20 +111,17 @@ public partial class StudentManagementContext : DbContext
             entity.Property(e => e.MaxQuantity).HasDefaultValue(10);
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.WeakDays).HasMaxLength(255);
 
             entity.HasOne(d => d.Course).WithMany(p => p.CourseClasses)
                 .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_course_class_course");
 
             entity.HasOne(d => d.DefaultRoom).WithMany(p => p.CourseClasses)
                 .HasForeignKey(d => d.DefaultRoomId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_course_class_room");
-
-            entity.HasOne(d => d.EndLessonNavigation).WithMany(p => p.CourseClassEndLessonNavigations)
-                .HasForeignKey(d => d.EndLesson)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CourseClass_LessonInfo1");
 
             entity.HasOne(d => d.Lecturer).WithMany(p => p.CourseClasses)
                 .HasForeignKey(d => d.LecturerId)
@@ -140,10 +133,14 @@ public partial class StudentManagementContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CourseClass_Semester");
 
-            entity.HasOne(d => d.StartLessonNavigation).WithMany(p => p.CourseClassStartLessonNavigations)
-                .HasForeignKey(d => d.StartLesson)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CourseClass_LessonInfo");
+            entity.HasOne(d => d.StudentClass).WithMany(p => p.CourseClasses)
+                .HasForeignKey(d => d.StudentClassId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_CourseClass_StudentClass");
+
+            entity.HasOne(d => d.Subject).WithMany(p => p.CourseClasses)
+                .HasForeignKey(d => d.SubjectId)
+                .HasConstraintName("FK_CourseClass_Subject");
         });
 
         modelBuilder.Entity<CourseType>(entity =>
@@ -206,29 +203,14 @@ public partial class StudentManagementContext : DbContext
         {
             entity.ToTable("Lecturer");
 
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.BirthPlace).HasMaxLength(255);
             entity.Property(e => e.DayOfBirth).HasColumnType("datetime");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.FullName).HasMaxLength(255);
             entity.Property(e => e.HiredDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Dept).WithMany(p => p.Lecturers)
-                .HasForeignKey(d => d.DeptId)
-                .HasConstraintName("FK_lecturer_department");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Lecturers)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_Lecturer_User");
-        });
-
-        modelBuilder.Entity<LecturerInfo>(entity =>
-        {
-            entity.ToTable("LecturerInfo");
-
-            entity.Property(e => e.BirthName).HasMaxLength(255);
-            entity.Property(e => e.BirthPlace).HasMaxLength(255);
             entity.Property(e => e.Nation).HasMaxLength(100);
             entity.Property(e => e.NationId)
                 .HasMaxLength(50)
@@ -237,34 +219,34 @@ public partial class StudentManagementContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Religion).HasMaxLength(100);
-            entity.Property(e => e.Sex)
-                .HasMaxLength(10)
-                .HasDefaultValue("Nam");
+            entity.Property(e => e.Sex).HasMaxLength(10);
             entity.Property(e => e.StreetAddress).HasMaxLength(255);
 
-            entity.HasOne(d => d.DistrictCodeNavigation).WithMany(p => p.LecturerInfos)
+            entity.HasOne(d => d.Dept).WithMany(p => p.Lecturers)
+                .HasForeignKey(d => d.DeptId)
+                .HasConstraintName("FK_lecturer_department");
+
+            entity.HasOne(d => d.DistrictCodeNavigation).WithMany(p => p.Lecturers)
                 .HasForeignKey(d => d.DistrictCode)
-                .HasConstraintName("FK_LecturerInfo_District");
+                .HasConstraintName("FK_Lecturer_District");
 
-            entity.HasOne(d => d.Lecturer).WithMany(p => p.LecturerInfos)
-                .HasForeignKey(d => d.LecturerId)
-                .HasConstraintName("FK_lecturer_info_lecturer");
-
-            entity.HasOne(d => d.ProvinceCodeNavigation).WithMany(p => p.LecturerInfos)
+            entity.HasOne(d => d.ProvinceCodeNavigation).WithMany(p => p.Lecturers)
                 .HasForeignKey(d => d.ProvinceCode)
-                .HasConstraintName("FK_LecturerInfo_Province");
+                .HasConstraintName("FK_Lecturer_Province");
 
-            entity.HasOne(d => d.WardCodeNavigation).WithMany(p => p.LecturerInfos)
+            entity.HasOne(d => d.User).WithMany(p => p.Lecturers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Lecturer_User");
+
+            entity.HasOne(d => d.WardCodeNavigation).WithMany(p => p.Lecturers)
                 .HasForeignKey(d => d.WardCode)
-                .HasConstraintName("FK_LecturerInfo_Ward");
+                .HasConstraintName("FK_Lecturer_Ward");
         });
 
         modelBuilder.Entity<Lesson>(entity =>
         {
             entity.ToTable("Lesson");
-
-            entity.Property(e => e.EndTime).HasColumnType("datetime");
-            entity.Property(e => e.StartTime).HasColumnType("datetime");
 
             entity.HasOne(d => d.CourseClass).WithMany(p => p.Lessons)
                 .HasForeignKey(d => d.CourseClassId)
@@ -356,14 +338,26 @@ public partial class StudentManagementContext : DbContext
             entity.Property(e => e.Id)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.BirthPlace).HasMaxLength(50);
             entity.Property(e => e.DayOfBirth).HasColumnType("datetime");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.FaceData).HasMaxLength(255);
             entity.Property(e => e.FullName).HasMaxLength(255);
+            entity.Property(e => e.Nation).HasMaxLength(100);
+            entity.Property(e => e.NationId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PhoneNo)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Religion).HasMaxLength(100);
+            entity.Property(e => e.Sex).HasMaxLength(10);
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasDefaultValue("Còn học");
+            entity.Property(e => e.StreetAddress).HasMaxLength(255);
 
             entity.HasOne(d => d.Curriculum).WithMany(p => p.Students)
                 .HasForeignKey(d => d.CurriculumId)
@@ -373,10 +367,18 @@ public partial class StudentManagementContext : DbContext
                 .HasForeignKey(d => d.DeptId)
                 .HasConstraintName("FK_student_department");
 
+            entity.HasOne(d => d.DistrictCodeNavigation).WithMany(p => p.Students)
+                .HasForeignKey(d => d.DistrictCode)
+                .HasConstraintName("FK_Student_District");
+
             entity.HasOne(d => d.Major).WithMany(p => p.Students)
                 .HasForeignKey(d => d.MajorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_student_major");
+
+            entity.HasOne(d => d.ProvinceCodeNavigation).WithMany(p => p.Students)
+                .HasForeignKey(d => d.ProvinceCode)
+                .HasConstraintName("FK_Student_Province");
 
             entity.HasOne(d => d.StudentClass).WithMany(p => p.Students)
                 .HasForeignKey(d => d.StudentClassId)
@@ -386,6 +388,10 @@ public partial class StudentManagementContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_Student_User");
+
+            entity.HasOne(d => d.WardCodeNavigation).WithMany(p => p.Students)
+                .HasForeignKey(d => d.WardCode)
+                .HasConstraintName("FK_Student_Ward");
         });
 
         modelBuilder.Entity<StudentClass>(entity =>
@@ -401,48 +407,6 @@ public partial class StudentManagementContext : DbContext
                 .HasForeignKey(d => d.LecturerId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_StudentClass_Lecturer");
-        });
-
-        modelBuilder.Entity<StudentInfo>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_student_info");
-
-            entity.ToTable("StudentInfo");
-
-            entity.Property(e => e.BirthName).HasMaxLength(255);
-            entity.Property(e => e.BirthPlace).HasMaxLength(255);
-            entity.Property(e => e.FaceData).HasMaxLength(255);
-            entity.Property(e => e.Nation).HasMaxLength(100);
-            entity.Property(e => e.NationId)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.PhoneNo)
-                .HasMaxLength(20)
-                .IsUnicode(false);
-            entity.Property(e => e.Religion).HasMaxLength(100);
-            entity.Property(e => e.Sex)
-                .HasMaxLength(10)
-                .HasDefaultValue("Nam");
-            entity.Property(e => e.StreetAddress).HasMaxLength(255);
-            entity.Property(e => e.StudentId)
-                .HasMaxLength(20)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.DistrictCodeNavigation).WithMany(p => p.StudentInfos)
-                .HasForeignKey(d => d.DistrictCode)
-                .HasConstraintName("FK_StudentInfo_District");
-
-            entity.HasOne(d => d.ProvinceCodeNavigation).WithMany(p => p.StudentInfos)
-                .HasForeignKey(d => d.ProvinceCode)
-                .HasConstraintName("FK_StudentInfo_Province");
-
-            entity.HasOne(d => d.Student).WithMany(p => p.StudentInfos)
-                .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK_student_info_student");
-
-            entity.HasOne(d => d.WardCodeNavigation).WithMany(p => p.StudentInfos)
-                .HasForeignKey(d => d.WardCode)
-                .HasConstraintName("FK_StudentInfo_Ward");
         });
 
         modelBuilder.Entity<StudentJoinClass>(entity =>
@@ -491,23 +455,22 @@ public partial class StudentManagementContext : DbContext
         {
             entity.ToTable("StudyYear");
 
-            entity.Property(e => e.EndYear).HasColumnType("datetime");
             entity.Property(e => e.ExpireDate).HasColumnType("datetime");
             entity.Property(e => e.Number).HasDefaultValue(1);
             entity.Property(e => e.StartDate).HasColumnType("datetime");
-            entity.Property(e => e.StartYear).HasColumnType("datetime");
+
+            entity.HasOne(d => d.EndYear).WithMany(p => p.StudyYearEndYears)
+                .HasForeignKey(d => d.EndYearId)
+                .HasConstraintName("FK_StudyYear_StudyYearDetail_end");
+
+            entity.HasOne(d => d.StartYear).WithMany(p => p.StudyYearStartYears)
+                .HasForeignKey(d => d.StartYearId)
+                .HasConstraintName("FK_StudyYear_StudyYearDetail_start");
         });
 
         modelBuilder.Entity<StudyYearDetail>(entity =>
         {
             entity.ToTable("StudyYearDetail");
-
-            entity.Property(e => e.EndYear).HasColumnType("datetime");
-            entity.Property(e => e.StartYear).HasColumnType("datetime");
-
-            entity.HasOne(d => d.StudyYear).WithMany(p => p.StudyYearDetails)
-                .HasForeignKey(d => d.StudyYearId)
-                .HasConstraintName("FK_study_year_detail_study_year");
         });
 
         modelBuilder.Entity<Subject>(entity =>

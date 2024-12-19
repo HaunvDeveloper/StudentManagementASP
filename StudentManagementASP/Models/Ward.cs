@@ -13,7 +13,7 @@ public partial class Ward
 
     public virtual District DistrictCodeNavigation { get; set; } = null!;
 
-    public virtual ICollection<LecturerInfo> LecturerInfos { get; set; } = new List<LecturerInfo>();
+    public virtual ICollection<Lecturer> Lecturers { get; set; } = new List<Lecturer>();
 
-    public virtual ICollection<StudentInfo> StudentInfos { get; set; } = new List<StudentInfo>();
+    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 }

@@ -1,0 +1,130 @@
+﻿@model StudentManagementASP.Models.CourseClass
+@{
+    ViewData["Title"] = "Xóa lớp học phần";
+    string[] dayNames = new string[] { "Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy" };
+}
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .displayModel{
+            font-size:18px;
+            font-weight:bold;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">XÓA LỚP HỌC PHẦN</h4>
+        <div class="container">
+            @Html.HiddenFor(x => x.Id)
+            <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    @Html.LabelFor(x => x.Code, "Mã lớp học phần", new { @class = "form-label text-danger", style = "text-wrap: nowrap;" })
+                    <label class="displayModel form-label">@Model.Code</label>
+                </div>
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    @Html.LabelFor(x => x.Name, "Tên lớp học phần", new { @class = "form-label text-danger", style = "text-wrap: nowrap;" })
+                    <label class="displayModel form-label">@Model.Name</label>
+                </div>
+            </div>
+            <hr />
+            <div class="row info-detail">
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.SubjectId, "Môn học", new { @class = "form-label" })
+                        <label class="displayModel form-label">@Model.Subject.Name</label>
+
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.StudentClassId, "Lớp sinh viên", new { @class = "form-label" })
+                        <label class="displayModel form-label">@Model.StudentClass.Code</label>
+
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.WeakDays, "Thời khóa biểu", new { @class = "form-label" })
+                        <label class="displayModel form-label">@Model.WeakDays</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.StartDate, "Ngày bắt đầu", new { @class = "form-label" })
+                        <label class="displayModel form-label">@Model.StartDate.ToShortDateString()</label>
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.EndDate, "Ngày kết thúc", new { @class = "form-label" })
+                        <label class="displayModel form-label">@Model.EndDate.ToShortDateString()</label>
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.MaxQuantity, "Sĩ số tối đa", new { @class = "form-label" })
+                        <label class="displayModel form-label">@Model.MaxQuantity</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.DefaultRoomId, "Phòng", new { @class = "form-label" })
+                        <label class="displayModel form-label">@Model.DefaultRoom.Name</label>
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.LecturerId, "Giảng viên", new { @class = "form-label" })
+                         <label class="displayModel form-label">@Model.Lecturer.FullName</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            
+            <div class="mt-3 text-lg-end">
+                <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+                <button id="btn-delete" type="submit" class="btn btn-danger">Xác nhận xóa!</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        function getDayOfWeek(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date)) return "";
+            const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+
+            return days[date.getDay()];
+        }
+
+
+        $(document).ready(function () {
+            $('#StartDate').trigger('change');
+            $('#btn-delete').on('click', async function () {
+                var confirmed = await confirmAction();
+                if (confirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteConfirmed", "CourseClass", new { area = "Admin" })',
+                        method: 'post',
+                        data: {id: $('#Id').val()},
+                        success: function (res) {
+                            if (res.success) {
+                                showAlert("success", "Xóa thành công!!");
+                                setTimeout(function () {
+                                    window.location.href = res.redirect;
+                                }, 1500);
+                            }else{
+                                showAlert("error", "Xóa thất bại!!", res.error);
+                            }
+                        },
+                        error: function (error) {
+                            showAlert("error", "Xóa thất bại!!", error);
+                        }
+                    })
+                }
+            });
+
+        });
+
+    </script>
+}

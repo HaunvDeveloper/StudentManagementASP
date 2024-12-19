@@ -1,0 +1,194 @@
+﻿@{
+    ViewData["Title"] = "Chương trình đào tạo";
+    List<StudyYearDetail> listYear = (List<StudyYearDetail>)ViewBag.ListYear;
+    List<Subject> listSubject = (List<Subject>)ViewBag.Subject;
+
+}
+@model StudentManagementASP.Models.Curriculum
+
+@section Links{
+
+}
+
+<div class="container mt-3">
+    <div class="table-container">
+        <h4 class="text-center mb-4 mt-2" style="font-size:35px;font-weight:bold;">CHƯƠNG TRÌNH ĐÀO TẠO</h4>
+        <h6 class="my-2">@Model.Code - @Model.Name</h6>
+        <input type="hidden" id="curriculumId" value="@Model.Id"/>
+        <input type="hidden" id="studyYearId" value="@Model.StudyYearId"/>
+        <input type="hidden" id="curriculumCode" value="@Model.Code"/>
+        <input type="hidden" id="curriculumName" value="@Model.Name"/>
+
+        <table class="table table-hover table-bordered">
+            <thead class="table-primary">
+                <tr>
+                    <th>Mã học phần</th>
+                    <th>Tên học phần</th>
+                    <th>STC</th>
+                    <th>Số Tiết</th>
+                    <th>Loại HP</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var year in listYear)
+                {
+                    <tr class="table-success">
+                        <td colspan="7">Năm học @year.StartYear - @year.EndYear</td>
+                    </tr>
+                    foreach (var hk in year.Semesters)
+                    {
+                        <tr class="table-secondary">
+                            <td colspan="7">@hk.Name</td>
+                        </tr>
+                        foreach (var course in Model.Courses.Where(x => x.SemesterId == hk.Id))
+                        {
+                            <tr class="row-course" data-semesterid="@hk.Id" data-subjectid="@course.SubjectId" data-id="@course.Id">
+                                <td class="subjectCode">@course.Subject.Code</td>
+                                <td class="subjectName">@Html.DropDownList("SubjectId_" + hk.Id + "_" + course.SubjectId, new SelectList(listSubject, "Id", "Name", course.SubjectId), new { @class = "select2 SubjectId" })</td>
+                                <td class="subjectCredits">@course.Credits</td>
+                                <td class="subjectLesson">
+                                    <input class="subjectLessonVal" type="number" min="1" max="200" value="@course.Lesson" />
+                                </td>
+                                
+                                <td class="subjectType">@(Html.DropDownList("subjectTypeId", new SelectList(ViewBag.CourseType, "Id", "Name", course.TypeId)))</td>
+                                <td class="service">
+                                    <button class="btn btn-danger" onclick="deleteRow(this)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                        <tr class="row-course" data-semesterid="@hk.Id" data-id="0">
+                            <td class="subjectCode"></td>
+                            <td class="subjectName">@Html.DropDownList("SubjectId_" + hk.Id + "_", new SelectList(listSubject, "Id", "Name"), "Chọn môn học", new { @class = "select2 SubjectId" })</td>
+                            <td class="subjectCredits"></td>
+                            <td class="subjectLesson">
+                                <input class="subjectLessonVal" type="number" min="1" max="200" value="1" />
+                            </td>
+                            <td class="subjectType"></td>
+                            <td class="service"></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="text-lg-end">
+            <a href="" class="m-2 btn btn-lg btn-danger">Làm mới</a>
+            <button id="btn-create" class="m-2 btn btn-lg btn-primary">Lưu thay đổi</button>
+        </div>
+
+    </div>
+</div>
+
+@* Render the dropdown HTML first *@
+<div id="dropdownHtml" style="display:none;">
+    @Html.DropDownList("SubjectId_0", new SelectList(listSubject, "Id", "Name"), "Chọn môn học", new { @class = "select2 SubjectId" })
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $('#btn-create').on('click', function () {
+            var courses = [];
+            var curriculumId = $('#curriculumId').val();
+            $('.row-course').each(function (index, elem) {
+                var course = {
+                    Id: $(elem).attr('data-id'),
+                    SubjectId: $(elem).attr('data-subjectid'),
+                    SemesterId: $(elem).attr('data-semesterid'),
+                    TypeId: $(elem).find('.subjectType').find('select').val(),
+                    Credits: $(elem).find('.subjectCredits').text(),
+                    Lesson: $(elem).find('.subjectLessonVal').val()
+                }
+                if (course.SubjectId) {
+                    courses.push(course);
+                }
+                
+            });
+            console.log(courses);
+            $.ajax({
+                url: '@Url.Action("EditCourses", "Curriculum", new {area="Admin"})',
+                method: 'post',
+                data: {
+                    curriculumId,courses
+                },
+                success: function (response) {
+                    showAlert('success', 'Thành công');
+                    setTimeout(function () {
+                        window.location.href = response.redirect;
+                    }, 1500);
+                }
+            })
+        });
+    </script>
+    <script>
+        var newRow = `
+                    <tr id="new-row" class="row-course" data-semesterid="1"  data-id="0">
+                        <td class="subjectCode"></td>
+                        <td class="subjectName">
+                           `+ $('#dropdownHtml').html() + `
+                        </td>
+                        <td class="subjectCredits"></td>
+                        <td class="subjectLesson">
+                            <input class="subjectLessonVal" type="number" min="1" max="200" value="1" />
+                        </td>
+                        <td class="subjectType"></td>
+                        <td class="service">
+                            
+                        </td>
+                    </tr>
+                `;
+        
+
+        $(document).ready(function () {
+
+
+            $('.select2').select2({
+                placeholder: "Chọn môn học",
+            });
+
+            $(document).on('change', '.SubjectId', function () {
+                var selectedValue = $(this).val();
+                var tr = $(this).closest('tr');
+                var htmlId = $(this).attr("id");
+                var semesterId = $(tr).attr('data-semesterid');
+                $.ajax({
+                    url: '/api/API/GetSubject',
+                    method: 'get',
+                    data: { id: selectedValue },
+                    success: function (response) {
+                        if (response) {
+                            $(tr).attr('data-subjectid', response.id);
+                            $(tr).attr('data-id', '0');
+                            $(tr).find('.subjectCode').text(response.code);
+                            $(tr).find('.SubjectId').attr("id", htmlId + response.id);
+                            $(tr).find('.SubjectId').attr("name", htmlId + response.id);
+                            $(tr).find('.subjectCredits').text(response.defaultCredits);
+                            $(tr).find('.subjectLessonVal').val(response.defaultLesson);
+                            $(tr).find('.subjectType').html(`@(Html.DropDownList("subjectTypeId", new SelectList(ViewBag.CourseType, "Id", "Name")))`);
+                            $(tr).find('.service').html(`
+                                <button class="btn btn-danger" onclick="deleteRow(this)">Delete</button>
+                            `);
+                            $(tr).after(newRow);
+                            let addedRow = $('#new-row');
+                            $(addedRow).attr('data-semesterid', semesterId);
+                            $(addedRow).removeAttr('id');
+                            $(addedRow).find('.SubjectId').attr('id', 'Subject_' + semesterId + '_');
+                            $(addedRow).find('.SubjectId').attr('name', 'Subject_' + semesterId + '_');
+                            $('.select2').select2({
+                                placeholder: "Chọn môn học",
+                            });
+
+                        }
+                    }
+
+                });
+            });
+
+
+        });
+        function deleteRow(btn) {
+            $(btn).closest('tr').remove();
+        }
+    </script>
+}

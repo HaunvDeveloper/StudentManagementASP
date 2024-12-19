@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Tạo chương trình đào tạo";
+    var listYear = (SelectList)ViewBag.StudyYear;
+    var listMajor = (SelectList)ViewBag.Major;
+
+}
+@model StudentManagementASP.Models.Curriculum
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+
+<div class="container">
+    <form asp-action="Create" asp-controller="Curriculum" asp-area="Admin" method="post" class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">TẠO CHƯƠNG TRÌNH ĐÀO TẠO</h4>
+        <div class="form-group">
+            <label asp-for="Code">Mã chương trình</label>
+            <input asp-for="Code" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name">Tên chương trình</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label asp-for="StudyYearId">Khóa</label>
+            @Html.DropDownListFor(x => x.StudyYearId, listYear, new { @class = "form-control", required = "required" })
+        </div>
+        <div class="form-group">
+            <label asp-for="MajorId">Ngành</label>
+            @Html.DropDownListFor(x => x.MajorId, listMajor, new { @class = "form-control", required = "required" })
+
+        </div>
+        <div class="text-lg-end mt-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            <button type="reset" class="btn btn-outline-success">Reset</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+        <div class="text-danger mt-2">@ViewBag.Alert</div>
+    </form>
+</div>

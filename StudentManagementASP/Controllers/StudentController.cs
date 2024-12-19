@@ -112,7 +112,6 @@ namespace StudentManagementASP.Controllers
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             var student = _context.Students.AsNoTracking()
-                .Include(x => x.StudentInfos)
                 .FirstOrDefault(x => x.UserId == userId);
             if (student == null)
             {
@@ -121,12 +120,12 @@ namespace StudentManagementASP.Controllers
             string filePath = Path.Combine(_environment.WebRootPath, "Data", "nation.json");
             var jsonData = System.IO.File.ReadAllText(filePath);
             var ethnicList = JsonConvert.DeserializeObject<List<NationViewModel>>(jsonData);
-            ViewBag.NationNames = new SelectList(ethnicList, "EthnicName", "EthnicName", student.StudentInfos.FirstOrDefault()?.Nation);
+            ViewBag.NationNames = new SelectList(ethnicList, "EthnicName", "EthnicName", student.Nation);
 
             filePath = Path.Combine(_environment.WebRootPath, "Data", "religion.json");
             jsonData = System.IO.File.ReadAllText(filePath);
             var religionList = JsonConvert.DeserializeObject<List<ReligionViewModel>>(jsonData);
-            ViewBag.ReligionNames = new SelectList(religionList, "ReligionName", "ReligionName", student.StudentInfos.FirstOrDefault()?.Religion);
+            ViewBag.ReligionNames = new SelectList(religionList, "ReligionName", "ReligionName", student.Religion);
             return View(student);
         }
 
@@ -141,18 +140,14 @@ namespace StudentManagementASP.Controllers
             }
             student.DayOfBirth = DayOfBirth;
             student.Email = Email;
-            var info = student.StudentInfos.FirstOrDefault();
-            if (info != null)
-            {
-                info.BirthPlace = BirthPlace;
-                info.Nation = Nation;
-                info.PhoneNo = PhoneNo;
-                info.DistrictCode = District;
-                info.WardCode = Ward;
-                info.StreetAddress = StreetAddress;
-                info.ProvinceCode = Province;
-                info.Religion = Religion;   
-            }
+            student.BirthPlace = BirthPlace;
+            student.Nation = Nation;
+            student.PhoneNo = PhoneNo;
+                student.DistrictCode = District;
+                student.WardCode = Ward;
+                student.StreetAddress = StreetAddress;
+                student.ProvinceCode = Province;
+                student.Religion = Religion;   
             await _context.SaveChangesAsync();
             return RedirectToAction("Info", "Student");
         }

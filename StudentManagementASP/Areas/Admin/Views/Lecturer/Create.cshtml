@@ -1,0 +1,230 @@
+﻿@model StudentManagementASP.Models.Lecturer
+@{
+    ViewData["Title"] = "Thêm giảng viên";
+    var genders = new List<SelectListItem>()
+    {
+        new SelectListItem("Nam", "Nam"),
+        new SelectListItem("Nữ", "Nữ"),
+    };
+}
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">THÊM GIẢNG VIÊN</h4>
+        <form asp-action="Create" asp-controller="Student" asp-area="Admin" method="post" id="form-create" class="container">
+            <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+                <div class="d-flex gap-2 align-items-center w-75">
+                    <span style="text-wrap: nowrap;">Mã giảng viên:</span>
+                    <input asp-for="Id" class="form-control" value="@ViewBag.NewId" type="text" required/>
+                </div>
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    <span style="text-wrap: nowrap;">Họ lót</span>
+                    <input id="LastName" name="LastName" class="form-control" required />
+                    <span style="text-wrap: nowrap;">Tên</span>
+                    <input id="FirstName" name="FirstName" class="form-control" required />
+                </div>
+                <div class="d-flex gap-2 mt-2 align-items-center w-75">
+                    <span style="text-wrap: nowrap;">Khoa</span>
+                    @Html.DropDownListFor(x => x.DeptId, (SelectList)ViewBag.Depts, new {@class="form-control select2"})
+                </div>
+            </div>
+            <hr />
+            <div class="row info-detail">
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        @Html.Label("CCCD", "CCCD", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.NationId, "", new { @class = "form-control", type = "text", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.DayOfBirth, "Ngày sinh", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.DayOfBirth, "dd/MM/yyyy", new { @class = "form-control", type = "date", required = "required" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.Label("BirthPlace", "Nơi sinh", new { @class = "form-label" })
+                        <input class="form-control" asp-for="BirthPlace" type="text" />
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.Label("Gender", "Giới tính", new { @class = "form-label" })
+                        @Html.DropDownListFor(x => x.Sex, genders, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.Label("PhoneNo", "Số điện thoại", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.PhoneNo, "", new { @class = "form-control", type = "text" })
+                    </div>
+                    
+                </div>
+                <div class="col-4">
+                    
+                    <div class="form-group mb-3">
+                        <label for="province">Tỉnh/Thành</label>
+                        <select id="province" class="form-control select2" name="ProvinceCode" required>
+                            <option value="">Chọn Tỉnh/Thành</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="district">Quận/Huyện</label>
+                        <select id="district" class="form-control select2" name="DistrictCode" required disabled>
+                            <option value="">Chọn Quận/Huyện</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="ward">Xã/Phường</label>
+                        <select id="ward" class="form-control select2" name="WardCode" required disabled>
+                            <option value="">Chọn Xã/Phường</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.Label("StreetAddress", "Địa chỉ", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.StreetAddress, "",new { @class = "form-control", type = "text" })
+                    </div>
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(x => x.Email, "Email", new { @class = "form-label" })
+                        <input asp-for="Email" class="form-control" required />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group mb-3">
+                        <label for="ethnicity">Dân tộc</label>
+                        @Html.DropDownListFor(u => u.Nation, (SelectList)ViewBag.NationNames, "Chọn dân tộc", new { id = "ethnicity", @class="select2 form-control" })
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="religion">Tôn giáo</label>
+                        @Html.DropDownListFor(x => x.Religion, (SelectList)ViewBag.ReligionNames, "Chọn tôn giáo", new { id = "religion", @class = "select2 form-control" })
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="religion">Mật khẩu tài khoản (Nếu để trống sẽ là mã giảng viên)</label>
+                        <input id="Password" name="Password" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-3 text-lg-end">
+                <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+                <button id="btn-create" type="submit" class="btn btn-primary ">Tạo</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $('.select2').select2({
+            placeholder: "Chọn môn học",
+        });
+    </script>
+    <script>
+        
+
+
+        $(document).ready(function () {
+            const apiBaseUrl = "/api/AddressAPI/";
+
+            let selectedProvinceName = "";
+            let selectedDistrictName = "";
+            let selectedWardName = "";
+
+            // Load tỉnh/thành
+            $.get(apiBaseUrl + "GetProvince", function (data) {
+                const provinces = data; // Parse the JSON string
+                provinces.forEach(function (province) {
+                    
+                        $('#province').append(`<option value="${province.code}">${province.name}</option>`);
+                    
+                });
+                // Kích hoạt sự kiện onchange sau khi chọn tỉnh/thành
+                $('#province').trigger('change');
+            });
+
+            // Khi tỉnh/thành thay đổi
+            $('#province').on('change', function () {
+                const provinceCode = $(this).val();
+                selectedProvinceName = $(this).find('option:selected').text();  // Get the selected name
+                $('#district').html('<option value="">Chọn Quận/Huyện</option>');
+                $('#ward').html('<option value="">Chọn Xã/Phường</option>');
+                $('#district').prop('disabled', true);
+                $('#ward').prop('disabled', true);
+
+                if (provinceCode) {
+                    // Lấy quận theo tỉnh
+                    $.get(apiBaseUrl + `GetDistrictByProvince?provinceCode=${provinceCode}`, function (data) {
+                        const districts = data; // Parse the JSON string
+                        districts.forEach(function (district) {
+                            $('#district').append(`<option value="${district.code}">${district.name}</option>`);
+                        });
+                        $('#district').prop('disabled', false);
+
+                        // Kích hoạt onchange cho quận nếu có giá trị mặc định
+                        $('#district').trigger('change');
+                    });
+                }
+            });
+
+            // Khi quận/huyện thay đổi
+            $('#district').on('change', function () {
+                const districtCode = $(this).val();
+                selectedDistrictName = $(this).find('option:selected').text();  // Get the selected name
+                $('#ward').html('<option value="">Chọn Xã/Phường</option>');
+                $('#ward').prop('disabled', true);
+
+                if (districtCode) {
+                    // Lấy xã/phường theo quận
+                    $.get(apiBaseUrl + `GetWardByDistrict?districtCode=${districtCode}`, function (data) {
+                        const wards = data; // Parse the JSON string
+                        wards.forEach(function (ward) {
+                            $('#ward').append(`<option value="${ward.code}" >${ward.name}</option>`);
+                        });
+                        $('#ward').prop('disabled', false);
+                    });
+                }
+            });
+
+            $('form').submit(function (event) {
+                event.preventDefault(); // Ngăn form gửi theo cách mặc định
+
+                // Tạo đối tượng FormData từ form
+                var formData = new FormData(this);
+
+                // Thêm trường FullName
+                var fullName = $('#LastName').val() + ' ' + $('#FirstName').val();
+                formData.append("FullName", fullName);
+
+                // Gửi AJAX
+                $.ajax({
+                    url: '@Url.Action("Create", "Lecturer", new { area = "Admin" })',
+                    method: 'post',
+                    data: formData,
+                    contentType: false, // Không đặt contentType để FormData hoạt động chính xác
+                    processData: false, // Không xử lý dữ liệu vì FormData sẽ làm việc này
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert("success", "Tạo thành công");
+                            setTimeout(function () {
+                                window.location.href = response.redirect;
+                            }, 1500);
+                        } else {
+                            showAlert("error", response.error);
+                        }
+                    },
+                    error: function () {
+                        showAlert("error", "Có lỗi xảy ra khi gửi yêu cầu.");
+                    }
+                });
+            });
+
+        });
+
+    </script>
+}

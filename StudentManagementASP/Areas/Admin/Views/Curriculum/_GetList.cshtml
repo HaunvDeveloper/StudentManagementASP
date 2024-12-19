@@ -1,0 +1,38 @@
+﻿@{
+
+    int stt = 1;
+}
+@model IEnumerable<StudentManagementASP.Models.Curriculum>
+
+
+<table class="table table-hover table-bordered">
+    <thead class="table-primary">
+        <tr>
+            <th>STT</th>
+            <th>Mã chương trình</th>
+            <th>Tên chương trình</th>
+            <th>Khóa</th>
+            <th>Ngành</th>
+            <th>Tổng số tín chỉ</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@stt</td>
+                <td>@item.Code</td>
+                <td>@item.Name</td>
+                <td>@item.StudyYear.Number</td>
+                <td>@item.Major.Name</td>
+                <td>@item.Courses.Sum(x => x.Credits)</td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Details" asp-controller="Curriculum" asp-area="Admin" asp-route-id="@item.Id">Chi tiết</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-controller="Curriculum" asp-area="Admin" asp-route-id="@item.Id">Xóa</a>
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>

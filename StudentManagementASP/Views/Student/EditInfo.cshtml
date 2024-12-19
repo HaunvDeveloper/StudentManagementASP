@@ -3,7 +3,6 @@
 
 @{
     ViewData["Title"] = "Chỉnh sửa thông tin";
-    var info = Model.StudentInfos.FirstOrDefault();
 }
 
 @section Links {
@@ -25,7 +24,7 @@
         </div>
         <div class="form-group">
             <label for="birthPlace">Nơi sinh</label>
-            <input name="BirthPlace" type="text" id="BirthPlace" value="@info?.BirthPlace">
+            <input name="BirthPlace" type="text" id="BirthPlace" value="@Model.BirthPlace">
         </div>
         <div class="form-group">
             <label for="ethnicity">Dân tộc</label>
@@ -38,7 +37,7 @@
         </div>
         <div class="form-group">
             <label for="idCard">CMND/CCCD</label>
-            <input type="text" id="idCard" value="@info?.NationId" disabled>
+            <input type="text" id="idCard" value="@Model.NationId" disabled>
         </div>
 
         <div class="section-title">Thông tin liên lạc</div>
@@ -65,11 +64,11 @@
         </div>
         <div class="form-group">
             <label for="address">Địa chỉ</label>
-            <input name="StreetAddress" type="text" id="address" value="@info?.StreetAddress">
+            <input name="StreetAddress" type="text" id="address" value="@Model.StreetAddress">
         </div>
         <div class="form-group">
             <label for="phone">Số điện thoại</label>
-            <input name="PhoneNo" type="text" id="phone" value="@info?.PhoneNo">
+            <input name="PhoneNo" type="text" id="phone" value="@Model.PhoneNo">
         </div>
         <div class="form-group">
             <label for="email">Email</label>
@@ -85,9 +84,9 @@
 
 @section Scripts {
     <script>
-        var deProvince = "@info?.ProvinceCode";
-        var deDistrict = "@info?.DistrictCode";
-        var deWard = "@info?.WardCode";
+        var deProvince = "@Model.ProvinceCode";
+        var deDistrict = "@Model.DistrictCode";
+        var deWard = "@Model.WardCode";
 
         $(document).ready(function () {
             const apiBaseUrl = "/api/AddressAPI/";
