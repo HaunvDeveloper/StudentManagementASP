@@ -1,4 +1,4 @@
-﻿
+﻿    
 @{
 }
 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
@@ -10,10 +10,11 @@
             </p>
         </a>
     </li>
+    <li class="nav-header">Nhân sự</li>
     <li class="nav-item">
-        <a asp-action="Index" asp-controller="Student" asp-area="Admin" class="nav-link">
+        <a asp-action="Index" asp-controller="Department" asp-area="Admin" class="nav-link">
             <i class="nav-icon bi bi-palette"></i>
-            <p>Sinh viên</p>
+            <p>Khoa/Bộ môn</p>
         </a>
     </li>
     <li class="nav-item">
@@ -22,24 +23,45 @@
             <p>Giảng viên</p>
         </a>
     </li>
+    <li class="nav-header">Chương trình giáo dục</li>
+    <li class="nav-item">
+        <a asp-action="Index" asp-controller="Major" asp-area="Admin" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Ngành học</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a asp-action="Index" asp-controller="Subject" asp-area="Admin" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Môn học</p>
+        </a>
+    </li>
     <li class="nav-item">
         <a asp-action="Index" asp-controller="Curriculum" asp-area="Admin" class="nav-link">
             <i class="nav-icon bi bi-palette"></i>
             <p>Chương trình đào tạo</p>
         </a>
     </li>
-    <li class="nav-item">
-        <a asp-action="Index" asp-controller="Course" asp-area="Admin" class="nav-link">
-            <i class="nav-icon bi bi-palette"></i>
-            <p>Học phần</p>
-        </a>
-    </li>
+
+    <li class="nav-header">Học phần</li>
     <li class="nav-item">
         <a asp-action="Index" asp-controller="CourseClass" asp-area="Admin" class="nav-link">
             <i class="nav-icon bi bi-palette"></i>
             <p>Lớp học phần</p>
         </a>
     </li>
+    <li class="nav-header">Sinh viên</li>
+    <li class="nav-item">
+        <a asp-action="Index" asp-controller="Student" asp-area="Admin" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Sinh viên</p>
+        </a>
+    </li>
+    
+    
+    @* <li class="nav-header">---------</li>
+
+
     <li class="nav-item">
         <a href="#" class="nav-link">
             <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -415,5 +437,5 @@
             <i class="nav-icon bi bi-circle text-info"></i>
             <p>Informational</p>
         </a>
-    </li>
+    </li> *@
 </ul>

@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Xóa ngành học";
+}
+@model StudentManagementASP.Models.Major
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .displayModel {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+}
+
+
+<div class="container">
+    <form asp-action="DeleteConfirmed" method="post" class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">XÓA NGÀNH HỌC</h4>
+        @Html.HiddenFor(x => x.Id)
+        <div class="form-group">
+            <label asp-for="Code">Mã môn</label>
+            <label class="displayModel form-label">@Model.Code</label>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name">Tên môn</label>
+            <label class="displayModel form-label">@Model.Name</label>
+        </div>
+        <div class="form-group">
+            <label asp-for="DeptId">Khoa</label>
+            <label class="displayModel form-label">@Model.Dept?.Name</label>
+        </div>
+        <div class="text-lg-end mt-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            <button type="submit" class="btn btn-danger">Xóa</button>
+        </div>
+        <div class="text-danger mt-2">@ViewBag.Alert</div>
+    </form>
+</div>
+
+
+@section Scripts {
+
+}

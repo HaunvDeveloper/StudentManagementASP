@@ -8,7 +8,11 @@
 
   <ItemGroup>
     <Content Remove="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
+    <Content Remove="Areas\Admin\Views\Major\Create.cshtml" />
+    <Content Remove="Areas\Admin\Views\Major\Details.cshtml" />
     <Content Remove="Areas\Admin\Views\Student\Create.cshtml" />
+    <Content Remove="Areas\Admin\Views\Subject\Create.cshtml" />
+    <Content Remove="Areas\Admin\Views\Subject\Details.cshtml" />
     <Content Remove="Views\User\ForgetPassword.cshtml" />
   </ItemGroup>
 
@@ -36,14 +40,24 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Major\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Major\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Major\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Major\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Student\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Subject\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Subject\Details.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\Data\nation.json" />
     <_ContentIncludedByDefault Remove="Views\User\ForgetPassword.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
+    <None Include="Areas\Admin\Views\Major\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Major\Details.cshtml" />
     <None Include="Areas\Admin\Views\Student\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Subject\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Subject\Details.cshtml" />
     <None Include="Views\User\ForgetPassword.cshtml" />
     <None Include="wwwroot\Data\TextFile.txt" />
     <None Include="wwwroot\lib\sweetalert2\dist\sweetalert2.all.js" />
@@ -154,6 +168,37 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Areas\Admin\Views\Student\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Subject\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Subject\Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\Major\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Major\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Major\Delete.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Major\Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Major\Edit.cshtml" />
   </ItemGroup>
 
 </Project>

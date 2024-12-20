@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using StudentManagementASP.Models;
 using StudentManagementASP.Services;
 using StudentManagementASP.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StudentManagementASP.Areas.Admin.Controllers
 {
@@ -424,5 +427,267 @@ namespace StudentManagementASP.Areas.Admin.Controllers
 
             }
         }
+    
+        public IActionResult ImportStudentList(int id)
+        {
+            var courseClass = _context.CourseClasses.Find(id);
+            if (courseClass == null)
+            {
+                return NotFound();
+            }
+            return View(courseClass);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportStudentList(IFormFile file, int Id)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return Json(new { success = false, error = "File không hợp lệ!!!" });
+            }
+
+            var model = _context.CourseClasses.Find(Id);
+            if (model == null)
+            {
+                return Json(new { success = false, error = "Id không tồn tại!!!" });
+
+            }
+
+            try
+            {
+                using var stream = new MemoryStream();
+                await file.CopyToAsync(stream);
+
+                using var package = new OfficeOpenXml.ExcelPackage(stream);
+                var worksheet = package.Workbook.Worksheets[0];
+                var rowCount = worksheet.Dimension.Rows;
+                var list = new List<StudentJoinClass>();
+                
+                List<string> error = new List<string>();
+                int failNum = 0;
+                for (int row = 5; row <= rowCount; row++)
+                {
+                    try
+                    {
+                        if (string.IsNullOrEmpty(worksheet.Cells[row, 2].Text.Trim()))
+                        {
+                            break;
+                        }
+                        string MSSV = worksheet.Cells[row, 2].Text.Trim();
+                        if (!_context.Students.AsNoTracking().Any(x => x.Id == MSSV))
+                        {
+                            failNum++;
+                            error.Add($"{MSSV} Không tồn tại");
+                            continue;
+                        }
+                        if (_context.StudentJoinClasses.AsNoTracking().Any(x => x.StudentId == MSSV && x.CourseClassId == model.Id))
+                        {
+                            failNum++;
+                            error.Add($"{MSSV} đã tồn tại trong lớp học phần");
+                            continue;
+                        }
+                        var studentJoinClass = new StudentJoinClass()
+                        {
+                            CourseClassId = model.Id,
+                            StudentId = worksheet.Cells[row, 2].Text.Trim(),
+                            DateJoin = DateTime.Now,
+                        };
+
+                        list.Add(studentJoinClass);
+                    }
+                    catch (Exception ex)
+                    {
+                        error.Add(worksheet.Cells[row, 2].Text.Trim() + " has error: " + ex.ToString());
+                        continue;
+                    }
+                }
+
+                _context.StudentJoinClasses.AddRange(list);
+                model.CurrentQuantity = list.Count;
+                await _context.SaveChangesAsync();
+                if (failNum > 0)
+                {
+                    return Json(new { success = true, redirect = Url.Action("Index", "CourseClass", new { area = "Admin" }), message = "Has some error:" + string.Join("\n", error) });
+                }
+                return Json(new
+                {
+                    success = true,
+                    redirect = Url.Action("Index", "CourseClass", new { area = "Admin" })
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.ToString() });
+            }
+        }
+
+
+
+        [HttpGet]
+        public IActionResult DownloadImportStudentList()
+        {
+            // Đường dẫn tới file trong thư mục wwwroot
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Data", "MauThemSV_LHP.xlsx");
+
+            // Kiểm tra nếu file tồn tại
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("File không tồn tại.");
+            }
+
+            // Lấy nội dung file
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            // Trả file về client
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MauThemSV_LHP.xlsx");
+        }
+
+
+        public IActionResult ExportStudentList(int id)
+        {
+            // Đường dẫn đến tệp Excel trong wwwroot/Data/
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Data", "DanhSachSVLHP.xlsx");
+
+            // Kiểm tra tệp có tồn tại
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("Tệp không tồn tại.");
+            }
+
+            // Lấy dữ liệu từ cơ sở dữ liệu
+            var list = _context.StudentJoinClasses
+                .Include(x => x.Student)
+                .Where(x => x.CourseClassId == id)
+                .ToList();
+            var courseClass = _context.CourseClasses.AsNoTracking().SingleOrDefault(x => x.Id == id);
+            var lessonJoins = _context.StudentJoinLessons
+                .AsNoTracking()
+                .GroupJoin(_context.Lessons, sj => sj.LessonId, l => l.Id, (sj, l) => new { sj, l })
+                .SelectMany(x => x.l.DefaultIfEmpty(), (x, lJoined) => new {x.sj, lJoined})
+                .Where(x => x.lJoined.CourseClassId == courseClass.Id)
+                .Select(x => x.sj)
+                .ToList();
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets[0]; // Sử dụng worksheet đầu tiên
+
+                worksheet.Cells[$"D4"].Value = courseClass?.Semester.Name;
+                worksheet.Cells[$"I4"].Value = courseClass?.Semester.SchoolYearDetail.StartYear + " - " +  courseClass?.Semester.SchoolYearDetail.StartYear;
+
+                worksheet.Cells[$"E5"].Value = courseClass?.Subject?.Code + " - " + courseClass?.Name;
+                worksheet.Cells[$"W5"].Value = courseClass?.Code;
+                worksheet.Cells[$"A6"].Value = $"Thời gian học: Bắt đầu: {courseClass?.StartDate.ToString("dd/MM/yyyy")} - Kết thúc: {courseClass?.EndDate.ToString("dd/MM/yyyy")}";
+                worksheet.Cells[$"B7"].Value = courseClass?.WeakDays;   
+
+
+                // Xóa dữ liệu cũ (nếu cần)
+                var startRow = 10; // Giả sử dữ liệu bắt đầu từ dòng 5
+
+                // Điền dữ liệu mới
+                var currentRow = startRow;
+                int stt = 1;
+                foreach (var item in list)
+                {
+                    string[] nameParts = item.Student.FullName.Trim().Split(' ');
+                    string ho = string.Join(" ", nameParts, 0, nameParts.Length - 1);
+                    string ten = nameParts[nameParts.Length - 1];
+                    worksheet.Cells[$"A{currentRow}"].Value = stt++; // STT
+                    worksheet.Cells[$"C{currentRow}"].Value = item.Student.Id;          // Mã số sinh viên
+                    worksheet.Cells[$"F{currentRow}"].Value = item.Student.StudentClass?.Code;    // Họ lót
+                    worksheet.Cells[$"H{currentRow}"].Value = ho;   // Tên
+                    worksheet.Cells[$"M{currentRow}"].Value = ten; // Ngày sinh
+                    worksheet.Cells[$"Q{currentRow}"].Value = item.Student.DayOfBirth.ToString("dd/MM/yyyy");
+                    int coMat = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Có mặt");
+                    int diTre = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Đi trễ");
+                    int vang = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Vắng");
+                    worksheet.Cells[$"U{currentRow}"].Value = coMat; 
+                    worksheet.Cells[$"X{currentRow}"].Value = diTre; 
+                    worksheet.Cells[$"AB{currentRow}"].Value = vang; 
+                    currentRow++;
+                }
+                // Thiết lập đường viền cho vùng ô A1:M10
+                var range = worksheet.Cells[$"A9:AD{currentRow - 1}"];
+                range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                // Điều chỉnh kích thước cột
+
+                // Trả lại tệp Excel đã chỉnh sửa
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                var fileName = "DanhSachSinhVien_ChinhSua.xlsx";
+                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                return File(stream, contentType, fileName);
+            }
+        }
+
+
+        public IActionResult ViewStudentList(int id)
+        {
+            var courseClass = _context.CourseClasses.AsNoTracking()
+                .Include(x => x.StudentJoinClasses)
+                .SingleOrDefault(x => x.Id == id);
+            if (courseClass == null)
+            {
+                return NotFound();
+            }
+            ViewBag.LessonJoined = _context.StudentJoinLessons
+                .AsNoTracking()
+                .GroupJoin(_context.Lessons, sj => sj.LessonId, l => l.Id, (sj, l) => new { sj, l })
+                .SelectMany(x => x.l.DefaultIfEmpty(), (x, lJoined) => new { x.sj, lJoined })
+                .Where(x => x.lJoined.CourseClassId == courseClass.Id)
+                .Select(x => x.sj)
+                .ToList();
+            return View(courseClass);   
+        }
+
+        [HttpPost]
+        public IActionResult AddStudentIntoClass(string studentId, int courseClassId)
+        {
+            try
+            {
+                if(_context.StudentJoinClasses.Any(x => x.CourseClassId == courseClassId && x.StudentId == studentId))
+                {
+                    return Json(new { success = false, error = "Sinh viên đã tồn tại" });
+                }
+                _context.StudentJoinClasses.Add(new StudentJoinClass()
+                {
+                    StudentId = studentId,
+                    CourseClassId = courseClassId,
+                    DateJoin = DateTime.Now
+                });
+                _context.SaveChanges();
+                return Json(new { success = true, redirect=Url.Action("ViewStudentList", "CourseClass", new {area="Admin", id=courseClassId}) });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error=ex.ToString() });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult RemoveStudentFromClass(string studentId, int courseClassId)
+        {
+            try
+            {
+                
+                var model = _context.StudentJoinClasses.FirstOrDefault(x => x.StudentId ==studentId && x.CourseClassId == courseClassId);
+                if (model != null)
+                {
+                    _context.StudentJoinClasses.Remove(model);
+                    _context.SaveChanges();
+                }
+                return Json(new { success = true, redirect = Url.Action("ViewStudentList", "CourseClass", new { area = "Admin", id = courseClassId }) });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = true, error = ex.ToString() });
+            }
+        }
+
     }
 }

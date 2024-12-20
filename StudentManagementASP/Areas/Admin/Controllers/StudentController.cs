@@ -88,6 +88,7 @@ namespace StudentManagementASP.Areas.Admin.Controllers
         {
             return View();
         }
+        
         [HttpPost]
         public async Task<IActionResult> CreateWithList(IFormFile file)
         {
@@ -239,7 +240,7 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                 var worksheet = package.Workbook.Worksheets.Add("Danh sách sinh viên");
 
                 // Title row
-                worksheet.Cells["A1:E1"].Merge = true;
+                worksheet.Cells["A1:R1"].Merge = true;
                 worksheet.Cells["A1"].Value = "DANH SÁCH SINH VIÊN";
                 worksheet.Cells["A1"].Style.Font.Bold = true;
                 worksheet.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;

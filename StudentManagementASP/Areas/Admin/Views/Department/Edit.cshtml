@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Sửa khoa";
+}
+@model StudentManagementASP.Models.Department
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+
+<div class="container">
+    <form asp-action="Edit" asp-controller="Department" asp-area="Admin" method="post" class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">SỬA KHOA/BỘ MÔN</h4>
+        <input asp-for="Id" type="hidden"/>
+        <input asp-for="DateFound" type="hidden"/>
+        <div class="form-group">
+            <label asp-for="Code">Mã khoa</label>
+            <input asp-for="Code" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label asp-for="Name">Tên khoa</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+        <div class="text-lg-end mt-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+        <div class="text-danger mt-2">@ViewBag.Alert</div>
+    </form>
+</div>
+
+
+@section Scripts {
+    <script>
+        $('.select2').select2({
+            placeholder: "Chọn môn học",
+        });
+    </script>
+}

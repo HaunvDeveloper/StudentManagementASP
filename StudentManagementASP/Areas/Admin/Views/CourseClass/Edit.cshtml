@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Sửa lớp học phần";
     var lessons = Model.Lessons as List<Lesson>;
+    lessons = lessons?.OrderBy(x => x.Date).ToList();
 }
 @section Links {
     <link rel="stylesheet" href="~/assets/css/course.css">

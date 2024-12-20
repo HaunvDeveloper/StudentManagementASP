@@ -15,6 +15,8 @@ public partial class StudentJoinLesson
 
     public string Status { get; set; } = null!;
 
+    public int? LateLessons { get; set; }
+
     public virtual Lesson Lesson { get; set; } = null!;
 
     public virtual Student Student { get; set; } = null!;

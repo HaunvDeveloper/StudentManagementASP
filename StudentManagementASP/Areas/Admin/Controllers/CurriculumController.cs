@@ -144,10 +144,6 @@ namespace StudentManagementASP.Areas.Admin.Controllers
         }
 
 
-
-
-
-
         public IActionResult Details(int id)
         {
             var curriculum = _context.Curricula.AsNoTracking()
@@ -164,6 +160,29 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                 .Where(x => x.Id >= curriculum.StudyYear.StartYearId && x.Id <= curriculum.StudyYear.EndYearId)
                 .ToList();
             return View(curriculum);
+        }
+    
+    
+        public IActionResult Delete(int id)
+        {
+            var model = _context.Curricula.Find(id);
+            if (model == null)
+            {
+
+            return NotFound(); }
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var model = _context.Curricula.Find(id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            _context.Curricula.Remove(model);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿@model StudentManagementASP.ViewModels.LecturerListViewModel
+﻿@model StudentManagementASP.ViewModels.SubjectListViewModel
 
 @{
-    ViewData["Title"] = "Danh sách giảng viên";
+    ViewData["Title"] = "Danh sách các môn học";
+    var depts = (IEnumerable<Department>)ViewBag.Depts;
+    var selectList = new SelectList(depts, "Id", "Name");
 }
 
 @section Links {
@@ -10,40 +12,42 @@
 
 <div class="container">
     <div class="table-container m-4">
-        <h4 class="text-center mb-4 mt-2" style="font-size:35px;font-weight:bold;">DANH SÁCH GIẢNG VIÊN</h4>
+        <h4 class="text-center mb-4 mt-2" style="font-size:35px;font-weight:bold;">DANH SÁCH MÔN HỌC</h4>
         <div class="d-flex justify-content-between mb-3">
             <div class="d-flex gap-2">
-                @Html.DropDownList("DeptId", (SelectList)ViewBag.Depts, "Chọn khoa", new { @class = "form-control", onchange = "onDeptChange()" })
-                <button onclick="downloadExcel()" class="btn btn-outline-secondary">Export</button>
+                @Html.DropDownList("DeptId", selectList, "Chọn khoa/bộ môn", new { @class = "form-control", onchange = "onDeptChange()" })
             </div>
-            <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-add-course">+ Thêm giảng viên</button>
+            <a asp-action="Create" class="btn btn-add-course">+ Thêm môn học</a>
         </div>
 
         <table class="table table-bordered table-hover">
             <thead>
                 <tr class="table-primary">
-                    <th class="text-center text-light">Mã giảng viên</th>
-                    <th class="text-center text-light">Họ và tên</th>
-                    <th class="text-center text-light">Email</th>
-                    <th class="text-center text-light">Ngày sinh</th>
-                    <th class="text-center text-light">Giới tính</th>
-                    <th class="text-center text-light">Khoa</th>
+                    <th class="text-center text-light">STT</th>
+                    <th class="text-center text-light">Mã môn học</th>
+                    <th class="text-center text-light">Tên môn học</th>
+                    <th class="text-center text-light">Số tín chỉ</th>
+                    <th class="text-center text-light">Khóa/Bộ môn</th>
+                    <th class="text-center text-light">Số tiết mặc định</th>
                     <th width="13%"></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Lecturers)
+                @{
+                    int stt = 1;
+                }
+                @foreach (var item in Model.Subjects)
                 {
                     <tr>
-                        <td>@item.Id</td>
-                        <td>@item.FullName</td>
-                        <td>@item.Email</td>
-                        <td>@item.DayOfBirth.ToString("dd/MM/yyyy")</td>
-                        <td>@item.Sex</td>
-                        <td>@item.Dept.Name</td>
+                        <td>@(stt++)</td>
+                        <td>@item.Code</td>
+                        <td>@item.Name</td>
+                        <td>@item.DefaultCredits</td>
+                        <td>@(depts.FirstOrDefault(x => x.Id == item.DeptId)?.Name)</td>
+                        <td>@item.DefaultLesson</td>
                         <td class="text-center">
-                            <a asp-action="Edit" asp-controller="Lecturer" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
-                            <a asp-action="Delete" asp-controller="Lecturer" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
+                            <a asp-action="Edit" asp-controller="Subject" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
+                            <a asp-action="Delete" asp-controller="Subject" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
                         </td>
                     </tr>
                 }
@@ -57,7 +61,7 @@
                     @if (Model.CurrentPage > 1)
                     {
                         <a href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })" class="move previous">
-                            <img width="35" height="35" src="~/assets/images/circle-chevron-left-solid.svg" alt="">
+                            <img width="35" height="35" src="~/assets/images/circle-chevron-right-solid.svg" alt="">
                         </a>
                     }
                     else
@@ -91,38 +95,20 @@
     </div>
 </div>
 
-<div class="modal" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h4 class="modal-title">Thêm Giảng viên</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body text-center">
-                <div class="row">
-                    <div class="col-6">
-                        <a class="btn btn-lg btn-primary" asp-action="Create" asp-controller="Lecturer" asp-area="Admin">Tạo thủ công</a>
-                    </div>
-                    <div class="col-6">
-                        <a class="btn btn-lg btn-danger" asp-action="CreateWithList" asp-controller="Lecturer" asp-area="Admin">Tải danh sách</a>
-                    </div>
-                </div>
-
-            </div>
-
-
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <script>
+        @if (TempData["Success"] != null)
+        {
+            <text>
+                showToast("success", "Xóa thành công");
+            </text>
+        }
+    </script>
+    <script>
         function onDeptChange() {
             const deptId = document.querySelector('[name="DeptId"]').value;
-            const currentPage = @Model.CurrentPage;
-            window.location.href = `@Url.Action("Index")?page=${currentPage}&deptId=${deptId}`;
+            window.location.href = `@Url.Action("Index")?page=1&deptId=${deptId}`;
         }
         function downloadExcel() {
             const params = {

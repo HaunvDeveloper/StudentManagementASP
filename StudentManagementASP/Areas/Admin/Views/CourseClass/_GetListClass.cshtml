@@ -22,7 +22,7 @@
                     <th class="text-center text-light">Thời khóa biểu</th>
                     <th class="text-center text-light">Ngày bắt đầu</th>
                     <th class="text-center text-light">Ngày kết thúc</th>
-                    <th width="13%"></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -37,7 +37,17 @@
                         <td>@item.WeakDays</td>
                         <td>@(item.StartDate.ToString("dd/MM/yyyy"))</td>
                         <td>@(item.EndDate.ToString("dd/MM/yyyy"))</td>
-                        <td class="text-center">
+                        <td class="text-center" style="text-wrap:nowrap;">
+                    
+                            <a asp-action="ViewStudentList" asp-route-id="@item.Id" class="btn-service btn btn-info mx-1">
+                                <img src="~/assets/images/bars-solid.svg" height="20" alt="">
+                            </a>
+                            @* <a asp-action="ImportStudentList" asp-route-id="@item.Id" class="btn-service btn btn-info mx-1">
+                                <img src="~/assets/images/file-import-solid.svg" height="20" alt="">
+                            </a>
+                            <a asp-action="ExportStudentList" asp-route-id="@item.Id" class="btn-service btn btn-warning mx-1">
+                                <img src="~/assets/images/file-export-solid.svg" height="20" alt="">
+                            </a> *@
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
                         </td>

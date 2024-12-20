@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Tạo ngành học";
+}
+@model StudentManagementASP.Models.Major
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+
+<div class="container">
+    <form asp-action="Create" asp-controller="Major" asp-area="Admin" method="post" class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">TẠO NGÀNH HỌC</h4>
+        <div class="form-group">
+            <label asp-for="Code">Mã ngành</label>
+            <input asp-for="Code" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name">Tên ngành</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label asp-for="DeptId">Khoa</label>
+            @Html.DropDownListFor(x => x.DeptId, (List<SelectListItem>)ViewBag.Depts, new { @class = "select2 form-control", required = "required" })
+        </div>
+        <div class="text-lg-end mt-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            <button type="reset" class="btn btn-outline-success">Reset</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+        <div class="text-danger mt-2">@ViewBag.Alert</div>
+    </form>
+</div>
+
+            
+@section Scripts {
+    <script>
+        $('.select2').select2({
+            placeholder: "Chọn ngành học",
+        });
+    </script>
+}

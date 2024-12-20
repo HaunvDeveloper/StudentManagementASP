@@ -25,16 +25,22 @@ namespace StudentManagementASP.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Index(int page = 1)
+        public IActionResult Index(int? deptId, int page = 1)
         {
             int pageSize = 10;
 
-            var totalLecturers = _context.Lecturers.Count();
-            var lecturers = _context.Lecturers
+            var query = _context.Lecturers.AsNoTracking();
+
+            if (deptId.HasValue)
+            {
+                query = query.Where(x => x.DeptId == deptId.Value);
+            }
+
+            var totalLecturers = query.Count();
+
+            var lecturers = query
                 .Skip((page - 1) * pageSize)  // Skip previous pages
                 .Take(pageSize)              // Take the current page size
-                .AsNoTracking()
-                .Include(x => x.Dept)
                 .ToList();
 
             var model = new LecturerListViewModel
@@ -44,8 +50,12 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                 TotalPages = (int)Math.Ceiling((double)totalLecturers / pageSize)
             };
 
+            // Load department list for the dropdown
+            ViewBag.Depts = new SelectList(_context.Departments.AsNoTracking().ToList(), "Id", "Name");
+
             return View(model);
         }
+
 
         public IActionResult Create()
         {
@@ -261,6 +271,97 @@ namespace StudentManagementASP.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        public IActionResult DownloadListLecturer(int? DeptId)
+        {
+            var query = _context.Lecturers.AsQueryable();
+            Department? department = null;
+            if (DeptId.HasValue)
+            {
+                query = query.Where(ex => ex.DeptId == DeptId.Value);
+                department = _context.Departments.AsNoTracking().SingleOrDefault(x => x.Id == DeptId.Value);
+            }
+
+            var list = query.ToList();
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Danh sách giảng viên");
+
+                // Title row
+                worksheet.Cells["A1:N1"].Merge = true;
+                worksheet.Cells["A1"].Value = "DANH SÁCH GIẢNG VIÊN";
+                worksheet.Cells["A1"].Style.Font.Bold = true;
+                worksheet.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                int row = 2;
+
+                if (DeptId.HasValue)
+                {
+                    worksheet.Cells[$"A{row}"].Value = "Khoa";
+                    worksheet.Cells[$"B{row}"].Value = department?.Name;
+                    row++;
+                }
+
+
+                // Table headers
+                worksheet.Cells[$"A{row}"].Value = "STT";
+                worksheet.Cells[$"B{row}"].Value = "Mã số giảng viên";
+                worksheet.Cells[$"C{row}"].Value = "Họ lót";
+                worksheet.Cells[$"D{row}"].Value = "Tên";
+                worksheet.Cells[$"E{row}"].Value = "Ngày sinh";
+                worksheet.Cells[$"F{row}"].Value = "Email";
+                worksheet.Cells[$"G{row}"].Value = "SĐT";
+                worksheet.Cells[$"H{row}"].Value = "Giới tính";
+                worksheet.Cells[$"I{row}"].Value = "Mã khoa";
+                worksheet.Cells[$"J{row}"].Value = "CCCD";
+                worksheet.Cells[$"K{row}"].Value = "Nơi sinh";
+                worksheet.Cells[$"L{row}"].Value = "Địa chỉ";
+                worksheet.Cells[$"M{row}"].Value = "Dân tộc";
+                worksheet.Cells[$"N{row}"].Value = "Tôn giáo";
+
+                worksheet.Row(row).Style.Font.Bold = true;
+
+                row++;
+
+                // Add student data
+                int index = 1;
+                foreach (var lecturer in list)
+                {
+                    string[] nameParts = lecturer.FullName.Trim().Split(' ');
+                    string ho = string.Join(" ", nameParts, 0, nameParts.Length - 1);
+                    string ten = nameParts[nameParts.Length - 1];
+                    worksheet.Cells[$"A{row}"].Value = index++;
+                    worksheet.Cells[$"B{row}"].Value = lecturer.Id;
+                    worksheet.Cells[$"C{row}"].Value = ho;
+                    worksheet.Cells[$"D{row}"].Value = ten;
+                    worksheet.Cells[$"E{row}"].Value = lecturer.DayOfBirth.ToString("yyyy-MM-dd");
+                    worksheet.Cells[$"F{row}"].Value = lecturer.Email;
+                    worksheet.Cells[$"G{row}"].Value = lecturer.PhoneNo;
+                    worksheet.Cells[$"H{row}"].Value = lecturer.Sex;
+                    worksheet.Cells[$"I{row}"].Value = lecturer.Dept.Code;
+                    worksheet.Cells[$"J{row}"].Value = lecturer.NationId;
+                    worksheet.Cells[$"K{row}"].Value = lecturer.BirthPlace;
+                    worksheet.Cells[$"L{row}"].Value = $"{lecturer.StreetAddress}, {lecturer.WardCodeNavigation?.Name}, {lecturer.DistrictCodeNavigation?.Name}, {lecturer.ProvinceCodeNavigation?.Name}";
+                    worksheet.Cells[$"M{row}"].Value = lecturer.Nation;
+                    worksheet.Cells[$"N{row}"].Value = lecturer.Religion;
+
+                    row++;
+                }
+
+                // Adjust columns width
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Return Excel file
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                var fileName = "DanhSachGiangVien.xlsx";
+                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                return File(stream, contentType, fileName);
             }
         }
     }

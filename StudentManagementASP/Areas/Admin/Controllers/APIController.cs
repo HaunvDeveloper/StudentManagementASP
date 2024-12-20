@@ -117,5 +117,27 @@ namespace StudentManagementASP.Areas.Admin.Controllers
             
             return Ok(new { code = subject.Code + count.ToString("00"), name = subject.Name, lessonNo = subject.DefaultLesson });
         }
+
+        [HttpGet("GetStudentById")]
+        public IActionResult GetStudentById(string id)
+        {
+            if (string.IsNullOrEmpty(id) || id.Length < 3)
+            {
+                return BadRequest("Vui lòng nhập ít nhất 3 ký tự.");
+            }
+
+            var students = _context.Students
+                .Where(s => s.FullName.Contains(id) || s.Id.ToString().Contains(id))
+                .Select(s => new
+                {
+                    Id = s.Id,
+                    Name = s.FullName
+                })
+                .Take(50) // Giới hạn kết quả
+                .ToList();
+
+            return Ok(students);
+        }
+
     }
 }

@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Chi tiết môn học";
+}
+@model StudentManagementASP.Models.Subject
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .displayModel {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+}
+
+
+<div class="container">
+    <div method="post" class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">XEM MÔN HỌC</h4>
+        <div class="form-group">
+            <label asp-for="Code">Mã môn</label>
+            <label class="displayModel form-label">@Model.Code</label>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name">Tên môn</label>
+            <label class="displayModel form-label">@Model.Name</label>
+        </div>
+        <div class="form-group">
+            <label asp-for="DefaultCredits">Số tín chỉ</label>
+            <label class="displayModel form-label">@Model.DefaultCredits</label>
+
+        </div>
+        <div class="form-group">
+            <label asp-for="DefaultLesson">Số tiết dạy mặc định </label>
+            <label class="displayModel form-label">@Model.DefaultLesson</label>
+        </div>
+        <div class="form-group">
+            <label asp-for="DeptId">Khoa</label>
+            <label class="displayModel form-label">@Model.DeptId</label>
+        </div>
+        <div class="text-lg-end mt-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+}
