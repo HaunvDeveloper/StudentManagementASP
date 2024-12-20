@@ -108,6 +108,11 @@ namespace StudentManagementASP.Controllers
             return View();
         }
 
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
         public IActionResult EditInfo()
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");

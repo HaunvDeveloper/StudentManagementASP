@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace StudentManagementASP.Controllers
 {
-    [Authorize]
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
