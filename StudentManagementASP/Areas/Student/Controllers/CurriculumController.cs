@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using StudentManagementASP.Models;
 using System.Security.Claims;
 
-namespace StudentManagementASP.Controllers
+namespace StudentManagementASP.Area.Student.Controllers
 {
+    [Area("Student")]
     [Authorize(Roles = "student")]
     public class CurriculumController : Controller
     {

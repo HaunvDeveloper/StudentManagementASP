@@ -105,7 +105,7 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                 using var package = new OfficeOpenXml.ExcelPackage(stream);
                 var worksheet = package.Workbook.Worksheets[0];
                 var rowCount = worksheet.Dimension.Rows;
-                var listStudent = new List<Student>();
+                var listStudent = new List<Models.Student>();
                 var studentClasses = _context.StudentClasses.AsNoTracking().ToList();
                 var curriculums = _context.Curricula.AsNoTracking().ToList();
                 var depts = _context.Departments.AsNoTracking().ToList();
@@ -132,7 +132,7 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                             continue;
                         }
 
-                        var student = new Student
+                        var student = new Models.Student
                         {
                             Id = worksheet.Cells[row, 3].Text.Trim(),
                             FullName = worksheet.Cells[row, 4].Text.Trim() + " " + worksheet.Cells[row, 5].Text.Trim(),

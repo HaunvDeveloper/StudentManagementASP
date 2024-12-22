@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using StudentManagementASP.Models;
 using System.Security.Claims;
 
-namespace StudentManagementASP.Controllers
+namespace StudentManagementASP.Areas.Student.Controllers
 {
+    [Area("Student")]
     [Authorize(Roles = "student")]
     public class CourseController : Controller
     {
@@ -30,7 +31,7 @@ namespace StudentManagementASP.Controllers
             ViewBag.ListSemester = _context.Semesters.AsNoTracking()
                 .Where(x => x.SchoolYearDetailId >= curriculum.StudyYear.StartYearId && x.SchoolYearDetailId <= curriculum.StudyYear.EndYearId)
                 .ToList();
-            
+
             ViewBag.CourseClass = _context.StudentJoinClasses.AsNoTracking()
                 .Where(sjc => sjc.StudentId == student.Id)
                 .Include(sjc => sjc.CourseClass) // Bao gồm thông tin CourseClass
@@ -42,7 +43,7 @@ namespace StudentManagementASP.Controllers
             return View(curriculum);
         }
 
-        
+
         public IActionResult CourseInfo(int id)
         {
             var courseClass = _context.CourseClasses.AsNoTracking().SingleOrDefault(x => x.Id == id);

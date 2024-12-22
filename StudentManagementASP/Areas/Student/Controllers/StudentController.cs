@@ -10,8 +10,9 @@ using StudentManagementASP.ViewModels;
 using System.Security.Claims;
 using System.IO;
 
-namespace StudentManagementASP.Controllers
+namespace StudentManagementASP.Areas.Student.Controllers
 {
+    [Area("Student")]
     [Authorize(Roles = "student")]
     public class StudentController : Controller
     {
@@ -32,7 +33,7 @@ namespace StudentManagementASP.Controllers
                 return BadRequest("No file uploaded.");
             }
 
-            var students = new List<Student>();
+            var students = new List<Models.Student>();
 
             using (var package = new ExcelPackage(file.OpenReadStream()))
             {
@@ -50,7 +51,7 @@ namespace StudentManagementASP.Controllers
                         if (MSSV.Length != 13)
                             continue;
                         DateTime birthday = new DateTime(2004, r.Next(1, 12), r.Next(1, 28));
-                        var student = new Student
+                        var student = new Models.Student
                         {
                             FullName = worksheet.Cells[row, 2].Text,
                             DayOfBirth = birthday,
@@ -148,11 +149,11 @@ namespace StudentManagementASP.Controllers
             student.BirthPlace = BirthPlace;
             student.Nation = Nation;
             student.PhoneNo = PhoneNo;
-                student.DistrictCode = District;
-                student.WardCode = Ward;
-                student.StreetAddress = StreetAddress;
-                student.ProvinceCode = Province;
-                student.Religion = Religion;   
+            student.DistrictCode = District;
+            student.WardCode = Ward;
+            student.StreetAddress = StreetAddress;
+            student.ProvinceCode = Province;
+            student.Religion = Religion;
             await _context.SaveChangesAsync();
             return RedirectToAction("Info", "Student");
         }

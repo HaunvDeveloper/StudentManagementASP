@@ -93,7 +93,19 @@ namespace StudentManagementASP.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
+                    if (user.AuthId == 1 || user.AuthId == 2)
+                    {
+                        return RedirectToAction("Index", "Home", new {area="Admin"});
+                    }
+                    else if (user.AuthId == 3)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Lecturer" });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Student" });
+
+                    }
                 }
             }
         }
