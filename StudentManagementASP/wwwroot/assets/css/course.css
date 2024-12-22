@@ -19,6 +19,12 @@ body {
     color: white;
 }
 
+.table th
+{
+    color:white;
+    text-align: center;
+}
+
 .table th,
 .table td {
     vertical-align: middle;
