@@ -22,7 +22,7 @@
     <div class="table-container m-4">
         <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">SỬA THÔNG TIN LỚP HỌC PHẦN</h4>
         <form id="form-create" asp-action="Create" asp-controller="CourseClass" asp-area="Admin" method="post" class="container">
-            @Html.HiddenFor(x => x.Id);
+            @Html.HiddenFor(x => x.Id)
             <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
                 <div class="d-flex gap-2 mt-2 align-items-center w-75">
                     @Html.LabelFor(x => x.Code, "Mã lớp học phần", new { @class = "form-label text-danger", style = "text-wrap: nowrap;" })
@@ -107,7 +107,7 @@
                                         @Html.DropDownList($"Lessons[{stt}].RoomId", new SelectList((IEnumerable<SelectListItem>)ViewBag.Rooms, "Value", "Text", buoi.RoomId), new { @class = "form-control-sm roomId select2", required = "required" })
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Xoá</button>
                                     </td>
                                 </tr>
                                 stt++;

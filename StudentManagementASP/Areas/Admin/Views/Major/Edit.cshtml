@@ -24,9 +24,9 @@
             @Html.DropDownListFor(x => x.DeptId, new SelectList(ViewBag.Depts, "Value", "Text", Model.DeptId), new { @class = "select2 form-control", required = "required" })
         </div>
         <div class="text-lg-end mt-2">
-            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
-            <button type="reset" class="btn btn-outline-success">Reset</button>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+            <button type="reset" class="btn btn-outline-success">Đặt lại</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
         </div>
         <div class="text-danger mt-2">@ViewBag.Alert</div>
     </form>
