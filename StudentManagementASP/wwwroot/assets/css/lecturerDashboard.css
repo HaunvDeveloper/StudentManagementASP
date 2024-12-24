@@ -36,7 +36,7 @@
 }
 
 h5.card-title {
-    all: unset; /* Xóa toàn bộ thiết lập mặc định */
+    all: unset;
     display: block;
     font-size: 20px;
     font-weight: bold;
