@@ -20,7 +20,7 @@
 
 <div class="container">
     <form asp-action="DeleteConfirmed" method="post" class="table-container m-4">
-        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">XEM MÔN HỌC</h4>
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">XOÁ MÔN HỌC</h4>
         @Html.HiddenFor(x => x.Id)
         <div class="form-group">
             <label asp-for="Code">Mã môn</label>
@@ -44,7 +44,7 @@
             <label class="displayModel form-label">@Model.DeptId</label>
         </div>
         <div class="text-lg-end mt-2">
-            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
             <button type="submit" class="btn btn-danger">Xóa</button>
         </div>
         <div class="text-danger mt-2">@ViewBag.Alert</div>
