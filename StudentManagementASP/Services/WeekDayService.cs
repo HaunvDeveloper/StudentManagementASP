@@ -1,4 +1,6 @@
-﻿namespace StudentManagementASP.Services
+﻿using StudentManagementASP.ViewModels;
+
+namespace StudentManagementASP.Services
 {
     public class WeekDayService
     {
@@ -18,5 +20,54 @@
             // Trả về ngày kết quả
             return d.AddDays(forwardDistance);
         }
-    }
+
+		public static List<Week> CreateListWeek(DateTime startDate, DateTime endDate)
+		{
+			List<Week> danhSachTuan = new List<Week>();
+
+			// Đưa startDate về ngày thứ 2 đầu tiên
+			DateTime current = startDate;
+			while (current.DayOfWeek != DayOfWeek.Monday)
+			{
+				current = current.AddDays(1);
+			}
+
+			int thuTuTuan = 1;
+			while (current <= endDate)
+			{
+				DateTime ngayDauTuan = current;
+				DateTime ngayCuoiTuan = current.AddDays(6);
+
+				if (ngayDauTuan > endDate)
+					break;
+
+				if (ngayCuoiTuan > endDate)
+					ngayCuoiTuan = endDate;
+
+				danhSachTuan.Add(new Week
+				{
+					ThuTuTuan = thuTuTuan,
+					NgayDauTuan = ngayDauTuan,
+					NgayCuoiTuan = ngayCuoiTuan
+				});
+
+				thuTuTuan++;
+				current = current.AddDays(7); 
+			}
+
+			return danhSachTuan;
+		}
+
+		public static int TimTuanHienTai(List<Week> danhSachTuan, DateTime ngayHienTai)
+		{
+			foreach (var tuan in danhSachTuan)
+			{
+				if (ngayHienTai >= tuan.NgayDauTuan && ngayHienTai <= tuan.NgayCuoiTuan)
+				{
+					return tuan.ThuTuTuan;
+				}
+			}
+			return -1; // Trả về -1 nếu không tìm thấy tuần
+		}
+	}
 }

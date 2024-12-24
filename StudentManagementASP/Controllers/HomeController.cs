@@ -27,6 +27,16 @@ namespace StudentManagementASP.Controllers
             return PartialView("_MenuAdmin");
         }
 
+        public IActionResult _MenuLecturer()
+        {
+            return PartialView("_MenuLecturer");
+        }
+
+        public IActionResult _MenuStudent()
+        {
+            return PartialView("_MenuStudent");
+        }
+
         public IActionResult Privacy()
         {
             return View();

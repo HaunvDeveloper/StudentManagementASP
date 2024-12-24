@@ -58,4 +58,11 @@
             };
         }
     }
+
+	public class Week
+	{
+		public int ThuTuTuan { get; set; }
+		public DateTime NgayDauTuan { get; set; }
+		public DateTime NgayCuoiTuan { get; set; }
+	}
 }
