@@ -49,6 +49,7 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Subject\Create.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Subject\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Lecturer\Views\CourseClass\_GetSchedules.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\checkbox.css" />
     <_ContentIncludedByDefault Remove="wwwroot\Data\nation.json" />
     <_ContentIncludedByDefault Remove="Views\User\ForgetPassword.cshtml" />
   </ItemGroup>

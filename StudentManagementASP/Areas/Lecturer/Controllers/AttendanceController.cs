@@ -64,8 +64,35 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
             string[] dayOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
             return Json(courseClass.Lessons.Select(x => new {
                 Id = x.Id,
-                Name = $"{x.Date?.ToString("dd/MM/yyyy")} - {dayOfWeek[(int)x.Date?.DayOfWeek]} - {x.Room.Code}"
+                Name = $"{x.Date?.ToString("dd/MM/yyyy")} - {dayOfWeek[(int)x.Date?.DayOfWeek]} - {x.Room.Code}",
+                Date = x.Date
             }).ToList());
+        }
+    
+        public IActionResult _GetListStudent(int classId, int lessonId)
+        {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var lecturer = _context.Lecturers.AsNoTracking().Single(x => x.UserId == userId);
+
+            var courseClass = _context.CourseClasses.AsNoTracking()
+                .Include(x => x.StudentJoinClasses)
+                    .ThenInclude(x => x.Student)
+                .SingleOrDefault(x => x.Id == classId && x.LecturerId == lecturer.Id);
+
+            if (courseClass == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.LessonJoined = _context.StudentJoinLessons
+                .AsNoTracking()
+                .Where(x => x.LessonId == lessonId)
+                .GroupJoin(_context.Lessons, sj => sj.LessonId, l => l.Id, (sj, l) => new { sj, l })
+                .SelectMany(x => x.l.DefaultIfEmpty(), (x, lJoined) => new { x.sj, lJoined })
+                .Where(x => x.lJoined.CourseClassId == classId)
+                .Select(x => x.sj)
+                .ToList();
+            return PartialView(courseClass);
         }
     }
 }

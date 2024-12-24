@@ -63,7 +63,6 @@ public partial class StudentManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     { }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Authentication>(entity =>
@@ -434,6 +433,7 @@ public partial class StudentManagementContext : DbContext
             entity.ToTable("StudentJoinLesson");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.JoinTime).HasColumnType("datetime");
             entity.Property(e => e.Status)
                 .HasMaxLength(10)

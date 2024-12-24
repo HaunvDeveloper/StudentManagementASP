@@ -10,7 +10,7 @@
 }
 
 <div class="container">
-    <div class="table-container m-4">
+    <div class="table-container table-responsive m-4">
         <h4 class="text-center text-danger mb-4 mt-2" style="font-size:35px;font-weight:bold;">DANH SÁCH SINH VIÊN LỚP HỌC PHẦN @Model.Code.ToUpper()</h4>
         <div class="d-flex justify-content-between mb-3">
             <div class="d-flex gap-2">
@@ -28,7 +28,8 @@
                     <th class="text-center text-light">Ngày sinh</th>
                     <th class="text-center text-light">Số buổi có mặt</th>
                     <th class="text-center text-light">Số buổi đi trễ</th>
-                    <th class="text-center text-light">Số buổi vắng</th>
+                    <th class="text-center text-light">Số buổi vắng có phép</th>
+                    <th class="text-center text-light">Số buổi vắng không phép</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,11 +47,13 @@
                         @{
                             int coMat = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Có mặt");
                             int diTre = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Đi trễ");
-                            int vang = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Vắng");
+                            int vang = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Có phép");
+                            int vangKp = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Không phép");
                         }
                         <td class="text-center">@coMat</td>
                         <td class="text-center">@diTre</td>
                         <td class="text-center">@vang</td>
+                        <td class="text-center">@vangKp</td>
                     </tr>
                 }
             </tbody>

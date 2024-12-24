@@ -175,14 +175,15 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
                     worksheet.Cells[$"Q{currentRow}"].Value = item.Student.DayOfBirth.ToString("dd/MM/yyyy");
                     int coMat = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Có mặt");
                     int diTre = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Đi trễ");
-                    int vang = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Vắng");
+                    int vang = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Có phép");
+                    int vangKp = lessonJoins.Count(x => x.StudentId == item.Student.Id && x.Status == "Không phép");
                     worksheet.Cells[$"U{currentRow}"].Value = coMat;
                     worksheet.Cells[$"X{currentRow}"].Value = diTre;
                     worksheet.Cells[$"AB{currentRow}"].Value = vang;
+                    worksheet.Cells[$"AD{currentRow}"].Value = vangKp;
                     currentRow++;
                 }
-                // Thiết lập đường viền cho vùng ô A1:M10
-                var range = worksheet.Cells[$"A9:AD{currentRow - 1}"];
+                var range = worksheet.Cells[$"A9:AE{currentRow - 1}"];
                 range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                 range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 range.Style.Border.Left.Style = ExcelBorderStyle.Thin;

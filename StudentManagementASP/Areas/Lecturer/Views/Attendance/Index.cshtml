@@ -4,10 +4,16 @@
 
 @section Links {
     <link rel="stylesheet" href="~/assets/css/course.css">
+    <link rel="stylesheet" href="~/assets/css/checkbox.css">
     <style>
 
         .form-control {
             width: 180px !important;
+        }
+
+        .form-control-sm{
+            outline:none;
+            border:none;
         }
     </style>
 }
@@ -17,7 +23,7 @@
         <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">ĐIỂM DANH LỚP HỌC PHẦN</h4>
         <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
             <div>
-                <div class="d-flex gap-2 align-items-center w-100">
+                <div class="d-flex gap-2 flex-wrap align-items-center w-100">
                     <span style="text-wrap: nowrap;">Chọn niên học:</span>
                     @Html.DropDownList("StudyYearDetailId", (SelectList)ViewBag.StudyYearDetails, new { @class = "form-control " })
 
@@ -38,8 +44,11 @@
             <div></div>
         </div>
 
-        <div class="table-data table-reponsive">
+        <div class="table-data table-responsive">
             <!-- Nội dung bảng danh sách sinh viên sẽ được hiển thị ở đây -->
+        </div>
+        <div class="text-lg-end">
+            <button id="save" class="btn btn-primary">LƯU</button>
         </div>
     </div>
 </div>
@@ -49,13 +58,41 @@
 
 @section Scripts {
     <script>
+        //$('input[name="phep_48.01.103.024"]:checked').val();
+        
         $(document).ready(function () {
+            $(document).on('change', 'input[type=checkbox]', function () {
+                // Lấy giá trị `name` của checkbox hiện tại
+                var name = $(this).attr('name');
+
+                // Nếu checkbox này được chọn
+                if ($(this).is(':checked')) {
+                    // Bỏ chọn tất cả các checkbox khác có cùng giá trị `name`
+                    $('input[type=checkbox][name="' + name + '"]').not(this).prop('checked', false);
+
+                    // Kiểm tra giá trị checkbox
+                    if ($(this).val() === "Đi trễ") {
+                        // Kích hoạt lại input có class `.lateLesson`
+                        $(this).closest('tr').find('.lateLesson').prop('disabled', false);
+                    } else {
+                        // Vô hiệu hóa input có class `.lateLesson`
+                        $(this).closest('tr').find('.lateLesson').prop('disabled', true);
+                    }
+                } else {
+                    $(this).closest('tr').find('.lateLesson').prop('disabled', true);
+                    $(this).closest('tr').find('.lateLesson').val('');
+                }
+            });
+
+            $('input[type=checkbox]').trigger('change');
+
+
             $('#LessonId').on('change', function () {
                 $('.table-data').html('');
                 $.ajax({
                     url: '@Url.Action("_GetListStudent", "Attendance", new { area = "Lecturer" })',
                     method: 'get',
-                    data: { classId: $('#CourseClassId').val() },
+                    data: { classId: $('#CourseClassId').val(), lessonId: $('#LessonId').val() },
                     success: function (response) {
                         $('.table-data').html(response);
                     },
