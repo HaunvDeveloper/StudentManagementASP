@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementASP.Models;
+using StudentManagementASP.Services;
 using StudentManagementASP.ViewModels;
 
 namespace StudentManagementASP.Areas.Admin.Controllers
@@ -97,10 +99,24 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                     Id = x.Id,
                     Code = x.Code,
                     Name = x.Name,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
                 })
                 .ToList();
             return Ok(semester);
         }
+
+        [HttpGet("GetWeekBySemester")]
+        public IActionResult GetWeekBySemester(int semesterId)
+        {
+            var current = _context.Semesters.AsNoTracking().SingleOrDefault(x => x.Id == semesterId);
+            if(current == null) { return NotFound(); }
+            var listTuan = WeekDayService.CreateListWeek(current.StartDate, current.EndDate);
+            return Ok(listTuan);
+        }
+
+
+
 
         [HttpGet("GetNewCodeCourseClass")]
         public IActionResult GetNewCodeCourseClass(int subjectId, int semesterId)

@@ -75,7 +75,14 @@
                     {
                         @Html.Partial("_MenuAdmin")
                     }
-                    
+                    else if(User.IsInRole("lecturer"))
+                    {
+                        @Html.Partial("_MenuLecturer")
+                    }
+                    else
+                    {
+                        @Html.Partial("_MenuStudent")
+                    }
                 </nav>
             </div>
         </aside>
