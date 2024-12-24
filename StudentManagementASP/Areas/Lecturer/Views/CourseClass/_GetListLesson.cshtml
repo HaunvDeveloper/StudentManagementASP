@@ -1,0 +1,36 @@
+﻿@model StudentManagementASP.Models.CourseClass
+@{
+    int stt = 1;
+    string[] dayOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+    var lessons = Model.Lessons.OrderBy(x => x.Date).ToList();
+}
+
+<h4>Lịch giảng dạy chi tiết của HP: @Model.Name</h4>
+<table class="table table-sm table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th class="text-center text-light">STT</th>
+            <th class="text-center text-light">Ngày</th>
+            <th class="text-center text-light">Thứ</th>
+            <th class="text-center text-light">Số Tiết</th>
+            <th class="text-center text-light">Phòng</th>
+            <th class="text-center text-light">Tổng số tiết</th>
+            <th>Ghi chú</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in lessons)
+        {
+            <tr>
+                <td class="text-center">@(stt++)</td>
+                <td class="text-center">@item.Date?.ToString("dd/MM/yyyy")</td>
+                <td class="text-center">@(dayOfWeek[(int)item.Date?.DayOfWeek])</td>
+                <td class="text-center">@item.StartLesson - @item.EndLesson</td>
+                <td class="text-center">@item.Room.Name</td>
+                <td class="text-center">@(item.EndLesson - item.StartLesson + 1)</td>
+                <td class="text-center" style="text-wrap:nowrap;">
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

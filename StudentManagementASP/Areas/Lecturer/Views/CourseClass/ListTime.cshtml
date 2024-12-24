@@ -36,11 +36,41 @@
 
 @section Scripts {
     <script>
+
+        function showLesson(courseClassId, element) {
+            var isPick = $(element).attr('data-pick');
+            if (isPick == "0") {
+                $(element).attr('data-pick', '1');
+                $.ajax({
+                    url: '@Url.Action("_GetListLesson", "CourseClass", new { area = "Lecturer" })',
+                    method: 'get',
+                    data: { courseClassId: courseClassId },
+                    success: function (response) {
+                        var tr = document.createElement('tr');
+                        $(tr).html(`
+                            <td colspan="7">
+                            ${response}
+                            </td>
+                        `)
+                        // Chèn <tr> ngay sau <tr> chứa element
+                        $(element).closest('tr').after(tr);
+                    },
+                    error: function (err) {
+                        $('.table-data').html(err);
+                    }
+                });
+            } else {
+                $(element).attr('data-pick', '0');
+                // Xóa <tr> ngay sau <tr> chứa element
+                $(element).closest('tr').next('tr').remove();
+            }
+        }
+
         $(document).ready(function () {
             $('#SemesterId').on('change', function () {
                 $('.table-data').html('');
                 $.ajax({
-                    url: '@Url.Action("_GetListClass", "CourseClass", new { area = "Lecturer" })',
+                    url: '@Url.Action("_GetListTime", "CourseClass", new { area = "Lecturer" })',
                     method: 'get',
                     data: { yearDetailId: $('#StudyYearDetailId').val(), semesterId: $('#SemesterId').val() },
                     success: function (response) {

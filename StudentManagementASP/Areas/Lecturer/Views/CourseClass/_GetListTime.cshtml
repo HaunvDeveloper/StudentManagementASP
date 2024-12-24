@@ -1,0 +1,42 @@
+﻿@model IEnumerable<StudentManagementASP.Models.CourseClass>
+
+@{
+    ViewData["Title"] = "Danh sách lớp học phần";
+    string[] dayNames = new string[] { "Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy" };
+}
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th class="text-center text-light">Mã lớp học phần</th>
+            <th class="text-center text-light">Tên lớp học phần</th>
+            <th class="text-center text-light">Số TC</th>
+            <th class="text-center text-light">Lớp sinh viên</th>
+            <th class="text-center text-light">Sĩ số</th>
+            <th class="text-center text-light">Số tiết </th>
+            <th>Xem báo giảng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Code</td>
+                <td>@item.Name</td>
+                <td>@item.Subject?.DefaultCredits</td>
+                <td>@item.StudentClass?.Code</td>
+                <td>@item.StudentJoinClasses.Count</td>
+                <td>@item.Subject?.DefaultLesson</td>
+                <td class="text-center" style="text-wrap:nowrap;">
+                    <button data-pick="0" onclick="showLesson(@item.Id, this)" class="btn btn-outline-primary">CHI TIẾT</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

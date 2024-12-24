@@ -1,0 +1,168 @@
+﻿@model StudentManagementASP.Models.CourseClass
+
+@{
+    ViewData["Title"] = "Danh sách sinh viên lớp học phần " + Model.Name;
+    var lessonJoined = (IEnumerable<StudentJoinLesson>)ViewBag.LessonJoined;
+}
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center text-danger mb-4 mt-2" style="font-size:35px;font-weight:bold;">DANH SÁCH SINH VIÊN LỚP HỌC PHẦN @Model.Code.ToUpper()</h4>
+        <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex gap-2">
+                <a asp-action="ExportStudentList" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Export</a>
+            </div>
+        </div>
+        @Html.HiddenFor(x => x.Id)
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th class="text-center text-light">STT</th>
+                    <th class="text-center text-light">Lớp sinh viên</th>
+                    <th class="text-center text-light">Mã số sinh viên</th>
+                    <th class="text-center text-light">Họ và Tên</th>
+                    <th class="text-center text-light">Ngày sinh</th>
+                    <th class="text-center text-light">Số buổi có mặt</th>
+                    <th class="text-center text-light">Số buổi đi trễ</th>
+                    <th class="text-center text-light">Số buổi vắng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int stt = 1;
+                }
+                @foreach (var item in Model.StudentJoinClasses)
+                {
+                    <tr>
+                        <td>@(stt++)</td>
+                        <td>@item.Student.StudentClass?.Code</td>
+                        <td>@item.Student.Id</td>
+                        <td>@item.Student.FullName</td>
+                        <td>@item.Student.DayOfBirth.ToString("dd/MM/yyyy")</td>
+                        @{
+                            int coMat = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Có mặt");
+                            int diTre = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Đi trễ");
+                            int vang = lessonJoined.Count(x => x.StudentId == item.Student.Id && x.Status == "Vắng");
+                        }
+                        <td class="text-center">@coMat</td>
+                        <td class="text-center">@diTre</td>
+                        <td class="text-center">@vang</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm sinh viên</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <div class="form-group d-flex flex-column">
+                    <label for="" class="form-label">Nhập Mã số sinh viên</label>
+                    <select id="student-select" class="select2 w-100 form-control">
+                    </select>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-add" type="submit" class="btn btn-primary" data-bs-dismiss="modal">Thêm</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        async function deleteStudent(element) {
+            var confirmed = await confirmAction();
+            if (confirmed) {
+                $.ajax({
+                    url: '@Url.Action("RemoveStudentFromClass", "CourseClass", new { area = "Admin" })',
+                    method: 'post',
+                    data: { courseClassId: $('#Id').val(), studentId: $(element).data('id') },
+                    success: function (res) {
+                        if (res.success) {
+                            showToast("success", "Xóa thành công!!");
+                            $(element).closest('tr').remove();
+                        } else {
+                            showAlert("error", "Xóa thất bại!!", res.error);
+                        }
+                    },
+                    error: function (error) {
+                        showAlert("error", "Xóa thất bại!!", error);
+                    }
+                })
+            }
+        }
+        $(document).ready(function () {
+            $('#myModal').on('shown.bs.modal', function () {
+                $('#student-select').select2({
+                    placeholder: 'Tìm kiếm sinh viên...',
+                    minimumInputLength: 3,
+                    dropdownParent: $('#myModal'),
+                    ajax: {
+                        url: '/api/API/GetStudentById',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                id: params.term
+                            };
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: data.map(function (student) {
+                                    return {
+                                        id: student.id,
+                                        text: `${student.id} - ${student.name}`
+                                    };
+                                })
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            });
+            $('#student-select').on('select2:select', function (e) {
+                var data = e.params.data; // Lấy dữ liệu của option được chọn
+                console.log('Selected:', data);
+            });
+            $('#btn-add').on('click', function () {
+                var studentId = $('#student-select').val();
+                var courseClassId = $('#Id').val();
+                $.ajax({
+                    url: '@Url.Action("AddStudentIntoClass", "CourseClass", new { area = "Admin" })',
+                    method: 'post',
+                    data: { studentId, courseClassId },
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert("success", "Thêm thành công");
+                            setTimeout(function () {
+                                window.location.href = response.redirect;
+                            }, 1500);
+                        } else {
+                            showAlert("error", "Tạo thất bại");
+                        }
+                    }
+                })
+            });
+        });
+
+
+
+
+    </script>
+}
