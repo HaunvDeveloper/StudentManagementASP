@@ -40,6 +40,8 @@
 			<li><span>19:00</span></li>
 			<li><span>19:30</span></li>
 			<li><span>20:00</span></li>
+			<li><span>20:30</span></li>
+			<li><span>21:00</span></li>
 		</ul>
 	</div> <!-- .timeline -->
 
@@ -90,7 +92,7 @@
 						</a>
 					</li>
 
-					<li class="single-event" data-start="15:45" data-end="16:45" data-content="event-yoga-1" data-event="event-3">
+					<li class="single-event" data-start="15:45" data-end="21:30" data-content="event-yoga-1" data-event="event-3">
 						<a href="">
 							<em class="event-name">Xác suất thống kê và ứng dụng trong giáo dục</em>
 						</a>
@@ -162,7 +164,7 @@
 				<div class="top-info"><span>Thứ sáu</span></div>
 
 				<ul>
-					<li class="single-event" data-start="06:00" data-end="11:00" data-content="event-rowing-workout" data-event="event-2">
+					<li class="single-event" data-start="07:20" data-end="11:40" data-content="event-rowing-workout" data-event="event-2">
 						<a href="">
 							<em class="event-name">Giáo dục học</em>
 						</a>
@@ -289,6 +291,8 @@
 				if( mq == 'desktop' && !this.element.hasClass('js-full') ) {
 					//in this case you are on a desktop version (first load or resize from mobile)
 					this.eventSlotHeight = this.eventsGroup.eq(0).children('.top-info').outerHeight();
+					this.eventsGroup.children('ul').css('height', (this.timelineItemsNumber * this.eventSlotHeight) + 'px');
+
 					this.element.addClass('js-full');
 					this.placeEvents();
 					this.element.hasClass('modal-is-open') && this.checkEventModal();
