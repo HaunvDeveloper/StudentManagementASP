@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="~/assets/css/checkbox.css">
     <style>
 
-        .form-control {
-            width: 180px !important;
-        }
+        
 
         .form-control-sm{
             outline:none;
@@ -24,21 +22,30 @@
         <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
             <div>
                 <div class="d-flex gap-2 flex-wrap align-items-center w-100">
-                    <span style="text-wrap: nowrap;">Chọn niên học:</span>
-                    @Html.DropDownList("StudyYearDetailId", (SelectList)ViewBag.StudyYearDetails, new { @class = "form-control " })
+                    <div>
+                        <span style="text-wrap: nowrap;">Chọn niên học:</span>
+                        @Html.DropDownList("StudyYearDetailId", (SelectList)ViewBag.StudyYearDetails, new { @class = "form-control " })
+                    </div>
+                    
+                    <div>
+                        <span style="text-wrap: nowrap;">Học kỳ:</span>
+                        <select id="SemesterId" name="SemesterId" class="form-control" required>
+                            <option value="">Chọn học kỳ</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <span style="text-wrap: nowrap;">Lớp học phần:</span>
+                        <select id="CourseClassId" name="CourseClassId" class="form-control" required>
+                        </select>
+                    </div>
 
-                    <span style="text-wrap: nowrap;">Học kỳ:</span>
-                    <select id="SemesterId" name="SemesterId" class="form-control" required>
-                        <option value="">Chọn học kỳ</option>
-                    </select>
-
-                    <span style="text-wrap: nowrap;">Lớp học phần:</span>
-                    <select id="CourseClassId" name="CourseClassId" class="form-control" required>
-                    </select>
-
-                    <span style="text-wrap: nowrap;">Buổi học:</span>
-                    <select id="LessonId" name="LessonId" class="form-control" required>
-                    </select>
+                    <div>
+                        <span style="text-wrap: nowrap;">Buổi học:</span>
+                        <select id="LessonId" name="LessonId" class="form-control" required>
+                        </select>
+                    </div>
+                    
                 </div>
             </div>
             <div></div>
@@ -58,9 +65,38 @@
 
 @section Scripts {
     <script>
-        //$('input[name="phep_48.01.103.024"]:checked').val();
-        
         $(document).ready(function () {
+
+            $('#save').on('click', function () {
+                var list = [];
+                $('.row-student').each(function (index, element) {
+                    var ob = {
+                        StudentId: $(element).attr('data-id'),
+                        LessonId: $('#LessonId').val(),
+                        Status: $(element).find('input[type=checkbox]:checked').val() || "Có mặt",
+                        LateLessons: $(element).find('.lateLesson').val(),
+                        Description: $(element).find('.description').val()
+                    }
+                    list.push(ob);
+                });
+                $.ajax({
+                    url: '@Url.Action("Save", "Attendance", new {area="Lecturer"})',
+                    method: 'post',
+                    data: { list },
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert("success", "Lưu thành công");
+                        } else {
+                            showAlert("error", "Lưu thất bại");
+                        }
+                    },
+                    error: function (error) {
+                        showAlert("error", "Lưu thất bại");
+                    }
+                });
+            });
+
+
             $(document).on('change', 'input[type=checkbox]', function () {
                 // Lấy giá trị `name` của checkbox hiện tại
                 var name = $(this).attr('name');
@@ -83,8 +119,6 @@
                     $(this).closest('tr').find('.lateLesson').val('');
                 }
             });
-
-            $('input[type=checkbox]').trigger('change');
 
 
             $('#LessonId').on('change', function () {
@@ -197,8 +231,6 @@
                 $('#SemesterId').trigger('change');
             });
             $('#StudyYearDetailId').trigger('change');
-
-
         });
 
     </script>

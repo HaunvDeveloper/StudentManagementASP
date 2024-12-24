@@ -1,7 +1,7 @@
 ﻿@{
 	ViewData["Title"] = "Thông tin giảng viên";
 }
-
+@model StudentManagementASP.Models.Lecturer
 @section Links {
 	<link rel="stylesheet" href="~/assets/css/lecturerDashboard.css">
 }
@@ -18,12 +18,12 @@
 			<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">Thông tin cá nhân</h5>
-					<p><strong>Mã giảng viên:</strong> 9112</p>
-					<p><strong>Họ tên:</strong> Nguyễn Duy Hàm</p>
-					<p><strong>Giới tính:</strong> Nam</p>
-					<p><strong>Email:</strong> example@example.com</p>
-					<p><strong>Địa chỉ thường trú:</strong> 123 Đường ABC, Hà Nội</p>
-					<p><strong>Địa chỉ liên lạc:</strong> 456 Đường XYZ, Hà Nội</p>
+					<p><strong>Mã giảng viên:</strong> @Model.Id</p>
+					<p><strong>Họ tên:</strong> @Model.FullName</p>
+					<p><strong>Giới tính:</strong> @Model.Sex</p>
+					<p><strong>Email:</strong> @Model.Email</p>
+					<p><strong>Địa chỉ thường trú:</strong> @Model.StreetAddress, @Model.WardCodeNavigation?.Name, @Model.DistrictCodeNavigation?.Name, @Model.ProvinceCodeNavigation?.Name</p>
+					<p><strong>Địa chỉ liên lạc:</strong> @Model.StreetAddress, @Model.WardCodeNavigation?.Name, @Model.DistrictCodeNavigation?.Name, @Model.ProvinceCodeNavigation?.Name</p>
 				</div>
 			</div>
 		</div>
@@ -34,16 +34,16 @@
 					<h5 class="card-title">Thông tin cơ bản</h5>
 					<div class="row">
 						<div class="col-md-6">
-							<p><strong>CMND/CCCD:</strong> 123456789</p>
-							<p><strong>Ngày cấp:</strong> 01/01/2020</p>
-							<p><strong>Nơi cấp:</strong> Hà Nội</p>
-							<p><strong>Điện thoại:</strong> 0987654321</p>
+							<p><strong>CMND/CCCD:</strong> @Model.NationId</p>
+							<p><strong>Ngày cấp:</strong> 28/12/2021</p>
+							<p><strong>Nơi cấp:</strong> Cục Cảnh sát quản lý hành chính về trật tự xã hội.  </p>
+							<p><strong>Điện thoại:</strong> @Model.PhoneNo</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Ngày sinh:</strong> 01/01/1990</p>
-							<p><strong>Nơi sinh:</strong> Hà Nội</p>
-							<p><strong>Dân tộc:</strong> Kinh</p>
-							<p><strong>Tôn giáo:</strong> Không</p>
+							<p><strong>Ngày sinh:</strong> @Model.DayOfBirth.ToString("dd/MM/yyyy")</p>
+							<p><strong>Nơi sinh:</strong> @Model.BirthPlace</p>
+							<p><strong>Dân tộc:</strong> @Model.Nation</p>
+							<p><strong>Tôn giáo:</strong> @Model.Religion</p>
 						</div>
 					</div>
 
@@ -51,24 +51,24 @@
 					<div class="row">
 						<div class="col-md-6">
 							<p><strong>Học hàm:</strong> Giảng viên</p>
-							<p><strong>Học vị:</strong> Tiến sĩ</p>
+							<p><strong>Học vị:</strong> Thạc Sĩ</p>
 							<p><strong>Chức vụ:</strong> </p>
 						</div>
 						<div class="col-md-6">
 							<p><strong>Loại giảng viên:</strong> Hợp đồng thỉnh giảng</p>
-							<p><strong>Chuyên ngành:</strong> Công nghệ thông tin</p>
-							<p><strong>Khoa:</strong> Khoa Công nghệ Thông tin</p>
+							<p><strong>Chuyên ngành:</strong> @Model.Dept.Name</p>
+							<p><strong>Khoa:</strong> @Model.Dept.Name</p>
 						</div>
 					</div>
 
 					<h5 class="card-title">Thông tin ngân hàng</h5>
 					<div class="row">
 						<div class="col-md-6">
-							<p><strong>Số tài khoản:</strong> 1234567890</p>
-							<p><strong>Mã số thuế:</strong> 123456789</p>
+							<p><strong>Số tài khoản:</strong> </p>
+							<p><strong>Mã số thuế:</strong> </p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Tên ngân hàng:</strong> Vietcombank</p>
+							<p><strong>Tên ngân hàng:</strong> </p>
 						</div>
 					</div>
 				</div>

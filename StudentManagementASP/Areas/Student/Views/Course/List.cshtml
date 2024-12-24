@@ -21,7 +21,6 @@
                 <th>Tên học phần</th>
                 <th>Số Tín chỉ</th>
                 <th>Số Tiết</th>
-                <th>Loại HP</th>
                 <th>Điểm danh</th>
             </tr>
         </thead>
@@ -38,11 +37,10 @@
                     {
                         <tr>
                             <td>@stt</td>
-                            <td>@course.Course.Subject.Code</td>
-                            <td>@course.Course.Subject.Name</td>
-                            <td>@course.Course.Credits</td>
-                            <td>@course.Course.Lesson</td>
-                            <td>@course.Course.Type.Name</td>
+                            <td>@course.Subject?.Code</td>
+                            <td>@course.Subject?.Name</td>
+                            <td>@course.Subject?.DefaultCredits</td>
+                            <td>@course.Subject?.DefaultLesson</td>
                             <td>
                                 <a asp-action="CourseInfo" asp-controller="Course" asp-route-id="@course.Id" class="btn btn-primary">
                                     <i class="fa-solid fa-eye"></i>

@@ -1,6 +1,19 @@
 ﻿@{
     ViewData["Title"] = "Thông tin học phần";
     string[] dayNames = new string[] { "Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy" };
+    var listJoined = (List<StudentJoinLesson>)ViewBag.StudentJoined;
+    int stt = 1;
+    Dictionary<string, string> statusDic = new Dictionary<string, string>();
+    statusDic["Có mặt"] = "status-present";
+    statusDic["Có phép"] = "status-absent";
+    statusDic["Không phép"] = "status-absent";
+    statusDic["Đi trễ"] = "status-late";
+
+    Dictionary<string, string> statusDisplay = new Dictionary<string, string>();
+    statusDisplay["Có mặt"] = "Có mặt";
+    statusDisplay["Có phép"] = "Vắng có phép";
+    statusDisplay["Không phép"] = "Vắng không phép";
+    statusDisplay["Đi trễ"] = "Trễ";
 }
 @model StudentManagementASP.Models.CourseClass
 
@@ -14,13 +27,13 @@
     <table class="info-table">
         <tr>
             <td>Mã HP</td>
-            <td>@Model.Course.Subject.Code</td>
+            <td>@Model.Subject?.Code</td>
             <td>Tên HP</td>
             <td>@Model.Name</td>
         </tr>
         <tr>
             <td>Số tiết</td>
-            <td>@Model.Course.Lesson</td>
+            <td>@Model.Subject?.DefaultLesson</td>
             <td>Giảng viên</td>
             <td>@Model.Lecturer?.FullName</td>
         </tr>
@@ -48,36 +61,33 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="status-present">
-                <td>1</td>
-                <td>6:20:35</td>
-                <td>7/11/2021</td>
-                <td>Có mặt</td>
-            </tr>
-            <tr class="status-present">
-                <td>2</td>
-                <td>6:25:12</td>
-                <td>14/11/2021</td>
-                <td>Có mặt</td>
-            </tr>
-            <tr class="status-late">
-                <td>3</td>
-                <td>7:00:03</td>
-                <td>21/11/2021</td>
-                <td>Trễ</td>
-            </tr>
-            <tr class="status-absent">
-                <td>4</td>
-                <td>-</td>
-                <td>28/11/2021</td>
-                <td>Vắng</td>
-            </tr>
-            <tr class="default-status">
-                <td>5</td>
-                <td>-</td>
-                <td>5/12/2021</td>
-                <td>-</td>
-            </tr>
+            @foreach(var buoi in Model.Lessons.OrderBy(x => x.Date).ToList())
+            {
+                var status = listJoined.FirstOrDefault(x => x.LessonId == buoi.Id);
+                if(status != null)
+                {
+                    
+                    <tr class="@(statusDic[status.Status])">
+                        <td>@(stt++)</td>
+                        <td>
+                            @(status.Status != "Có phép" && status.Status != "Không phép" ? status?.JoinTime.ToShortTimeString() : " - ")
+                        </td>
+                        <td>@buoi.Date?.ToString("dd/MM/yyyy")</td>
+                        <td>@statusDisplay[status?.Status ?? ""]</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="default-status">
+                        <td>@(stt++)</td>
+                        <td>
+                             - 
+                        </td>
+                        <td>@buoi.Date?.ToString("dd/MM/yyyy")</td>
+                        <td>Chưa điểm danh</td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
 </div>

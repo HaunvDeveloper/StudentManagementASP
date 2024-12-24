@@ -432,12 +432,9 @@ public partial class StudentManagementContext : DbContext
         {
             entity.ToTable("StudentJoinLesson");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.JoinTime).HasColumnType("datetime");
-            entity.Property(e => e.Status)
-                .HasMaxLength(10)
-                .IsFixedLength();
+            entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.StudentId)
                 .HasMaxLength(20)
                 .IsUnicode(false);

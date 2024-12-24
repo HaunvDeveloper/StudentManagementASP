@@ -86,13 +86,40 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
 
             ViewBag.LessonJoined = _context.StudentJoinLessons
                 .AsNoTracking()
-                .Where(x => x.LessonId == lessonId)
-                .GroupJoin(_context.Lessons, sj => sj.LessonId, l => l.Id, (sj, l) => new { sj, l })
-                .SelectMany(x => x.l.DefaultIfEmpty(), (x, lJoined) => new { x.sj, lJoined })
-                .Where(x => x.lJoined.CourseClassId == classId)
-                .Select(x => x.sj)
+                .Include(x => x.Lesson)
+                .Where(x => x.LessonId == lessonId && x.Lesson.CourseClassId == classId)
                 .ToList();
             return PartialView(courseClass);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Save(List<StudentJoinLesson> list)
+        {
+            try
+            {
+                foreach(var item in list)
+                {
+                    var exist = _context.StudentJoinLessons.SingleOrDefault(x => x.LessonId == item.LessonId && x.StudentId == item.StudentId);
+                    if (exist != null)
+                    {
+                        exist.Status = item.Status;
+                        exist.LateLessons = item.LateLessons;
+                        exist.Description = item.Description;
+                    }
+                    else
+                    {
+                        item.JoinTime = DateTime.Now;
+                        _context.StudentJoinLessons.Add(item);
+                    }
+                }
+                await _context.SaveChangesAsync();
+                return Json(new { success = true});
+            }
+            catch (Exception ex)
+            {
+                return Json(new {success=false, error=ex.Message});
+            }
+        }
+    
     }
 }

@@ -26,7 +26,7 @@
         @foreach (var item in Model.StudentJoinClasses)
         {
             var status = studentJoined.FirstOrDefault(x => x.StudentId == item.StudentId);
-            <tr data-id="@item.Id">
+            <tr class="row-student" data-id="@item.StudentId">
                 <td>@(stt++)</td>
                 <td>@item.Student.Id</td>
                 <td>@item.Student.FullName</td>
@@ -34,7 +34,7 @@
                 <td>@item.Student.DayOfBirth.ToString("dd/MM/yyyy")</td>
                 <td class="text-center">
                     <div class="checkbox-wrapper-31">
-                        <input type="checkbox" name="phep_@item.StudentId" value="Có phép" @(status?.Status == "Có phép" ? "selected" : "") />
+                        <input type="checkbox" name="phep_@item.StudentId" value="Có phép" @(status?.Status == "Có phép" ? "checked" : "") />
                         <svg viewBox="0 0 35.6 35.6">
                             <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
                             <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
@@ -44,7 +44,7 @@
                 </td>
                 <td class="text-center">
                     <div class="checkbox-wrapper-31">
-                        <input type="checkbox" name="phep_@item.StudentId" value="Không phép" @(status?.Status == "Không phép" ? "selected" : "") />
+                        <input type="checkbox" name="phep_@item.StudentId" value="Không phép" @(status?.Status == "Không phép" ? "checked" : "") />
                         <svg viewBox="0 0 35.6 35.6">
                             <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
                             <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
@@ -54,7 +54,7 @@
                 </td>
                 <td class="text-center">
                     <div class="checkbox-wrapper-31">
-                        <input type="checkbox" name="phep_@item.StudentId" value="Đi trễ" @(status?.Status == "Đi trễ" ? "selected" : "") />
+                        <input type="checkbox" name="phep_@item.StudentId" value="Đi trễ" @(status?.Status == "Đi trễ" ? "checked" : "") />
                         <svg viewBox="0 0 35.6 35.6">
                             <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
                             <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
@@ -63,7 +63,7 @@
                     </div>
                 </td>
                 <td>
-                    <input type="number" min="0" max="100" class="lateLesson form-control-sm" name="lateLesson_@item.StudentId" disabled placeholder="..........." value="@status?.LateLessons" />
+                    <input type="number" min="0" max="100" class="lateLesson form-control-sm" name="lateLesson_@item.StudentId" @(status?.Status == "Đi trễ" ? "disable" : "") placeholder="..........." value="@status?.LateLessons" />
                 </td>
                 <td>
                     <input type="text" class="description form-control-sm" name="description_@item.StudentId" placeholder="..........." value="@status?.Description" />
