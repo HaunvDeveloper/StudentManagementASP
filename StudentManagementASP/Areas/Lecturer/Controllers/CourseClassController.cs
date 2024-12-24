@@ -242,5 +242,7 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
             }
             return PartialView(courseClass);
         }
+        
+
     }
 }

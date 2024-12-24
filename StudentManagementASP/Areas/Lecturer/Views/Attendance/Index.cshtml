@@ -1,0 +1,168 @@
+﻿@{
+    ViewData["Title"] = "Điểm danh online";
+}
+
+@section Links {
+    <link rel="stylesheet" href="~/assets/css/course.css">
+    <style>
+
+        .form-control {
+            width: 180px !important;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="table-container m-4">
+        <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">ĐIỂM DANH LỚP HỌC PHẦN</h4>
+        <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap gap-2">
+            <div>
+                <div class="d-flex gap-2 align-items-center w-100">
+                    <span style="text-wrap: nowrap;">Chọn niên học:</span>
+                    @Html.DropDownList("StudyYearDetailId", (SelectList)ViewBag.StudyYearDetails, new { @class = "form-control " })
+
+                    <span style="text-wrap: nowrap;">Học kỳ:</span>
+                    <select id="SemesterId" name="SemesterId" class="form-control" required>
+                        <option value="">Chọn học kỳ</option>
+                    </select>
+
+                    <span style="text-wrap: nowrap;">Lớp học phần:</span>
+                    <select id="CourseClassId" name="CourseClassId" class="form-control" required>
+                    </select>
+
+                    <span style="text-wrap: nowrap;">Buổi học:</span>
+                    <select id="LessonId" name="LessonId" class="form-control" required>
+                    </select>
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="table-data table-reponsive">
+            <!-- Nội dung bảng danh sách sinh viên sẽ được hiển thị ở đây -->
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#LessonId').on('change', function () {
+                $('.table-data').html('');
+                $.ajax({
+                    url: '@Url.Action("_GetListStudent", "Attendance", new { area = "Lecturer" })',
+                    method: 'get',
+                    data: { classId: $('#CourseClassId').val() },
+                    success: function (response) {
+                        $('.table-data').html(response);
+                    },
+                    error: function (err) {
+                        $('.table-data').html(err);
+
+                    }
+                })
+            });
+
+
+            $('#CourseClassId').on('change', function () {
+                $('.table-data').html('');
+                $.ajax({
+                    url: '@Url.Action("GetLessonAPI", "Attendance", new { area = "Lecturer" })',
+                    method: 'get',
+                    data: { classId: $('#CourseClassId').val() },
+                    success: function (data) {
+                        if (data && data.length > 0) {
+                            var curriculumSelect = $('#LessonId');
+                            curriculumSelect.empty();
+
+                            $.each(data, function (index, item) {
+                                curriculumSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+                            $('#LessonId').trigger('change');
+
+                        } else {
+                            $('#LessonId').empty();
+                            $('#LessonId').trigger('change');
+                        }
+                    },
+                    error: function (err) {
+                        $('.table-data').html(err);
+
+                    }
+                })
+            });
+
+            $('#SemesterId').on('change', function () {
+                $('.table-data').html('');
+                $.ajax({
+                    url: '@Url.Action("GetListClassAPI", "Attendance", new { area = "Lecturer" })',
+                    method: 'get',
+                    data: { semesterId: $('#SemesterId').val() },
+                    success: function (data) {
+                        if (data && data.length > 0) {
+                            var curriculumSelect = $('#CourseClassId');
+                            curriculumSelect.empty();
+
+                            $.each(data, function (index, item) {
+                                curriculumSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+                            $('#CourseClassId').trigger('change');
+
+                        } else {
+                            $('#CourseClassId').empty();
+                            $('#CourseClassId').trigger('change');
+                        }
+                    },
+                    error: function (err) {
+                        $('.table-data').html(err);
+
+                    }
+                })
+            });
+
+            $('#StudyYearDetailId').on('change', function () {
+                var yearId = $(this).val();
+                if (yearId) {
+                    $.ajax({
+                        url: '/api/API/GetSemesterByYearDetail?yearDetailId=' + yearId,
+                        type: 'GET',
+                        success: function (data) {
+                            if (data && data.length > 0) {
+                                var curriculumSelect = $('#SemesterId');
+                                curriculumSelect.empty();
+
+                                var now = new Date(); // Ngày hiện tại
+
+                                $.each(data, function (index, item) {
+                                    var startDate = new Date(item.startDate);
+                                    var endDate = new Date(item.endDate);
+
+                                    // Kiểm tra ngày hiện tại thuộc khoảng [startDate, endDate]
+                                    var isSelected = now >= startDate && now <= endDate ? ' selected' : '';
+
+                                    curriculumSelect.append('<option value="' + item.id + '"' + isSelected + '>' + item.name + '</option>');
+                                });
+                                $('#SemesterId').trigger('change');
+
+                            } else {
+                                $('#SemesterId').empty();
+                                $('#SemesterId').trigger('change');
+                            }
+                        },
+                        error: function () {
+                            alert('Không thể lấy dữ liệu.');
+                        }
+                    });
+                }
+                $('#SemesterId').trigger('change');
+            });
+            $('#StudyYearDetailId').trigger('change');
+
+
+        });
+
+    </script>
+}
