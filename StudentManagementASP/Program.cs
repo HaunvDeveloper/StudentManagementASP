@@ -34,6 +34,7 @@ builder.Services.AddDbContext<StudentManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("student_management")).UseLazyLoadingProxies());
 
 builder.Services.AddSingleton<EmailSendService>();
+builder.Services.AddTransient<CheckFacePositionService>();
 
 // Add Runtime Compilation
 builder.Services.AddControllersWithViews();

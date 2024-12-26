@@ -101,9 +101,13 @@ namespace StudentManagementASP.Controllers
                     {
                         return RedirectToAction("Index", "Home", new { area = "Lecturer" });
                     }
-                    else
+                    else if(user.AuthId == 4)
                     {
                         return RedirectToAction("Index", "Home", new { area = "Student" });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Device" });
 
                     }
                 }

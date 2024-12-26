@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Thông tin sinh viên";
 }
-
+@model StudentManagementASP.Models.Curriculum
 @section Links {
     <link rel="stylesheet" href="~/assets/css/studentDashboard.css">
 }
@@ -24,12 +24,10 @@
         <div class="card academic-card">
             <h5>Chương trình đào tạo</h5>
             <select class="form-select">
-                <option>Sư phạm Tin học</option>
+                <option>@Model.Name</option>
             </select>
-            <select class="form-select">
-                <option>2024-2025</option>
-            </select>
-            <select class="form-select">
+            @Html.DropDownList("StudyYearDetailId", (SelectList)ViewBag.StudyYearDetails, new { @class = "form-control " })
+            <select id="SemesterId" name="SemesterId" class="form-select">
                 <option>Học kỳ 1</option>
             </select>
             <div class="card">
@@ -59,112 +57,181 @@
 {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const attendanceData = [
-            { subject: 'Lập trình Windows', attended: 25, late: 5, absent: 2 },
-            { subject: 'Nhập môn công nghệ phần mềm', attended: 22, late: 8, absent: 5 },
-            { subject: 'Lập trình PHP', attended: 20, late: 6, absent: 9 },
-            { subject: 'Phát triển chương trình môn Tin học', attended: 23, late: 4, absent: 3 },
-            { subject: 'Kỹ năng làm việc nhóm và tư duy sáng tạo', attended: 30, late: 2, absent: 0 }
-        ];
-
-        const tableBody = document.getElementById('attendanceTableBody');
-
-        attendanceData.forEach(record => {
-            const row = document.createElement('tr');
-
-            const subjectCell = document.createElement('td');
-            subjectCell.textContent = record.subject;
-            row.appendChild(subjectCell);
-
-            const attendedCell = document.createElement('td');
-            attendedCell.textContent = record.attended;
-            row.appendChild(attendedCell);
-
-            const lateCell = document.createElement('td');
-            lateCell.textContent = record.late;
-            row.appendChild(lateCell);
-
-            const absentCell = document.createElement('td');
-            absentCell.textContent = record.absent;
-            row.appendChild(absentCell);
-
-            tableBody.appendChild(row);
-        });
-
-        const attendanceBarChartCtx = document.getElementById('attendanceBarChart').getContext('2d');
-        new Chart(attendanceBarChartCtx, {
-            type: 'bar',
-            data: {
-                labels: attendanceData.map(record => record.subject),
-                datasets: [
-                    {
-                        label: 'Đi học',
-                        data: attendanceData.map(record => record.attended),
-                        backgroundColor: '#124874',
-                    },
-                    {
-                        label: 'Đi trễ',
-                        data: attendanceData.map(record => record.late),
-                        backgroundColor: '#FABF07',
-                    },
-                    {
-                        label: 'Vắng',
-                        data: attendanceData.map(record => record.absent),
-                        backgroundColor: '#CF373D',
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Học phần'
+        $(document).ready(function () {
+            $('#SemesterId').on('change', function () {
+                var semesterId = $(this).val();
+                if (semesterId) {
+                    $.ajax({
+                        url: '@Url.Action("GetChartData", "Home", new{area="Student"})',
+                        type: 'POST',
+                        data: { semesterId : $('#SemesterId').val()},
+                        success: function (data) {
+                            createChart(
+                                data.blockChartData.data,
+                                data.pieChartData.attended,
+                                data.pieChartData.absent,
+                                data.pieChartData.late
+                            );
                         },
-                        ticks: {
-                            display: false
+                        error: function () {
+                            alert('Không thể lấy dữ liệu.');
                         }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Số buổi'
+                    });
+                }
+            });
+
+
+
+            $('#StudyYearDetailId').on('change', function () {
+                var yearId = $(this).val();
+                if (yearId) {
+                    $.ajax({
+                        url: '/api/API/GetSemesterByYearDetail?yearDetailId=' + yearId,
+                        type: 'GET',
+                        success: function (data) {
+                            if (data && data.length > 0) {
+                                var curriculumSelect = $('#SemesterId');
+                                curriculumSelect.empty();
+
+                                var now = new Date(); // Ngày hiện tại
+
+                                $.each(data, function (index, item) {
+                                    var startDate = new Date(item.startDate);
+                                    var endDate = new Date(item.endDate);
+
+                                    // Kiểm tra ngày hiện tại thuộc khoảng [startDate, endDate]
+                                    var isSelected = now >= startDate && now <= endDate ? ' selected' : '';
+
+                                    curriculumSelect.append('<option value="' + item.id + '"' + isSelected + '>' + item.name + '</option>');
+                                });
+                                $('#SemesterId').trigger('change');
+
+                            }
                         },
-                        beginAtZero: true
+                        error: function () {
+                            alert('Không thể lấy dữ liệu.');
+                        }
+                    });
+                }
+                $('#SemesterId').trigger('change');
+            });
+            $('#StudyYearDetailId').trigger('change');
+        });
+    </script>
+    
+    <script>
+        var attendanceBarChartInstance = null;
+        var pieChart = null;
+        function createChart(attendanceData, totalAttended, totalAbsent, totalLate) {
+            const tableBody = document.getElementById('attendanceTableBody');
+            tableBody.innerHTML = "";
+            attendanceData.forEach(record => {
+                const row = document.createElement('tr');
+
+                const subjectCell = document.createElement('td');
+                subjectCell.textContent = record.subject;
+                row.appendChild(subjectCell);
+
+                const attendedCell = document.createElement('td');
+                attendedCell.textContent = record.attended;
+                row.appendChild(attendedCell);
+
+                const lateCell = document.createElement('td');
+                lateCell.textContent = record.late;
+                row.appendChild(lateCell);
+
+                const absentCell = document.createElement('td');
+                absentCell.textContent = record.absent;
+                row.appendChild(absentCell);
+
+                tableBody.appendChild(row);
+            });
+
+            const attendanceBarChartCtx = document.getElementById('attendanceBarChart').getContext('2d');
+
+            if (attendanceBarChartInstance) {
+                attendanceBarChartInstance.destroy();
+            }
+
+
+            attendanceBarChartInstance = new Chart(attendanceBarChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: attendanceData.map(record => record.subject),
+                    datasets: [
+                        {
+                            label: 'Đi học',
+                            data: attendanceData.map(record => record.attended),
+                            backgroundColor: '#124874',
+                        },
+                        {
+                            label: 'Đi trễ',
+                            data: attendanceData.map(record => record.late),
+                            backgroundColor: '#FABF07',
+                        },
+                        {
+                            label: 'Vắng',
+                            data: attendanceData.map(record => record.absent),
+                            backgroundColor: '#CF373D',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Học phần'
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Số buổi'
+                            },
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        const progressChartCtx = document.getElementById('progressChart').getContext('2d');
-        new Chart(progressChartCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Đi học', 'Đi trễ', 'Vắng'],
-                datasets: [
-                    {
-                        data: [50, 54, 20],
-                        backgroundColor: ['#124874', '#FABF07', '#CF373D'], //xanh, vàng, đỏ
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const value = context.raw;
-                                const percentage = ((value / total) * 100).toFixed(2);
-                                return `${context.label}: ${value} (${percentage}%)`;
+            const progressChartCtx = document.getElementById('progressChart').getContext('2d');
+            if (pieChart){
+                pieChart.destroy();
+            }
+            pieChart = new Chart(progressChartCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Đi học', 'Đi trễ', 'Vắng'],
+                    datasets: [
+                        {
+                            data: [totalAttended, totalLate, totalAbsent],
+                            backgroundColor: ['#124874', '#FABF07', '#CF373D'], //xanh, vàng, đỏ
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const value = context.raw;
+                                    const percentage = ((value / total) * 100).toFixed(2);
+                                    return `${context.label}: ${value} (${percentage}%)`;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+        
     </script>
 }

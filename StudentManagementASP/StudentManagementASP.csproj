@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\Data\captured_faces\attendance\temp.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="7.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
@@ -213,6 +217,19 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Areas\Lecturer\Views\CourseClass\_GetSchedules.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\Data\captured_faces\attendance\temp.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\Data\captured_faces\register\" />
+    <Folder Include="Scripts\Data\users\" />
+    <Folder Include="wwwroot\TempImages\" />
   </ItemGroup>
 
 </Project>
