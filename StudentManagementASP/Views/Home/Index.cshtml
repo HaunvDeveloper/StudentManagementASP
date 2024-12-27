@@ -36,8 +36,14 @@
                             <a class="nav-link" href="#">NGÀNH</a>
                         </li>
                     </ul>
-
-                    <a href="/login" class="btn btn-login">Đăng nhập</a>
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <a class="text-light">@User.FindFirst(ClaimTypes.Name)?.Value - @User.FindFirst(ClaimTypes.GivenName)?.Value</a>
+                    }
+                    else
+                    {
+                        <a href="/login" class="btn btn-login">Đăng nhập</a>
+                    }
                 </div>
             </div>
         </nav>

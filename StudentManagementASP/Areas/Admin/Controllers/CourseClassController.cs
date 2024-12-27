@@ -416,6 +416,8 @@ namespace StudentManagementASP.Areas.Admin.Controllers
                 var model = _context.CourseClasses.Find(id);
                 if (model != null)
                 {
+                    var studentJoinClass = _context.StudentJoinClasses.Where(x => x.CourseClassId == model.Id).ToList();
+                    _context.RemoveRange(studentJoinClass);
                     _context.CourseClasses.Remove(model);
                     _context.SaveChanges();
                 }

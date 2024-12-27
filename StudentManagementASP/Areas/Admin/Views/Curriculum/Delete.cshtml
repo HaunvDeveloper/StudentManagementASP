@@ -21,6 +21,7 @@
 <div class="container">
     <form asp-action="DeleteConfirmed" asp-controller="Curriculum" asp-area="Admin" method="post" class="table-container m-4">
         <h4 class="text-center mb-4 mt-2 text-danger" style="font-size:30px;font-weight:bold;">XÓA CHƯƠNG TRÌNH ĐÀO TẠO</h4>
+        <input asp-for="Id" type="hidden"/>
         <div class="form-group">
             <label asp-for="Code">Mã chương trình</label>
             <input disabled asp-for="Code" class="form-control"  />

@@ -63,7 +63,14 @@
                     </div>
                 </td>
                 <td>
-                    <input type="number" min="0" max="100" class="lateLesson form-control-sm" name="lateLesson_@item.StudentId" @(status?.Status == "Đi trễ" ? "disable" : "") placeholder="..........." value="@status?.LateLessons" />
+                    @{
+                        bool isDisable = true;
+                        if (status?.Status == "Đi trễ")
+                        {
+                            isDisable = false;
+                        }
+                    }
+                    <input type="number" min="0" max="100" class="lateLesson form-control-sm" name="lateLesson_@item.StudentId" @(isDisable ? "disabled" : "") placeholder="..........." value="@status?.LateLessons" />
                 </td>
                 <td>
                     <input type="text" class="description form-control-sm" name="description_@item.StudentId" placeholder="..........." value="@status?.Description" />

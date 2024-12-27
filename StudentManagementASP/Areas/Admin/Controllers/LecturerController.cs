@@ -274,6 +274,30 @@ namespace StudentManagementASP.Areas.Admin.Controllers
             }
         }
 
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var model = _context.Lecturers.Find(id);
+                if (model != null)
+                {
+                    _context.Lecturers.Remove(model);
+                    _context.SaveChanges();
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = "Không tìm thấy giảng viên" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
         public IActionResult DownloadListLecturer(int? DeptId)
         {
             var query = _context.Lecturers.AsQueryable();

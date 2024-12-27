@@ -43,7 +43,7 @@
                         <td>@item.Dept.Name</td>
                         <td class="text-center">
                             <a asp-action="Edit" asp-controller="Lecturer" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-primary mx-1"><img src="~/assets/images/pen-solid.svg" height="20" alt=""></a>
-                            <a asp-action="Delete" asp-controller="Lecturer" asp-area="Admin" asp-route-id="@item.Id" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
+                            <a  data-id="@item.Id" onclick="deleteRow(this)" class="btn-service btn btn-danger"><img src="~/assets/images/trash-solid.svg" height="20" alt=""></a>
                         </td>
                     </tr>
                 }
@@ -57,7 +57,7 @@
                     @if (Model.CurrentPage > 1)
                     {
                         <a href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })" class="move previous">
-                            <img width="35" height="35" src="~/assets/images/circle-chevron-left-solid.svg" alt="">
+                            <img width="35" height="35" src="~/assets/images/circle-chevron-right-solid.svg" alt="">
                         </a>
                     }
                     else
@@ -119,6 +119,25 @@
 
 @section Scripts {
     <script>
+        async function deleteRow(element){
+            var res = await confirmAction();
+            if (res) {
+                $.ajax({
+                    url:'@Url.Action("Delete", "Lecturer", new{area="Admin"})',
+                    method: 'post',
+                    data: {id: $(element).attr('data-id')},
+                    success: function (res) {
+                        if (res.success) {
+                            showAlert("success", "Xóa thành công");
+                            $(element).closest('tr').remove();
+                        }
+                        else {
+                            showAlert("error", "Xóa thất bại");
+                        }
+                    }
+                })
+            }
+        }
         function onDeptChange() {
             const deptId = document.querySelector('[name="DeptId"]').value;
             const currentPage = @Model.CurrentPage;

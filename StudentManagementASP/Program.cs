@@ -67,7 +67,7 @@ builder.Services.AddSession(options =>
 
 // Config Lowercase
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 /*
  *  BUILD APP
