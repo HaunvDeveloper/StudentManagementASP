@@ -22,7 +22,7 @@
             <th class="text-center" style="background-color:rgb(9, 107, 187);">Không phép</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="list-student">
         @foreach (var item in Model.StudentJoinClasses)
         {
             var status = studentJoined.FirstOrDefault(x => x.StudentId == item.StudentId);

@@ -24,6 +24,7 @@ using StudentManagementASP.Models;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementASP.Services;
 using System.Security.Policy;
+using StudentManagementASP.Hubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,7 +44,7 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddControllersWithViews();
 
-
+builder.Services.AddSignalR();
 
 
 // Add Authentication
@@ -98,7 +99,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
+app.MapHub<AttendanceHub>("/attendanceHub");
 
 app.Run();
 

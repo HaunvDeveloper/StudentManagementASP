@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Thông tin sinh viên";
+    var student = (StudentManagementASP.Models.Student)ViewBag.Student;
 }
 @model StudentManagementASP.Models.Curriculum
 @section Links {
@@ -10,12 +11,12 @@
     <div class="left-column">
         <div class="card profile-card">
             <img src="https://via.placeholder.com/150" alt="Student Avatar">
-            <h5>Nguyễn Văn A</h5>
+            <h5>@(student.FullName)</h5>
         </div>
 
         <div class="card progress-card">
             <h5>Tiến độ đi học</h5>
-            <p>Số buổi đi học: 70/124 (Đã điểm danh/Tổng buổi)</p>
+            <p id="totalDd">Số buổi đi học: 70/124 (Đã điểm danh/Tổng buổi)</p>
             <canvas id="progressChart"></canvas>
         </div>
     </div>
@@ -123,6 +124,9 @@
         var attendanceBarChartInstance = null;
         var pieChart = null;
         function createChart(attendanceData, totalAttended, totalAbsent, totalLate) {
+            let coMat = totalAttended + totalLate;
+            let koCoMat = totalAttended + totalLate + totalAbsent;
+            $('#totalDd').text('Số buổi đi học: ' + coMat + '/' + koCoMat + '(Đã điểm danh/Tổng buổi)');
             const tableBody = document.getElementById('attendanceTableBody');
             tableBody.innerHTML = "";
             attendanceData.forEach(record => {

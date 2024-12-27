@@ -17,5 +17,7 @@ public partial class Room
 
     public virtual ICollection<CourseClass> CourseClasses { get; set; } = new List<CourseClass>();
 
+    public virtual ICollection<Device> Devices { get; set; } = new List<Device>();
+
     public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 }

@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="~/assets/css/course.css">
     <link rel="stylesheet" href="~/assets/css/checkbox.css">
     <style>
-
-        
-
         .form-control-sm{
             outline:none;
             border:none;
@@ -46,7 +43,10 @@
                         </select>
                     </div>
                     
+                     <button class="activate mt-4 btn btn-info">Kích hoạt chức năng điểm danh</button>
+                    
                 </div>
+                
             </div>
             <div></div>
         </div>
@@ -64,9 +64,69 @@
 
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/attendanceHub")
+            .build();
+
+        connection.on("ReceiveAttendance", function (studentId, status) {
+            showToast("success", "Đã điểm danh " + studentId);
+            console.log("Student ID:", studentId, "Status:", status);
+
+            // Tìm hàng chứa studentId
+            const row = $(`tr[data-id="${studentId}"]`);
+            console.log(row.length > 0 ? "Row found" : "Row not found");
+
+            if (row.length > 0) {
+                // Tìm checkbox bên trong row
+                const checkbox = row.find('input[type=checkbox][value="'+status+'"]');
+                console.log(checkbox.length > 0 ? "Checkbox found" : "Checkbox not found");
+
+                if (checkbox.length > 0) {
+                    checkbox.focus();
+                    checkbox.prop('checked', true); // Sử dụng prop thay vì .checked
+                }
+            }
+        });
+
+
+        connection.start().catch(err => console.error(err));
+    </script>
     <script>
         $(document).ready(function () {
+            $('.activate').on('click', function () {
+                var isActive = $('.activate').hasClass('btn-info');
+                $.ajax({
+                    url: '@Url.Action("ActivateDevice", "Attendance", new { area = "Lecturer" })',
+                    method: 'post',
+                    data: { active: isActive, lessonId: $('#LessonId').val() },
+                    success: function (response) {
+                        if (response.success) {
+                            
+                            
+                            if (!isActive) {
+                                showAlert("success", "Tắt thành công");
+                                $('.activate').text('Kích hoạt chức năng điểm danh');
+                                $('.activate').addClass('btn-info');
+                                $('.activate').removeClass('btn-danger');
+                            }
+                            else {
+                                showAlert("success", "Kích hoạt thành công");
+                                $('.activate').text('Tắt thiết bị');
 
+                                $('.activate').removeClass('btn-info');
+                                $('.activate').addClass('btn-danger');
+                            }
+                        } else {
+                            showAlert("error", "Kích hoạt thất bại", response.error);
+                        }
+                    },
+                    error: function (error) {
+                        showAlert("error", "Kích hoạt thất bại", response.error);
+                    }
+                });
+            });
             $('#save').on('click', function () {
                 var list = [];
                 $('.row-student').each(function (index, element) {

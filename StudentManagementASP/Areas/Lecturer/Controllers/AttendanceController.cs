@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementASP.Models;
 using StudentManagementASP.Services;
+using System;
 using System.Security.Claims;
 
 namespace StudentManagementASP.Areas.Lecturer.Controllers
@@ -120,6 +121,37 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
                 return Json(new {success=false, error=ex.Message});
             }
         }
-    
+
+        [HttpPost]
+        public async Task<IActionResult> ActivateDevice(bool active, int lessonId)
+        {
+            try
+            {
+                var lesson = _context.Lessons.AsNoTracking().SingleOrDefault(x => x.Id == lessonId);
+                if (lesson == null) { return NotFound(); }
+                var device = _context.Devices.FirstOrDefault(x => x.RoomId == lesson.RoomId);
+                if (device == null) { return Json(new { success = false, error ="Không có thiết bị điểm danh cho phòng" }); }
+                if (active)
+                {
+                    device.LessonId = lessonId;
+                    device.CourseClassId = lesson.CourseClassId;
+                    device.IsActive = true;
+                }
+                else
+                {
+                    device.LessonId = null;
+                    device.CourseClassId = null;
+                    device.IsActive = false;
+                }
+                await _context.SaveChangesAsync();
+                return Json(new { success = true});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error= ex.Message });
+
+            }
+        }
+
     }
 }

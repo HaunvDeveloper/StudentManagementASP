@@ -37,6 +37,8 @@ public partial class CourseClass
 
     public virtual Room? DefaultRoom { get; set; }
 
+    public virtual ICollection<Device> Devices { get; set; } = new List<Device>();
+
     public virtual Lecturer? Lecturer { get; set; }
 
     public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();

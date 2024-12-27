@@ -1,6 +1,8 @@
-﻿@{
+﻿@model StudentManagementASP.Models.Device
+@{
     Layout = null;
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +19,7 @@
     <link rel="stylesheet" href="~/libs/data-table.css" />
     <link rel="stylesheet" href="~/lib/sweetalert2/themes/default/default.min.css">
     <link rel="stylesheet" href="~/js/sweetalert2-extend.js" />
+    <link rel="stylesheet" href="~/assets/css/loader.css">
     <style>
         body, html {
             margin: 0;
@@ -37,6 +40,7 @@
             text-align: center;
             width: 100%;
             height: 100%;
+            position: relative;
         }
 
         .content-wrapper {
@@ -45,6 +49,11 @@
             align-items: center;
             gap: 20px;
         }
+
+            .content-wrapper.blur {
+                filter: blur(5px);
+                pointer-events: none; /* Prevent interactions */
+            }
 
         .camera-frame {
             position: relative;
@@ -83,21 +92,45 @@
             .confirm-button:hover {
                 background-color: #c0392b;
             }
+
+        .camera-frame {
+            box-shadow: 0 0 15px 5px rgb(223 31 31 / 80%);
+        }
+
+            .camera-frame.centered {
+                box-shadow: 0 0 15px 5px rgba(0, 255, 0, 0.8); /* Green border when isCentered is true */
+            }
     </style>
 </head>
 <body>
     <div class="main-wrapper">
-        <div class="content-wrapper">
-            <div class="horizontal-layout">
-                <div class="camera-frame" onclick="startCamera()">
-                    <video id="camera" autoplay playsinline></video>
-                    <div class="camera-placeholder" id="camera-placeholder">
-                        <i class="fa-solid fa-camera"></i>
+        @if(Model.IsActive)
+        {
+            <div class="loader" style="    display: none;
+                    position: absolute;
+                    top: 45%;
+                    left: 49%;
+                    z-index: 100;"></div>
+            <div class="content-wrapper">
+                <div class="horizontal-layout">
+                    <div class="camera-frame" onclick="startCamera()">
+                        <video id="camera" autoplay playsinline></video>
+                        <div class="camera-placeholder" id="camera-placeholder">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
                     </div>
                 </div>
+                <a href="/logout" class="confirm-button" onclick="stopCamera()">Thoát</a>
             </div>
-            <button class="confirm-button" onclick="stopCamera()">Thoát</button>
-        </div>
+        }
+        else
+        {
+            <div class="content-wrapper">
+                <h4 class="not-active">Thiết bị chưa được bật</h4>
+                <a href="/logout" class="confirm-button" onclick="stopCamera()">Thoát</a>
+            </div>
+        }
+
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@@2.3.0/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w=" crossorigin="anonymous"></script>
@@ -107,7 +140,32 @@
     <script src="~/libs/adminlte/js/adminlte.js"></script> <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script src="~/lib/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="~/js/sweetalert2-extend.js"></script>
+    
     <script>
+        $(document).ready(function () {
+            var notActive = $('.not-active').length;
+            if (notActive > 0) {
+                setInterval(async () => {
+                    
+
+                    try {
+                        const response = await fetch('/Device/Home/CheckActivate', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        console.error("Error capturing image: ", error);
+                    } 
+                }, 1000);
+            }
+        });
         let intervalId = null;
         let isProcessing = false;  // Biến theo dõi trạng thái yêu cầu
 
@@ -145,11 +203,17 @@
 
                         const result = await response.json();
                         if (result.success) {
-                            showToast("success", "Đã điểm danh " + result.name);
+                            $('.camera-frame').addClass('centered');
+                            await verifyFace(imageData);
+                        }
+                        else {
+                            $('.camera-frame').removeClass('centered');
                         }
                     } catch (error) {
                         console.error("Error capturing image: ", error);
+                        $('.camera-frame').removeClass('centered');
                     } finally {
+                        $('.camera-frame').removeClass('centered');
                         isProcessing = false;
                     }
                 }, 1000); // Check every second
@@ -157,7 +221,38 @@
                 alert('Cannot access the camera: ' + err.message);
             }
         }
+        async function verifyFace(imageData) {
+            const mainWrapper = document.querySelector('.content-wrapper');
+            const loader = document.querySelector('.loader');
+            try {
+                // Add blur effect and loader
+                mainWrapper.classList.add('blur');
+                loader.style.display = 'block';
+                const response = await fetch('/Device/Home/Verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image: imageData }),
+                });
 
+                const result = await response.json();
+                if (result.success) {
+                    showToast("success", "Đã điểm danh " + result.name);
+                }
+                else {
+                    showToast("error", "Thất bại: " + result.error);
+                }
+            } catch (error) {
+                console.error("Error registering user: ", error);
+                alert("Error registering user.");
+            } finally {
+                // Remove blur effect and loader
+                mainWrapper.classList.remove('blur');
+                loader.style.display = 'none';
+
+            }
+        }
         function stopCamera() {
             if (cameraStream) {
                 const tracks = cameraStream.getTracks();

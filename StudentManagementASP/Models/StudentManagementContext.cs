@@ -27,6 +27,8 @@ public partial class StudentManagementContext : DbContext
 
     public virtual DbSet<Department> Departments { get; set; }
 
+    public virtual DbSet<Device> Devices { get; set; }
+
     public virtual DbSet<District> Districts { get; set; }
 
     public virtual DbSet<Lecturer> Lecturers { get; set; }
@@ -183,6 +185,33 @@ public partial class StudentManagementContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.DateFound).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<Device>(entity =>
+        {
+            entity.ToTable("Device");
+
+            entity.Property(e => e.Code).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(50);
+
+            entity.HasOne(d => d.CourseClass).WithMany(p => p.Devices)
+                .HasForeignKey(d => d.CourseClassId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Device_CourseClass");
+
+            entity.HasOne(d => d.Lesson).WithMany(p => p.Devices)
+                .HasForeignKey(d => d.LessonId)
+                .HasConstraintName("FK_Device_Lesson");
+
+            entity.HasOne(d => d.Room).WithMany(p => p.Devices)
+                .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Device_Room");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Devices)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Device_User");
         });
 
         modelBuilder.Entity<District>(entity =>

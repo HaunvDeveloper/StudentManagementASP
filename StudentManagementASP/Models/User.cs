@@ -27,6 +27,8 @@ public partial class User
 
     public virtual Authentication Auth { get; set; } = null!;
 
+    public virtual ICollection<Device> Devices { get; set; } = new List<Device>();
+
     public virtual ICollection<Lecturer> Lecturers { get; set; } = new List<Lecturer>();
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();

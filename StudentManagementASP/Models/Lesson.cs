@@ -19,6 +19,8 @@ public partial class Lesson
 
     public virtual CourseClass CourseClass { get; set; } = null!;
 
+    public virtual ICollection<Device> Devices { get; set; } = new List<Device>();
+
     public virtual LessonInfo EndLessonNavigation { get; set; } = null!;
 
     public virtual Room? Room { get; set; }

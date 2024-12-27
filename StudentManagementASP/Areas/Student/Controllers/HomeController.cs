@@ -78,6 +78,7 @@ namespace StudentManagementASP.Areas.Student.Controllers
                 "Text",
                 current?.SchoolYearDetailId
             );
+            ViewBag.Student = student;
             return View(student?.Curriculum);
         }
     }
