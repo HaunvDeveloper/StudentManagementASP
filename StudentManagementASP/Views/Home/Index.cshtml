@@ -27,7 +27,7 @@
                 <div class="collapse navbar-collapse d-flex justify-content-between">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">TRANG CHỦ</a>
+                            <a class="nav-link" href="/">TRANG CHỦ</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">TRA CỨU VĂN BẰNG/CHỨNG CHỈ</a>
@@ -38,7 +38,7 @@
                     </ul>
                     @if (User.Identity?.IsAuthenticated ?? false)
                     {
-                        <a class="text-light">@User.FindFirst(ClaimTypes.Name)?.Value - @User.FindFirst(ClaimTypes.GivenName)?.Value</a>
+                        <a href="/@User.FindFirst(ClaimTypes.Role)?.Value" class="text-light">@User.FindFirst(ClaimTypes.Name)?.Value - @User.FindFirst(ClaimTypes.GivenName)?.Value</a>
                     }
                     else
                     {

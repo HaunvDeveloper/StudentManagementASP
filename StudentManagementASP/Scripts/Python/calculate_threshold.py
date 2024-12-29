@@ -104,7 +104,7 @@ def calculate_optimal_threshold(pairs, save_path='data/embeddings/optimal_thresh
     plt.title('Receiver Operating Characteristic (ROC) Curve')
     plt.legend(loc="lower right")
     plt.grid(True)
-    plt.show()
+    #plt.show()
     
     # Tìm ngưỡng tối ưu (Youden's J statistic)
     optimal_idx = np.argmax(tpr - fpr)
