@@ -37,7 +37,28 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
             );
             return View();
         }
+        public IActionResult _GetListStudent(int classId, int lessonId)
+        {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var lecturer = _context.Lecturers.AsNoTracking().Single(x => x.UserId == userId);
 
+            var courseClass = _context.CourseClasses.AsNoTracking()
+                .Include(x => x.StudentJoinClasses)
+                    .ThenInclude(x => x.Student)
+                .SingleOrDefault(x => x.Id == classId && x.LecturerId == lecturer.Id);
+
+            if (courseClass == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.LessonJoined = _context.StudentJoinLessons
+                .AsNoTracking()
+                .Include(x => x.Lesson)
+                .Where(x => x.LessonId == lessonId && x.Lesson.CourseClassId == classId)
+                .ToList();
+            return PartialView(courseClass);
+        }
 
         public IActionResult GetListClassAPI(int semesterId)
         {
@@ -70,28 +91,7 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
             }).ToList());
         }
     
-        public IActionResult _GetListStudent(int classId, int lessonId)
-        {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            var lecturer = _context.Lecturers.AsNoTracking().Single(x => x.UserId == userId);
-
-            var courseClass = _context.CourseClasses.AsNoTracking()
-                .Include(x => x.StudentJoinClasses)
-                    .ThenInclude(x => x.Student)
-                .SingleOrDefault(x => x.Id == classId && x.LecturerId == lecturer.Id);
-
-            if (courseClass == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.LessonJoined = _context.StudentJoinLessons
-                .AsNoTracking()
-                .Include(x => x.Lesson)
-                .Where(x => x.LessonId == lessonId && x.Lesson.CourseClassId == classId)
-                .ToList();
-            return PartialView(courseClass);
-        }
+        
 
         [HttpPost]
         public async Task<IActionResult> Save(List<StudentJoinLesson> list)
@@ -103,11 +103,18 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
                     var exist = _context.StudentJoinLessons.SingleOrDefault(x => x.LessonId == item.LessonId && x.StudentId == item.StudentId);
                     if (exist != null)
                     {
-                        exist.Status = item.Status;
-                        exist.LateLessons = item.LateLessons;
-                        exist.Description = item.Description;
+                        if (string.IsNullOrEmpty(item.Status))
+                        {
+                            _context.StudentJoinLessons.Remove(exist);
+                        }
+                        else
+                        {
+                            exist.Status = item.Status;
+                            exist.LateLessons = item.LateLessons;
+                            exist.Description = item.Description;
+                        }
                     }
-                    else
+                    else if(!string.IsNullOrEmpty(item.Status))
                     {
                         item.JoinTime = DateTime.Now;
                         _context.StudentJoinLessons.Add(item);

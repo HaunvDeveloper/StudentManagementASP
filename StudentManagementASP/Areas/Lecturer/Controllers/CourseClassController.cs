@@ -51,6 +51,13 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
             return PartialView(listClass);
         }
 
+
+
+
+
+
+
+
         public IActionResult Schedules()
         {
 			
@@ -70,6 +77,10 @@ namespace StudentManagementASP.Areas.Lecturer.Controllers
            
 			return View();
         }
+
+
+
+
         public IActionResult _GetSchedules(DateTime startDate, DateTime endDate)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");

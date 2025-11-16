@@ -77,7 +77,7 @@ namespace StudentManagementASP.Areas.Device.Controllers
                 var scriptPath = Path.Combine("Scripts", "Python", "mark_attendance.py");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = "python",
+                    FileName = Path.Combine("Compilers", "python", "python.exe"),
                     Arguments = $"\"{scriptPath}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -101,8 +101,6 @@ namespace StudentManagementASP.Areas.Device.Controllers
                                 var student = _context.Students.AsNoTracking().FirstOrDefault(x => x.Id == output);
                                 if (student != null)
                                 {
-                                    
-
                                     var now = DateTime.Now;
                                     int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
                                     var device = _context.Devices.AsNoTracking().FirstOrDefault(x => x.UserId == userId);
@@ -110,7 +108,7 @@ namespace StudentManagementASP.Areas.Device.Controllers
                                     {
                                         var lesson = device.Lesson;
                                         
-                                        if (lesson == null) { return Ok(new { success = false }); }
+                                        if (lesson == null) { return Ok(new { success = false, error="lesson is null" }); }
 
                                         var exist = _context.StudentJoinLessons.AsNoTracking().FirstOrDefault(x => x.StudentId == student.Id && x.LessonId == lesson.Id);
                                         if (exist != null) { return Ok(new { success = false, error = "Đã điểm danh" }); }
@@ -124,7 +122,6 @@ namespace StudentManagementASP.Areas.Device.Controllers
                                             LessonId = lesson.Id,
                                             JoinTime = now,
                                             Status = status,
-
                                         });
                                         await _context.SaveChangesAsync();
                                         var hubContext = HttpContext.RequestServices.GetRequiredService<IHubContext<AttendanceHub>>();
@@ -135,20 +132,20 @@ namespace StudentManagementASP.Areas.Device.Controllers
                                 }
                                 else
                                 {
-                                    return Ok(new { success = false });
+                                    return Ok(new { success = false, error="student is null", output=output, errorOutput = errorOutput });
                                 }
                             }
 
-                            return Ok(new { success = false }); ;
+                            return Ok(new { success = false, error="Không định dạng được khuôn mặt" }); ;
                         }
                         catch (Exception ex)
                         {
-                            return Ok(new { success = false });
+                            return Ok(new { success = false, error=ex.Message, content = ex.ToString() });
                         }
                     }
                 }
             }
-            return Ok(new { success = false });
+            return Ok(new { success = false, error="Image is null" });
 
         }
 

@@ -628,6 +628,17 @@ namespace StudentManagementASP.Areas.Admin.Controllers
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
         public IActionResult ViewStudentList(int id)
         {
             var courseClass = _context.CourseClasses.AsNoTracking()

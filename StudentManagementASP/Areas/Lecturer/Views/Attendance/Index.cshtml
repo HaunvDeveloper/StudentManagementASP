@@ -133,7 +133,7 @@
                     var ob = {
                         StudentId: $(element).attr('data-id'),
                         LessonId: $('#LessonId').val(),
-                        Status: $(element).find('input[type=checkbox]:checked').val() || "Có mặt",
+                        Status: $(element).find('input[type=checkbox]:checked').val() || '',
                         LateLessons: $(element).find('.lateLesson').val(),
                         Description: $(element).find('.description').val()
                     }

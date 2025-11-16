@@ -222,7 +222,7 @@ namespace StudentManagementASP.Controllers
 
             return RedirectToAction("ChangePassword", "User");
         }
-
+        [AllowAnonymous]
         public IActionResult ChangePassword()
         {
             if (TempData["ChangePassword"] == null)

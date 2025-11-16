@@ -44,12 +44,6 @@ namespace StudentManagementASP.Areas.Student.Controllers
             return View(student);
         }
 
-        public IActionResult CreateFaceIdentify()
-        {
-            return View();
-        }
-
-
         public IActionResult EditInfo()
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
@@ -92,6 +86,11 @@ namespace StudentManagementASP.Areas.Student.Controllers
             student.Religion = Religion;
             await _context.SaveChangesAsync();
             return RedirectToAction("Info", "Student");
+        }
+
+        public IActionResult CreateFaceIdentify()
+        {
+            return View();
         }
 
         [HttpPost]
@@ -138,7 +137,7 @@ namespace StudentManagementASP.Areas.Student.Controllers
             var scriptPath = Path.Combine("Scripts", "Python", "register.py");
             var startInfo = new ProcessStartInfo
             {
-                FileName = "python",
+                FileName = Path.Combine("Compilers", "python", "python.exe"),
                 Arguments = $"\"{scriptPath}\" \"{model.UserId}\"",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

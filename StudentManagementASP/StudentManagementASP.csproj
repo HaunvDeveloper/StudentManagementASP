@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,21 +6,58 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
-    <Content Remove="Areas\Admin\Views\Major\Create.cshtml" />
-    <Content Remove="Areas\Admin\Views\Major\Details.cshtml" />
-    <Content Remove="Areas\Admin\Views\Student\Create.cshtml" />
-    <Content Remove="Areas\Admin\Views\Subject\Create.cshtml" />
-    <Content Remove="Areas\Admin\Views\Subject\Details.cshtml" />
-    <Content Remove="Areas\Lecturer\Views\CourseClass\_GetSchedules.cshtml" />
-    <Content Remove="Areas\Student\Views\Course\_GetSchedules.cshtml" />
-    <Content Remove="Views\User\ForgetPassword.cshtml" />
+	<ItemGroup>
+    <Compile Remove="Compilers\python\**" />
+    <Content Remove="Compilers\python\**" />
+    <EmbeddedResource Remove="Compilers\python\**" />
+    <None Remove="Compilers\python\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="data\embeddings\optimal_threshold.npy" />
     <None Remove="Scripts\Data\captured_faces\attendance\temp.png" />
+    <None Remove="Scripts\Data\users\48.01.103.011\image_1.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.011\image_2.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.011\image_3.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.011\image_4.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.011\image_5.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.024\image_1.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.024\image_2.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.024\image_3.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.024\image_4.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.024\image_5.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.028\image_1.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.028\image_2.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.028\image_3.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.028\image_4.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.028\image_5.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.062\image_1.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.062\image_2.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.062\image_3.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.062\image_4.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.062\image_5.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.071\image_1.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.071\image_2.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.071\image_3.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.071\image_4.npy" />
+    <None Remove="Scripts\Data\users\48.01.103.071\image_5.npy" />
+    <None Remove="Scripts\Data\users\48.01.104.090\image_1.npy" />
+    <None Remove="Scripts\Data\users\48.01.104.090\image_2.npy" />
+    <None Remove="Scripts\Data\users\48.01.104.090\image_3.npy" />
+    <None Remove="Scripts\Data\users\48.01.104.090\image_4.npy" />
+    <None Remove="Scripts\Data\users\48.01.104.090\image_5.npy" />
+    <None Remove="Scripts\Data\users\49.01.103.017\image_1.npy" />
+    <None Remove="Scripts\Data\users\49.01.103.017\image_2.npy" />
+    <None Remove="Scripts\Data\users\49.01.103.017\image_3.npy" />
+    <None Remove="Scripts\Data\users\49.01.103.017\image_4.npy" />
+    <None Remove="Scripts\Data\users\49.01.103.017\image_5.npy" />
+    <None Remove="Scripts\Python\calculate_threshold.py" />
+    <None Remove="Scripts\Python\check.py" />
+    <None Remove="Scripts\Python\export_attendance.py" />
+    <None Remove="Scripts\Python\mark_attendance.py" />
+    <None Remove="Scripts\Python\register.py" />
   </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="7.5.2" />
@@ -40,7 +77,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <UpToDateCheckInput Remove="Views\User\ForgetPassword.cshtml" />
   </ItemGroup>
 
@@ -60,15 +97,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Areas\Admin\Views\Curriculum\_GetList.cshtml" />
-    <None Include="Areas\Admin\Views\Major\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Major\Details.cshtml" />
-    <None Include="Areas\Admin\Views\Student\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Subject\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Subject\Details.cshtml" />
-    <None Include="Areas\Lecturer\Views\CourseClass\_GetSchedules.cshtml" />
-    <None Include="Areas\Student\Views\Course\_GetSchedules.cshtml" />
-    <None Include="Views\User\ForgetPassword.cshtml" />
     <None Include="wwwroot\Data\TextFile.txt" />
     <None Include="wwwroot\lib\sweetalert2\dist\sweetalert2.all.js" />
     <None Include="wwwroot\lib\sweetalert2\dist\sweetalert2.all.min.js" />
@@ -191,11 +219,41 @@
   <ItemGroup>
     <Content Update="Areas\Admin\Views\Major\Index.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Course\CourseInfo.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Course\Index.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Course\List.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Course\Schedules.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Course\_GetSchedules.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Curriculum\List.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Home\Index.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Student\CreateFaceIdentify.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Student\EditInfo.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Student\Views\Student\Info.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="Views\Shared\_MenuLecturer.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 
@@ -220,16 +278,58 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="data\embeddings\optimal_threshold.npy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\Data\captured_faces\attendance\temp.png">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Include="Scripts\Data\users\48.01.103.011\image_1.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.011\image_2.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.011\image_3.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.011\image_4.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.011\image_5.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.024\image_1.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.024\image_2.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.024\image_3.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.024\image_4.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.024\image_5.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.028\image_1.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.028\image_2.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.028\image_3.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.028\image_4.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.028\image_5.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.062\image_1.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.062\image_2.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.062\image_3.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.062\image_4.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.062\image_5.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.071\image_1.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.071\image_2.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.071\image_3.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.071\image_4.npy" />
+    <Content Include="Scripts\Data\users\48.01.103.071\image_5.npy" />
+    <Content Include="Scripts\Data\users\48.01.104.090\image_1.npy" />
+    <Content Include="Scripts\Data\users\48.01.104.090\image_2.npy" />
+    <Content Include="Scripts\Data\users\48.01.104.090\image_3.npy" />
+    <Content Include="Scripts\Data\users\48.01.104.090\image_4.npy" />
+    <Content Include="Scripts\Data\users\48.01.104.090\image_5.npy" />
+    <Content Include="Scripts\Data\users\49.01.103.017\image_1.npy" />
+    <Content Include="Scripts\Data\users\49.01.103.017\image_2.npy" />
+    <Content Include="Scripts\Data\users\49.01.103.017\image_3.npy" />
+    <Content Include="Scripts\Data\users\49.01.103.017\image_4.npy" />
+    <Content Include="Scripts\Data\users\49.01.103.017\image_5.npy" />
+    <Content Include="Scripts\Python\calculate_threshold.py" />
+    <Content Include="Scripts\Python\check.py" />
+    <Content Include="Scripts\Python\export_attendance.py" />
+    <Content Include="Scripts\Python\mark_attendance.py" />
+    <Content Include="Scripts\Python\register.py" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Scripts\Data\captured_faces\register\" />
-    <Folder Include="Scripts\Data\users\" />
     <Folder Include="wwwroot\TempImages\" />
   </ItemGroup>
-
+	
 </Project>

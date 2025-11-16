@@ -67,7 +67,6 @@ builder.Services.AddSession(options =>
 
 // Config Lowercase
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 /*
  *  BUILD APP
@@ -75,11 +74,12 @@ builder.WebHost.UseUrls("http://0.0.0.0:5000");
 var app = builder.Build();
 
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+//if (!app.Environment.IsDevelopment())
+//{
+//    app.UseExceptionHandler("/Home/Error");
+//    app.UseHsts();
+//}
+app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

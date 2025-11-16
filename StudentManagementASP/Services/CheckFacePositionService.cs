@@ -53,7 +53,7 @@ namespace StudentManagementASP.Services
             // Bao quanh đường dẫn bằng dấu nháy kép để đảm bảo không bị lỗi vì dấu cách trong đường dẫn
             var start = new ProcessStartInfo
             {
-                FileName = "python",
+                FileName = Path.Combine("Compilers", "python", "python.exe"),
                 Arguments = $"\"{scriptPath}\" \"{imagePath}\"",  // Đảm bảo đường dẫn được bao quanh bằng dấu nháy kép
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
